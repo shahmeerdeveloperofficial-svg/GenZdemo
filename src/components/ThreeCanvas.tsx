@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 interface ThreeCanvasProps {
   scrollProgress: number; // 0 to 1
@@ -55,15 +56,19 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // 4. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
+    // 4. Lighting - Enhanced directional & ambient illumination for 3D model
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
     scene.add(ambientLight);
 
-    const pointLight = new THREE.PointLight(0x0099ff, 3.5, 60);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 2.5);
+    dirLight.position.set(8, 12, 10);
+    scene.add(dirLight);
+
+    const pointLight = new THREE.PointLight(0x0099ff, 4.0, 60);
     pointLight.position.set(6, 6, 6);
     scene.add(pointLight);
 
-    const pointLight2 = new THREE.PointLight(0x38bdf8, 2.5, 60);
+    const pointLight2 = new THREE.PointLight(0x38bdf8, 3.0, 60);
     pointLight2.position.set(-6, -6, -3);
     scene.add(pointLight2);
 
@@ -134,24 +139,42 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     ring3Ref.current = ring3;
 
     // ==========================================
-    // 6. Realistic 3D Jet Airplane & Contrail Stream
-    // (Matching the airliner in the user's reference image)
+    // 6. Complete 3D Airliner Model & Contrail Stream
+    // (Matching commercial airliner jet in reference image)
     // ==========================================
     const airplaneGroup = new THREE.Group();
 
-    // Jet Materials: Metallic deep sapphire navy with glowing cyan accents
+    // Twin Glowing Cyan Engine Exhaust Plumes
+    const jetThrustMat = new THREE.MeshBasicMaterial({
+      color: 0x00f0ff,
+      transparent: true,
+      opacity: 0.95,
+    });
+    const thrustGeo = new THREE.ConeGeometry(0.018, 0.22, 12);
+    thrustGeo.translate(0, -0.11, 0);
+
+    const rightThrust = new THREE.Mesh(thrustGeo, jetThrustMat);
+    rightThrust.position.set(0.13, -0.06, 0.02);
+    airplaneGroup.add(rightThrust);
+    rightThrustRef.current = rightThrust;
+
+    const leftThrust = new THREE.Mesh(thrustGeo, jetThrustMat);
+    leftThrust.position.set(-0.13, -0.06, -0.02);
+    airplaneGroup.add(leftThrust);
+    leftThrustRef.current = leftThrust;
+
+    // Instant Procedural Model as sleek baseline / fallback
+    const placeholder = new THREE.Group();
     const jetBodyMat = new THREE.MeshStandardMaterial({
       color: 0x071e3d,
       roughness: 0.28,
       metalness: 0.72,
     });
-
     const jetWingMat = new THREE.MeshStandardMaterial({
       color: 0x0b2545,
       roughness: 0.32,
       metalness: 0.65,
     });
-
     const jetCockpitMat = new THREE.MeshStandardMaterial({
       color: 0x00f0ff,
       emissive: 0x0099ff,
@@ -160,37 +183,31 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
       metalness: 0.9,
     });
 
-    const jetThrustMat = new THREE.MeshBasicMaterial({
-      color: 0x00f0ff,
-      transparent: true,
-      opacity: 0.9,
-    });
-
-    // A. Main Fuselage (Streamlined cylindrical cabin)
+    // Cabin
     const cabinGeo = new THREE.CylinderGeometry(0.046, 0.052, 0.44, 16);
     const cabin = new THREE.Mesh(cabinGeo, jetBodyMat);
-    airplaneGroup.add(cabin);
+    placeholder.add(cabin);
 
-    // B. Streamlined Nose Cone (Facing forward along +Y)
+    // Nose
     const noseGeo = new THREE.ConeGeometry(0.046, 0.26, 16);
     const nose = new THREE.Mesh(noseGeo, jetBodyMat);
     nose.position.y = 0.35;
-    airplaneGroup.add(nose);
+    placeholder.add(nose);
 
-    // C. Cockpit Glass Canopy
+    // Cockpit
     const cockpitGeo = new THREE.SphereGeometry(0.038, 12, 12);
     const cockpit = new THREE.Mesh(cockpitGeo, jetCockpitMat);
     cockpit.position.set(0.024, 0.22, 0);
     cockpit.scale.set(0.7, 1.5, 0.8);
-    airplaneGroup.add(cockpit);
+    placeholder.add(cockpit);
 
-    // D. Tail Cone (Tapering backward to -Y)
+    // Tail Cone
     const tailConeGeo = new THREE.CylinderGeometry(0.052, 0.016, 0.3, 16);
     const tailCone = new THREE.Mesh(tailConeGeo, jetBodyMat);
     tailCone.position.y = -0.37;
-    airplaneGroup.add(tailCone);
+    placeholder.add(tailCone);
 
-    // E. Swept Jet Airliner Wings
+    // Wings
     const wingShape = new THREE.Shape();
     wingShape.moveTo(0, 0.14);
     wingShape.lineTo(0.58, -0.16);
@@ -200,7 +217,6 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     wingShape.lineTo(-0.55, -0.25);
     wingShape.lineTo(-0.58, -0.16);
     wingShape.closePath();
-
     const wingGeo = new THREE.ExtrudeGeometry(wingShape, {
       depth: 0.016,
       bevelEnabled: true,
@@ -210,55 +226,15 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     });
     wingGeo.center();
     const wings = new THREE.Mesh(wingGeo, jetWingMat);
-    airplaneGroup.add(wings);
+    placeholder.add(wings);
 
-    // Winglet tips (turned upward along +X)
-    const wingletGeo = new THREE.ConeGeometry(0.016, 0.08, 8);
-    const rightWinglet = new THREE.Mesh(wingletGeo, jetCockpitMat);
-    rightWinglet.position.set(0.03, -0.20, 0.56);
-    rightWinglet.rotation.z = Math.PI / 12;
-    airplaneGroup.add(rightWinglet);
-
-    const leftWinglet = new THREE.Mesh(wingletGeo, jetCockpitMat);
-    leftWinglet.position.set(0.03, -0.20, -0.56);
-    leftWinglet.rotation.z = Math.PI / 12;
-    airplaneGroup.add(leftWinglet);
-
-    // F. Twin Turbofan Jet Engines with Glowing Cyan Exhaust
-    const engineGeo = new THREE.CylinderGeometry(0.03, 0.026, 0.18, 12);
-    const thrustGeo = new THREE.ConeGeometry(0.022, 0.16, 12);
-    thrustGeo.translate(0, -0.08, 0);
-
-    // Right Engine
-    const rightEngine = new THREE.Mesh(engineGeo, jetBodyMat);
-    rightEngine.position.set(-0.035, -0.02, 0.23);
-    airplaneGroup.add(rightEngine);
-
-    const rightThrust = new THREE.Mesh(thrustGeo, jetThrustMat);
-    rightThrust.position.set(-0.035, -0.11, 0.23);
-    rightThrust.rotation.x = Math.PI;
-    airplaneGroup.add(rightThrust);
-    rightThrustRef.current = rightThrust;
-
-    // Left Engine
-    const leftEngine = new THREE.Mesh(engineGeo, jetBodyMat);
-    leftEngine.position.set(-0.035, -0.02, -0.23);
-    airplaneGroup.add(leftEngine);
-
-    const leftThrust = new THREE.Mesh(thrustGeo, jetThrustMat);
-    leftThrust.position.set(-0.035, -0.11, -0.23);
-    leftThrust.rotation.x = Math.PI;
-    airplaneGroup.add(leftThrust);
-    leftThrustRef.current = leftThrust;
-
-    // G. Vertical Tail Fin (Swept back)
+    // Tail Fin
     const finShape = new THREE.Shape();
     finShape.moveTo(0, 0);
     finShape.lineTo(0.24, -0.22);
     finShape.lineTo(0.21, -0.29);
     finShape.lineTo(0, -0.24);
     finShape.closePath();
-
     const finGeo = new THREE.ExtrudeGeometry(finShape, {
       depth: 0.012,
       bevelEnabled: true,
@@ -269,9 +245,9 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     finGeo.center();
     const fin = new THREE.Mesh(finGeo, jetWingMat);
     fin.position.set(0.11, -0.38, 0);
-    airplaneGroup.add(fin);
+    placeholder.add(fin);
 
-    // H. Horizontal Tail Elevators
+    // Horizontal Elevators
     const hTailShape = new THREE.Shape();
     hTailShape.moveTo(0, -0.34);
     hTailShape.lineTo(0.24, -0.46);
@@ -280,7 +256,6 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     hTailShape.lineTo(-0.22, -0.51);
     hTailShape.lineTo(-0.24, -0.46);
     hTailShape.closePath();
-
     const hTailGeo = new THREE.ExtrudeGeometry(hTailShape, {
       depth: 0.01,
       bevelEnabled: true,
@@ -291,21 +266,61 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     hTailGeo.center();
     const hTail = new THREE.Mesh(hTailGeo, jetWingMat);
     hTail.position.set(0.01, 0, 0);
-    airplaneGroup.add(hTail);
+    placeholder.add(hTail);
 
-    // Position airplane on the orbital ring at x = 3.3
+    airplaneGroup.add(placeholder);
+
+    // Load Complete 3D Airliner Model (.glb)
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load(
+      '/models/airplane.glb',
+      (gltf) => {
+        const model = gltf.scene;
+        // Proportion matching orbital flight ring
+        model.scale.set(0.024, 0.024, 0.024);
+        
+        // Orient airliner along flight trajectory:
+        // Heading forward along +Y, banking towards camera for dramatic 3D view
+        model.rotation.set(0, Math.PI / 2.3, Math.PI / 2, 'YXZ');
+        model.position.set(0, 0, 0);
+
+        // Enhance metallic PBR materials for realistic aircraft reflections
+        model.traverse((child) => {
+          if ((child as THREE.Mesh).isMesh) {
+            const mesh = child as THREE.Mesh;
+            mesh.castShadow = true;
+            mesh.receiveShadow = true;
+            if (mesh.material) {
+              const mat = mesh.material as THREE.MeshStandardMaterial;
+              mat.roughness = 0.28;
+              mat.metalness = 0.55;
+              mat.needsUpdate = true;
+            }
+          }
+        });
+
+        // Remove placeholder and mount loaded 3D model
+        airplaneGroup.remove(placeholder);
+        airplaneGroup.add(model);
+      },
+      undefined,
+      (err) => {
+        console.warn('Using procedural fallback for airliner model:', err);
+      }
+    );
+
+    // Mount airplane on primary orbital ring at x = 3.3
     airplaneGroup.position.set(3.3, 0, 0);
-    // Aerodynamic banking roll (-18 deg) so wings and cockpit are clearly visible to viewer
     airplaneGroup.rotation.y = -0.32;
     ring.add(airplaneGroup);
     airplaneRef.current = airplaneGroup;
 
     // I. Swooping Jet Contrail / Vapor Stream (Matching reference image)
-    const contrailGeo = new THREE.TorusGeometry(3.3, 0.038, 8, 48, -Math.PI / 3.8);
+    const contrailGeo = new THREE.TorusGeometry(3.3, 0.042, 8, 54, -Math.PI / 3.4);
     const contrailMat = new THREE.MeshBasicMaterial({
       color: 0x00d2ff,
       transparent: true,
-      opacity: 0.75,
+      opacity: 0.8,
     });
     const contrail = new THREE.Mesh(contrailGeo, contrailMat);
     ring.add(contrail);
