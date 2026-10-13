@@ -105,27 +105,24 @@ export const CampusLifeSection: React.FC<CampusLifeProps> = ({ onOpenModal }) =>
             className="absolute top-0 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-none z-20"
           >
             {/* Ceiling Bracket */}
-            <div className="w-8 h-3 rounded-b-md bg-gradient-to-r from-navy via-cyan to-navy shadow-md" />
+            <div className="w-10 h-3 rounded-b-md bg-gradient-to-r from-cyan via-blue-500 to-purple-500 shadow-[0_0_12px_rgba(0,240,255,0.75)]" />
 
-            {/* Hanging Cord */}
-            <div className="w-[2.5px] h-20 sm:h-28 bg-gradient-to-b from-navy via-[#0B2545] to-[#07172C]" />
+            {/* Hanging Cord with Animated Neon Energy Flow */}
+            <div className="w-[3px] h-20 sm:h-28 animate-neon-cord rounded-full" />
 
-            {/* Big School Bell Assembly (Recolored to Signature GenZ Dark Navy Blue) */}
+            {/* Big School Bell Assembly (Vibrant Animated Neon Color-Changing Bell) */}
             <div
               ref={bellRef}
-              className="relative w-56 sm:w-72 md:w-80 h-56 sm:h-72 md:h-80 -mt-2 drop-shadow-2xl"
+              className="relative w-56 sm:w-72 md:w-80 h-56 sm:h-72 md:h-80 -mt-2"
             >
-              {/* Dark Navy Bell Body (Matching GenZ Logo Dark Navy #0B2545) */}
+              {/* Dynamic Neon Color-Changing Bell Body */}
               <img
                 src="/assets/images/ring.webp"
-                alt="GenZ Dark Navy Traditional School Bell"
-                className="w-full h-full object-contain"
-                style={{
-                  filter: 'hue-rotate(170deg) saturate(260%) brightness(0.26) contrast(1.4) drop-shadow(0 20px 35px rgba(11, 37, 69, 0.65))',
-                }}
+                alt="GenZ Animated Neon School Bell"
+                className="w-full h-full object-contain animate-neon-bell"
               />
 
-              {/* Clapper / Bell Tongue in Dark Navy */}
+              {/* Clapper / Bell Tongue with Synchronized Neon Animation */}
               <div
                 ref={clapperRef}
                 className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 w-14 sm:w-16 h-14 sm:h-16"
@@ -133,15 +130,13 @@ export const CampusLifeSection: React.FC<CampusLifeProps> = ({ onOpenModal }) =>
                 <img
                   src="/assets/images/ring-bell.webp"
                   alt=""
-                  className="w-full h-full object-contain"
-                  style={{
-                    filter: 'hue-rotate(170deg) saturate(260%) brightness(0.26) contrast(1.4)',
-                  }}
+                  className="w-full h-full object-contain animate-neon-bell"
                 />
               </div>
 
-              {/* Acoustic Ring Ripples in Dark Navy & Cyan Accent */}
-              <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-28 h-28 rounded-full border border-navy/50 ring-1 ring-cyan/40 animate-ping pointer-events-none opacity-60" />
+              {/* Multi-Layered Expanding Neon Acoustic Energy Ripples */}
+              <div className="absolute bottom-10 left-1/2 w-28 h-28 rounded-full border-2 animate-neon-ripple-1 pointer-events-none" />
+              <div className="absolute bottom-10 left-1/2 w-28 h-28 rounded-full border-2 animate-neon-ripple-2 pointer-events-none" />
             </div>
           </div>
 
