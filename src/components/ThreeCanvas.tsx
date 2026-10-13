@@ -2,10 +2,6 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import airplaneModelUrl from '../assets/models/airplane.glb?url';
-import usaMapImg from '../assets/images/countries/usa-map-flag.jpg';
-import ukMapImg from '../assets/images/countries/uk-map-flag.jpg';
-import turkeyMapImg from '../assets/images/countries/turkey-map-flag.jpg';
-import malaysiaMapImg from '../assets/images/countries/malaysia-map-flag.jpg';
 
 interface ThreeCanvasProps {
   scrollProgress: number; // 0 to 1
@@ -24,7 +20,6 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
   const leftThrustRef = useRef<THREE.Mesh | null>(null);
   const rightThrustRef = useRef<THREE.Mesh | null>(null);
   const contrailRef = useRef<THREE.Mesh | null>(null);
-  const hotspotRingsRef = useRef<THREE.Mesh[]>([]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -104,235 +99,6 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     });
     const innerSphere = new THREE.Mesh(innerGeo, innerMat);
     globeGroup.add(innerSphere);
-
-    // 5B. Real-World Geographic Country Hubs with Map Flags & Illuminated Names
-    // (America, United Kingdom, Turkey, Malaysia)
-    const countryData = [
-      {
-        name: 'AMERICA',
-        subtitle: 'Ivy League & Top Unis',
-        lat: 38,
-        lon: -97,
-        image: usaMapImg,
-      },
-      {
-        name: 'UNITED KINGDOM',
-        subtitle: 'Cambridge & Russell Group',
-        lat: 54,
-        lon: -2,
-        image: ukMapImg,
-      },
-      {
-        name: 'TURKEY',
-        subtitle: 'Eurasian Campuses & Awards',
-        lat: 39,
-        lon: 35,
-        image: turkeyMapImg,
-      },
-      {
-        name: 'MALAYSIA',
-        subtitle: 'Asia-Pacific Education Hub',
-        lat: 4,
-        lon: 102,
-        image: malaysiaMapImg,
-      },
-    ];
-
-    const ringsList: THREE.Mesh[] = [];
-
-    countryData.forEach((c) => {
-      const latRad = c.lat * (Math.PI / 180);
-      const lonRad = (c.lon - 90) * (Math.PI / 180);
-      const R = 2.36;
-      const surfacePos = new THREE.Vector3(
-        R * Math.cos(latRad) * Math.sin(lonRad),
-        R * Math.sin(latRad),
-        R * Math.cos(latRad) * Math.cos(lonRad)
-      );
-      const normal = surfacePos.clone().normalize();
-      const badgePos = normal.clone().multiplyScalar(2.88);
-
-      // 1. Surface Beacon Ring
-      const beaconGeo = new THREE.RingGeometry(0.06, 0.12, 24);
-      const beaconMat = new THREE.MeshBasicMaterial({
-        color: 0x00f0ff,
-        side: THREE.DoubleSide,
-        transparent: true,
-        opacity: 0.85,
-        depthWrite: false,
-      });
-      const beaconRing = new THREE.Mesh(beaconGeo, beaconMat);
-      beaconRing.position.copy(surfacePos.clone().multiplyScalar(1.002));
-      beaconRing.lookAt(surfacePos.clone().multiplyScalar(2));
-      globeGroup.add(beaconRing);
-      ringsList.push(beaconRing);
-
-      // Surface Center Glowing Sphere
-      const dotGeo = new THREE.SphereGeometry(0.035, 12, 12);
-      const dotMat = new THREE.MeshBasicMaterial({ color: 0x00ffff });
-      const dot = new THREE.Mesh(dotGeo, dotMat);
-      dot.position.copy(surfacePos);
-      globeGroup.add(dot);
-
-      // 2. Luminous Neon Stem (surface to floating badge)
-      const stemGeo = new THREE.BufferGeometry().setFromPoints([surfacePos, badgePos]);
-      const stemMat = new THREE.LineBasicMaterial({
-        color: 0x00d2ff,
-        transparent: true,
-        opacity: 0.8,
-      });
-      const stem = new THREE.Line(stemGeo, stemMat);
-      globeGroup.add(stem);
-
-      // 3. Country Map Graphic on Globe Surface
-      const textureLoader = new THREE.TextureLoader();
-      textureLoader.load(c.image, (tex) => {
-        const mapPlaneGeo = new THREE.PlaneGeometry(0.72, 0.48);
-        const mapMat = new THREE.MeshBasicMaterial({
-          map: tex,
-          transparent: true,
-          opacity: 0.88,
-          depthWrite: false,
-          side: THREE.DoubleSide,
-        });
-        const mapMesh = new THREE.Mesh(mapPlaneGeo, mapMat);
-        mapMesh.position.copy(surfacePos.clone().multiplyScalar(1.004));
-        mapMesh.lookAt(surfacePos.clone().multiplyScalar(2));
-        globeGroup.add(mapMesh);
-      });
-
-      // 4. Floating 3D Billboard Badge with Country Map Flag & Name
-      const canvas = document.createElement('canvas');
-      canvas.width = 512;
-      canvas.height = 180;
-      const ctx = canvas.getContext('2d');
-
-      if (ctx) {
-        const drawBadge = (img?: HTMLImageElement) => {
-          ctx.clearRect(0, 0, 512, 180);
-
-          // Card Background with Glowing Cyan Border
-          ctx.fillStyle = 'rgba(7, 23, 44, 0.94)';
-          ctx.strokeStyle = '#00f0ff';
-          ctx.lineWidth = 4;
-          ctx.shadowColor = '#00f0ff';
-          ctx.shadowBlur = 18;
-
-          // Rounded rectangle
-          const x = 12, y = 12, w = 488, h = 156, r = 24;
-          ctx.beginPath();
-          ctx.moveTo(x + r, y);
-          ctx.lineTo(x + w - r, y);
-          ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-          ctx.lineTo(x + w, y + h - r);
-          ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-          ctx.lineTo(x + r, y + h);
-          ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-          ctx.lineTo(x, y + r);
-          ctx.quadraticCurveTo(x, y, x + r, y);
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
-
-          // Reset shadow
-          ctx.shadowBlur = 0;
-
-          // Flag Map Image (left box)
-          const imgX = 26, imgY = 24, imgW = 150, imgH = 132;
-          ctx.save();
-          const ir = 16;
-          ctx.beginPath();
-          ctx.moveTo(imgX + ir, imgY);
-          ctx.lineTo(imgX + imgW - ir, imgY);
-          ctx.quadraticCurveTo(imgX + imgW, imgY, imgX + imgW, imgY + ir);
-          ctx.lineTo(imgX + imgW, imgY + imgH - ir);
-          ctx.quadraticCurveTo(imgX + imgW, imgY + imgH, imgX + imgW - ir, imgY + imgH);
-          ctx.lineTo(imgX + ir, imgY + imgH);
-          ctx.quadraticCurveTo(imgX, imgY + imgH, imgX, imgY + imgH - ir);
-          ctx.lineTo(imgX, imgY + ir);
-          ctx.quadraticCurveTo(imgX, imgY, imgX + ir, imgY);
-          ctx.closePath();
-          ctx.clip();
-
-          if (img) {
-            ctx.drawImage(img, imgX, imgY, imgW, imgH);
-          } else {
-            ctx.fillStyle = '#0b2545';
-            ctx.fillRect(imgX, imgY, imgW, imgH);
-          }
-          ctx.restore();
-
-          // Flag container stroke
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
-          ctx.lineWidth = 2;
-          ctx.stroke();
-
-          // Country Name Typography
-          ctx.fillStyle = '#ffffff';
-          ctx.font = '900 36px "Outfit", "Plus Jakarta Sans", sans-serif';
-          ctx.textBaseline = 'top';
-          ctx.fillText(c.name, 194, 34);
-
-          // Subtitle
-          ctx.fillStyle = '#00d2ff';
-          ctx.font = '700 19px "Plus Jakarta Sans", sans-serif';
-          ctx.fillText(c.subtitle, 194, 82);
-
-          // Status Badge: "GLOBAL CAMPUS"
-          ctx.fillStyle = 'rgba(0, 240, 255, 0.15)';
-          ctx.strokeStyle = 'rgba(0, 240, 255, 0.6)';
-          ctx.lineWidth = 1.5;
-          const px = 194, py = 118, pw = 175, ph = 26, pr = 13;
-          ctx.beginPath();
-          ctx.moveTo(px + pr, py);
-          ctx.lineTo(px + pw - pr, py);
-          ctx.quadraticCurveTo(px + pw, py, px + pw, py + pr);
-          ctx.lineTo(px + pw, py + ph - pr);
-          ctx.quadraticCurveTo(px + pw, py + ph, px + pw - pr, py + ph);
-          ctx.lineTo(px + pr, py + ph);
-          ctx.quadraticCurveTo(px, py + ph, px, py + ph - pr);
-          ctx.lineTo(px, py + pr);
-          ctx.quadraticCurveTo(px, py, px + pr, py);
-          ctx.closePath();
-          ctx.fill();
-          ctx.stroke();
-
-          // Glowing dot
-          ctx.fillStyle = '#00f0ff';
-          ctx.beginPath();
-          ctx.arc(206, 131, 4, 0, Math.PI * 2);
-          ctx.fill();
-
-          ctx.fillStyle = '#ffffff';
-          ctx.font = '800 11.5px "Plus Jakarta Sans", sans-serif';
-          ctx.fillText('GLOBAL CAMPUS', 218, 125);
-        };
-
-        const spriteTex = new THREE.CanvasTexture(canvas);
-        const spriteMat = new THREE.SpriteMaterial({
-          map: spriteTex,
-          transparent: true,
-          depthTest: true,
-          depthWrite: false,
-        });
-        const sprite = new THREE.Sprite(spriteMat);
-        sprite.position.copy(badgePos);
-        sprite.scale.set(1.25, 0.44, 1);
-        globeGroup.add(sprite);
-
-        drawBadge();
-
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          drawBadge(img);
-          spriteTex.needsUpdate = true;
-        };
-        img.src = c.image;
-      }
-    });
-
-    hotspotRingsRef.current = ringsList;
 
     // Primary Orbital Ring (Matching logo airplane flight path)
     const ringGeo = new THREE.TorusGeometry(3.3, 0.045, 16, 120);
@@ -630,14 +396,6 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
         if (contrailMat) {
           contrailMat.opacity = 0.72 + Math.sin(time * 3.5) * 0.16;
         }
-      }
-
-      // Telemetry radar pulse on country hotspots
-      if (hotspotRingsRef.current.length > 0) {
-        hotspotRingsRef.current.forEach((r, idx) => {
-          const s = 1.0 + Math.sin(time * 4 + idx * 1.5) * 0.22;
-          r.scale.set(s, s, 1);
-        });
       }
 
       renderer.render(scene, camera);
