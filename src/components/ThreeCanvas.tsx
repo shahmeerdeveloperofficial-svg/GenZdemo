@@ -14,6 +14,10 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
   const ring2Ref = useRef<THREE.Mesh | null>(null);
   const ring3Ref = useRef<THREE.Mesh | null>(null);
   const particlesRef = useRef<THREE.Points | null>(null);
+  const airplaneRef = useRef<THREE.Group | null>(null);
+  const leftThrustRef = useRef<THREE.Mesh | null>(null);
+  const rightThrustRef = useRef<THREE.Mesh | null>(null);
+  const contrailRef = useRef<THREE.Mesh | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -129,17 +133,183 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     globeGroup.add(ring3);
     ring3Ref.current = ring3;
 
-    // Flight Particle (The Airplane beacon along the primary ring)
-    const airplaneBeaconGeo = new THREE.ConeGeometry(0.2, 0.5, 8);
-    const airplaneBeaconMat = new THREE.MeshStandardMaterial({
-      color: 0x0099ff,
-      emissive: 0x00a8ff,
-      emissiveIntensity: 0.9,
+    // ==========================================
+    // 6. Realistic 3D Jet Airplane & Contrail Stream
+    // (Matching the airliner in the user's reference image)
+    // ==========================================
+    const airplaneGroup = new THREE.Group();
+
+    // Jet Materials: Metallic deep sapphire navy with glowing cyan accents
+    const jetBodyMat = new THREE.MeshStandardMaterial({
+      color: 0x071e3d,
+      roughness: 0.28,
+      metalness: 0.72,
     });
-    const airplaneBeacon = new THREE.Mesh(airplaneBeaconGeo, airplaneBeaconMat);
-    airplaneBeacon.position.set(3.3, 0, 0);
-    airplaneBeacon.rotation.z = -Math.PI / 2;
-    ring.add(airplaneBeacon);
+
+    const jetWingMat = new THREE.MeshStandardMaterial({
+      color: 0x0b2545,
+      roughness: 0.32,
+      metalness: 0.65,
+    });
+
+    const jetCockpitMat = new THREE.MeshStandardMaterial({
+      color: 0x00f0ff,
+      emissive: 0x0099ff,
+      emissiveIntensity: 0.85,
+      roughness: 0.1,
+      metalness: 0.9,
+    });
+
+    const jetThrustMat = new THREE.MeshBasicMaterial({
+      color: 0x00f0ff,
+      transparent: true,
+      opacity: 0.9,
+    });
+
+    // A. Main Fuselage (Streamlined cylindrical cabin)
+    const cabinGeo = new THREE.CylinderGeometry(0.046, 0.052, 0.44, 16);
+    const cabin = new THREE.Mesh(cabinGeo, jetBodyMat);
+    airplaneGroup.add(cabin);
+
+    // B. Streamlined Nose Cone (Facing forward along +Y)
+    const noseGeo = new THREE.ConeGeometry(0.046, 0.26, 16);
+    const nose = new THREE.Mesh(noseGeo, jetBodyMat);
+    nose.position.y = 0.35;
+    airplaneGroup.add(nose);
+
+    // C. Cockpit Glass Canopy
+    const cockpitGeo = new THREE.SphereGeometry(0.038, 12, 12);
+    const cockpit = new THREE.Mesh(cockpitGeo, jetCockpitMat);
+    cockpit.position.set(0.024, 0.22, 0);
+    cockpit.scale.set(0.7, 1.5, 0.8);
+    airplaneGroup.add(cockpit);
+
+    // D. Tail Cone (Tapering backward to -Y)
+    const tailConeGeo = new THREE.CylinderGeometry(0.052, 0.016, 0.3, 16);
+    const tailCone = new THREE.Mesh(tailConeGeo, jetBodyMat);
+    tailCone.position.y = -0.37;
+    airplaneGroup.add(tailCone);
+
+    // E. Swept Jet Airliner Wings
+    const wingShape = new THREE.Shape();
+    wingShape.moveTo(0, 0.14);
+    wingShape.lineTo(0.58, -0.16);
+    wingShape.lineTo(0.55, -0.25);
+    wingShape.lineTo(0.05, -0.09);
+    wingShape.lineTo(-0.05, -0.09);
+    wingShape.lineTo(-0.55, -0.25);
+    wingShape.lineTo(-0.58, -0.16);
+    wingShape.closePath();
+
+    const wingGeo = new THREE.ExtrudeGeometry(wingShape, {
+      depth: 0.016,
+      bevelEnabled: true,
+      bevelSize: 0.004,
+      bevelThickness: 0.004,
+      bevelSegments: 2,
+    });
+    wingGeo.center();
+    const wings = new THREE.Mesh(wingGeo, jetWingMat);
+    airplaneGroup.add(wings);
+
+    // Winglet tips (turned upward along +X)
+    const wingletGeo = new THREE.ConeGeometry(0.016, 0.08, 8);
+    const rightWinglet = new THREE.Mesh(wingletGeo, jetCockpitMat);
+    rightWinglet.position.set(0.03, -0.20, 0.56);
+    rightWinglet.rotation.z = Math.PI / 12;
+    airplaneGroup.add(rightWinglet);
+
+    const leftWinglet = new THREE.Mesh(wingletGeo, jetCockpitMat);
+    leftWinglet.position.set(0.03, -0.20, -0.56);
+    leftWinglet.rotation.z = Math.PI / 12;
+    airplaneGroup.add(leftWinglet);
+
+    // F. Twin Turbofan Jet Engines with Glowing Cyan Exhaust
+    const engineGeo = new THREE.CylinderGeometry(0.03, 0.026, 0.18, 12);
+    const thrustGeo = new THREE.ConeGeometry(0.022, 0.16, 12);
+    thrustGeo.translate(0, -0.08, 0);
+
+    // Right Engine
+    const rightEngine = new THREE.Mesh(engineGeo, jetBodyMat);
+    rightEngine.position.set(-0.035, -0.02, 0.23);
+    airplaneGroup.add(rightEngine);
+
+    const rightThrust = new THREE.Mesh(thrustGeo, jetThrustMat);
+    rightThrust.position.set(-0.035, -0.11, 0.23);
+    rightThrust.rotation.x = Math.PI;
+    airplaneGroup.add(rightThrust);
+    rightThrustRef.current = rightThrust;
+
+    // Left Engine
+    const leftEngine = new THREE.Mesh(engineGeo, jetBodyMat);
+    leftEngine.position.set(-0.035, -0.02, -0.23);
+    airplaneGroup.add(leftEngine);
+
+    const leftThrust = new THREE.Mesh(thrustGeo, jetThrustMat);
+    leftThrust.position.set(-0.035, -0.11, -0.23);
+    leftThrust.rotation.x = Math.PI;
+    airplaneGroup.add(leftThrust);
+    leftThrustRef.current = leftThrust;
+
+    // G. Vertical Tail Fin (Swept back)
+    const finShape = new THREE.Shape();
+    finShape.moveTo(0, 0);
+    finShape.lineTo(0.24, -0.22);
+    finShape.lineTo(0.21, -0.29);
+    finShape.lineTo(0, -0.24);
+    finShape.closePath();
+
+    const finGeo = new THREE.ExtrudeGeometry(finShape, {
+      depth: 0.012,
+      bevelEnabled: true,
+      bevelSize: 0.003,
+      bevelThickness: 0.003,
+      bevelSegments: 2,
+    });
+    finGeo.center();
+    const fin = new THREE.Mesh(finGeo, jetWingMat);
+    fin.position.set(0.11, -0.38, 0);
+    airplaneGroup.add(fin);
+
+    // H. Horizontal Tail Elevators
+    const hTailShape = new THREE.Shape();
+    hTailShape.moveTo(0, -0.34);
+    hTailShape.lineTo(0.24, -0.46);
+    hTailShape.lineTo(0.22, -0.51);
+    hTailShape.lineTo(0, -0.48);
+    hTailShape.lineTo(-0.22, -0.51);
+    hTailShape.lineTo(-0.24, -0.46);
+    hTailShape.closePath();
+
+    const hTailGeo = new THREE.ExtrudeGeometry(hTailShape, {
+      depth: 0.01,
+      bevelEnabled: true,
+      bevelSize: 0.002,
+      bevelThickness: 0.002,
+      bevelSegments: 2,
+    });
+    hTailGeo.center();
+    const hTail = new THREE.Mesh(hTailGeo, jetWingMat);
+    hTail.position.set(0.01, 0, 0);
+    airplaneGroup.add(hTail);
+
+    // Position airplane on the orbital ring at x = 3.3
+    airplaneGroup.position.set(3.3, 0, 0);
+    // Aerodynamic banking roll (-18 deg) so wings and cockpit are clearly visible to viewer
+    airplaneGroup.rotation.y = -0.32;
+    ring.add(airplaneGroup);
+    airplaneRef.current = airplaneGroup;
+
+    // I. Swooping Jet Contrail / Vapor Stream (Matching reference image)
+    const contrailGeo = new THREE.TorusGeometry(3.3, 0.038, 8, 48, -Math.PI / 3.8);
+    const contrailMat = new THREE.MeshBasicMaterial({
+      color: 0x00d2ff,
+      transparent: true,
+      opacity: 0.75,
+    });
+    const contrail = new THREE.Mesh(contrailGeo, contrailMat);
+    ring.add(contrail);
+    contrailRef.current = contrail;
 
     // Starfield / Knowledge Particles
     const particlesCount = 220;
@@ -170,6 +340,8 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
       }
       animationFrameId = requestAnimationFrame(animate);
 
+      const time = performance.now() * 0.001;
+
       // Ambient continuous idle rotation
       if (globeGroupRef.current) {
         globeGroupRef.current.rotation.y += 0.0025;
@@ -185,6 +357,29 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
       }
       if (particlesRef.current) {
         particlesRef.current.rotation.y -= 0.0005;
+      }
+
+      // Airplane Dynamic Flight Dynamics (Banking & Pitching)
+      if (airplaneRef.current) {
+        // Dynamic banking roll into the flight curve
+        airplaneRef.current.rotation.y = -0.32 + Math.sin(time * 2.2) * 0.06;
+        // Subtle aerodynamic pitch oscillation
+        airplaneRef.current.rotation.z = Math.sin(time * 1.6) * 0.03;
+      }
+
+      // Dynamic Cyan Engine Thrust Plumes Pulse
+      if (leftThrustRef.current && rightThrustRef.current) {
+        const thrustScale = 1.0 + Math.sin(time * 14) * 0.35;
+        leftThrustRef.current.scale.set(1, thrustScale, 1);
+        rightThrustRef.current.scale.set(1, thrustScale, 1);
+      }
+
+      // Swooping Vapor Contrail Shimmer
+      if (contrailRef.current) {
+        const contrailMat = contrailRef.current.material as THREE.MeshBasicMaterial;
+        if (contrailMat) {
+          contrailMat.opacity = 0.72 + Math.sin(time * 3.5) * 0.16;
+        }
       }
 
       renderer.render(scene, camera);
