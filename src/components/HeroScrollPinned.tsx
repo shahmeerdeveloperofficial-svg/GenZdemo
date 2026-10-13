@@ -77,7 +77,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
       id="continuum"
     >
       {/* Sticky Fullscreen Viewport */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between py-6 px-6 sm:px-10 lg:px-16">
+      <div className="sticky top-0 h-[100dvh] w-full overflow-hidden flex flex-col justify-between py-2 sm:py-6 px-3 sm:px-10 lg:px-16">
         {/* SVG Goo Filter for Organic Liquid Bubbles */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -175,7 +175,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
               /* Phase 0: Hero Intro - 4 Transparent Corner Buttons + Top "Welcome to GenZ" */
               <motion.div
                 key="hero-intro"
-                className="relative w-full h-[76vh] flex flex-col justify-between"
+                className="relative w-full h-[78dvh] sm:h-[76vh] flex flex-col justify-between"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.95, y: -20 }}
@@ -188,19 +188,19 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.1 }}
                   >
-                    <div className="inline-flex items-center gap-3 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-[0_15px_35px_rgba(0,153,255,0.15)] hover:shadow-[0_20px_45px_rgba(0,153,255,0.25)] hover:scale-105 transition-all duration-300 group cursor-default">
-                      <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-cyan animate-pulse group-hover:rotate-45 transition-transform" />
-                      <span className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#07172C] tracking-tight">
+                    <div className="inline-flex items-center gap-2 sm:gap-3 px-4 sm:px-8 py-1.5 sm:py-3 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-[0_15px_35px_rgba(0,153,255,0.15)] hover:shadow-[0_20px_45px_rgba(0,153,255,0.25)] hover:scale-105 transition-all duration-300 group cursor-default">
+                      <Sparkles className="w-4 h-4 sm:w-6 sm:h-6 text-cyan animate-pulse group-hover:rotate-45 transition-transform" />
+                      <span className="font-display font-extrabold text-lg sm:text-3xl lg:text-4xl text-[#07172C] tracking-tight">
                         Welcome to <span className="bg-gradient-to-r from-navy via-cyan to-blue-600 bg-clip-text text-transparent group-hover:from-cyan group-hover:to-cyan-light transition-all">GenZ</span>
                       </span>
-                      <span className="w-2.5 h-2.5 rounded-full bg-cyan animate-ping" />
+                      <span className="w-2 sm:w-2.5 h-2 sm:h-2.5 rounded-full bg-cyan animate-ping" />
                     </div>
                   </motion.div>
                 </div>
 
                 {/* 2. THE 4 CORNERS: Ultra-Attractive Transparent Gooey Liquid Bubble Buttons */}
                 {/* CORNER 1: TOP-LEFT — USA */}
-                <div className="absolute top-2 left-0 sm:left-2 pointer-events-auto">
+                <div className="absolute top-12 sm:top-2 left-0 sm:left-2 pointer-events-auto">
                   <GooeyBubbleButton
                     country="USA"
                     subtitle="Ivy League & Top Unis"
@@ -211,7 +211,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 </div>
 
                 {/* CORNER 2: TOP-RIGHT — UK */}
-                <div className="absolute top-2 right-0 sm:right-2 pointer-events-auto">
+                <div className="absolute top-12 sm:top-2 right-0 sm:right-2 pointer-events-auto">
                   <GooeyBubbleButton
                     country="UK"
                     subtitle="Cambridge & Russell Group"
@@ -222,7 +222,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 </div>
 
                 {/* CORNER 3: BOTTOM-LEFT — MALAYSIA */}
-                <div className="absolute bottom-4 left-0 sm:left-2 pointer-events-auto">
+                <div className="absolute bottom-12 sm:bottom-4 left-0 sm:left-2 pointer-events-auto">
                   <GooeyBubbleButton
                     country="MALAYSIA"
                     subtitle="Asia-Pacific Education Hub"
@@ -233,7 +233,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 </div>
 
                 {/* CORNER 4: BOTTOM-RIGHT — TURKEY */}
-                <div className="absolute bottom-4 right-0 sm:right-2 pointer-events-auto">
+                <div className="absolute bottom-12 sm:bottom-4 right-0 sm:right-2 pointer-events-auto">
                   <GooeyBubbleButton
                     country="TURKEY"
                     subtitle="Eurasian Campuses & Awards"
@@ -247,7 +247,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
               /* Phases 1..5: Educational Continuum Stage Card */
               <motion.div
                 key={currentStage.id}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-white/95 backdrop-blur-2xl rounded-3xl p-6 sm:p-10 lg:p-12 border border-navy/10 shadow-2xl"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-center bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl p-4 sm:p-8 lg:p-12 border border-navy/10 shadow-2xl max-h-[78dvh] overflow-y-auto lg:overflow-visible"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -30 }}
@@ -256,32 +256,32 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 {/* Left: Stage Information */}
                 <div className="lg:col-span-7 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-3 mb-3">
-                      <span className="px-3.5 py-1 rounded-full bg-cyan text-white font-display text-xs font-black uppercase tracking-wider shadow-sm">
+                    <div className="flex items-center gap-3 mb-2 sm:mb-3">
+                      <span className="px-3 py-0.5 sm:px-3.5 sm:py-1 rounded-full bg-cyan text-white font-display text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm">
                         Stage 0{currentStage.stageNumber}
                       </span>
-                      <span className="text-xs font-bold text-slate-500">
+                      <span className="text-[11px] sm:text-xs font-bold text-slate-500">
                         {currentStage.ageRange}
                       </span>
                     </div>
 
-                    <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-extrabold text-navy mb-2 tracking-tight">
+                    <h2 className="font-display text-xl sm:text-3xl lg:text-5xl font-extrabold text-navy mb-1 sm:mb-2 tracking-tight">
                       {currentStage.name}
                     </h2>
-                    <div className="text-cyan font-display font-bold text-sm sm:text-base mb-4">
+                    <div className="text-cyan font-display font-bold text-xs sm:text-base mb-2 sm:mb-4">
                       {currentStage.subtitle}
                     </div>
 
-                    <p className="text-slate-600 text-sm sm:text-base leading-relaxed mb-6">
+                    <p className="text-slate-600 text-xs sm:text-base leading-relaxed mb-3 sm:mb-6 line-clamp-3 sm:line-clamp-none">
                       {currentStage.description}
                     </p>
 
                     {/* 4 Pillars */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
+                    <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-8">
                       {currentStage.pillars.map((pillar) => (
-                        <div key={pillar} className="flex items-start gap-2.5 p-2 rounded-xl bg-slate-50/80 border border-slate-100">
-                          <CheckCircle2 className="w-4 h-4 text-cyan flex-shrink-0 mt-0.5" />
-                          <span className="text-xs font-bold text-navy">
+                        <div key={pillar} className="flex items-start gap-1.5 sm:gap-2.5 p-1.5 sm:p-2 rounded-xl bg-slate-50/80 border border-slate-100">
+                          <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan flex-shrink-0 mt-0.5" />
+                          <span className="text-[10px] sm:text-xs font-bold text-navy leading-tight">
                             {pillar}
                           </span>
                         </div>
@@ -289,10 +289,10 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-navy/10">
+                  <div className="flex flex-wrap items-center justify-between gap-3 pt-3 sm:pt-6 border-t border-navy/10">
                     <button
                       onClick={onOpenModal}
-                      className="px-7 py-3.5 bg-navy text-white rounded-full font-display font-bold text-xs uppercase tracking-wider hover:bg-navy-dark shadow-md transition-all flex items-center gap-2 group"
+                      className="w-full sm:w-auto px-5 sm:px-7 py-2.5 sm:py-3.5 bg-navy text-white rounded-full font-display font-bold text-[11px] sm:text-xs uppercase tracking-wider hover:bg-navy-dark shadow-md transition-all flex items-center justify-center gap-2 group"
                     >
                       <span>Inquire for {currentStage.name}</span>
                       <ArrowRight className="w-4 h-4 text-cyan group-hover:translate-x-1 transition-transform" />
@@ -305,7 +305,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 </div>
 
                 {/* Right: High-Resolution Photographic Showcase */}
-                <div className="lg:col-span-5 relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-[4/4] bg-navy-dark shadow-xl group">
+                <div className="lg:col-span-5 relative rounded-xl sm:rounded-2xl overflow-hidden aspect-[16/9] sm:aspect-[4/3] lg:aspect-square bg-navy-dark shadow-xl group max-h-48 sm:max-h-64 lg:max-h-none">
                   <img
                     src={currentStage.image}
                     alt={currentStage.name}
@@ -314,12 +314,12 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                   <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/90 via-navy-dark/10 to-transparent" />
 
                   {/* Floating Badge */}
-                  <div className="absolute bottom-5 left-5 right-5 bg-navy/90 backdrop-blur-md p-4 rounded-xl border border-white/10 text-white shadow-lg">
-                    <div className="flex items-center gap-2 text-cyan-light text-xs font-bold uppercase tracking-wider mb-1">
-                      <Sparkles className="w-3.5 h-3.5 text-cyan" />
+                  <div className="absolute bottom-2.5 sm:bottom-5 left-2.5 sm:left-5 right-2.5 sm:right-5 bg-navy/90 backdrop-blur-md p-2.5 sm:p-4 rounded-lg sm:rounded-xl border border-white/10 text-white shadow-lg">
+                    <div className="flex items-center gap-1.5 sm:gap-2 text-cyan-light text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-0.5 sm:mb-1">
+                      <Sparkles className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyan" />
                       <span>{currentStage.accreditationBadge}</span>
                     </div>
-                    <p className="text-xs text-white/80 leading-snug">
+                    <p className="text-[10px] sm:text-xs text-white/80 leading-snug line-clamp-2 sm:line-clamp-none">
                       {currentStage.accreditationDetail}
                     </p>
                   </div>
@@ -330,29 +330,29 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
         </div>
 
         {/* Compact Bottom Action Dock - Exactly at the bottom position requested by user */}
-        <div className="relative z-30 flex flex-col items-center justify-center pb-3 pointer-events-auto">
+        <div className="relative z-30 flex flex-col items-center justify-center pb-1.5 sm:pb-3 pointer-events-auto">
           {activeStageIdx === -1 && (
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="flex items-center gap-2 sm:gap-3 backdrop-blur-xl bg-white/90 p-1.5 rounded-full border border-white/90 shadow-[0_8px_25px_rgba(11,37,69,0.12)]"
+              className="flex items-center gap-1.5 sm:gap-3 backdrop-blur-xl bg-white/90 p-1 sm:p-1.5 rounded-full border border-white/90 shadow-[0_8px_25px_rgba(11,37,69,0.12)] max-w-full"
             >
               <button
                 onClick={onOpenModal}
-                className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 bg-navy text-white rounded-full font-display font-bold text-xs tracking-wide hover:bg-navy-dark shadow-md hover:shadow-cyan-glow transition-all transform hover:-translate-y-0.5 group"
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 bg-navy text-white rounded-full font-display font-bold text-[10px] sm:text-xs tracking-wide hover:bg-navy-dark shadow-md hover:shadow-cyan-glow transition-all transform hover:-translate-y-0.5 group whitespace-nowrap"
               >
-                <Calendar className="w-3.5 h-3.5 text-cyan-light" />
-                <span>Book Private Campus Tour</span>
+                <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyan-light" />
+                <span>Book Campus Tour</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan group-hover:scale-150 transition-transform" />
               </button>
 
               <button
                 onClick={() => scrollToStage(0)}
-                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-white/95 text-navy hover:text-cyan border border-navy/15 rounded-full font-display font-bold text-xs hover:border-cyan transition-all shadow-sm group"
+                className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-white/95 text-navy hover:text-cyan border border-navy/15 rounded-full font-display font-bold text-[10px] sm:text-xs hover:border-cyan transition-all shadow-sm group whitespace-nowrap"
               >
-                <span>Scroll to Discover Stages</span>
-                <ChevronDown className="w-3.5 h-3.5 text-cyan group-hover:translate-y-0.5 transition-transform" />
+                <span>Discover Stages</span>
+                <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyan group-hover:translate-y-0.5 transition-transform" />
               </button>
             </motion.div>
           )}

@@ -122,12 +122,25 @@ export const GooeyBubbleButton: React.FC<GooeyBubbleButtonProps> = ({
     setIsHovered(false);
   };
 
+  const handleTouchStart = () => {
+    setIsHovered(true);
+    timelineRef.current?.restart();
+  };
+
+  const handleTouchEnd = () => {
+    setTimeout(() => {
+      setIsHovered(false);
+    }, 1200);
+  };
+
   return (
     <div
       ref={containerRef}
-      className={`button--bubble__container relative inline-block group pointer-events-auto ${className}`}
+      className={`button--bubble__container relative inline-block group pointer-events-auto touch-manipulation ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {/* 1. Behind: Gooey Liquid SVG Effect Container */}
       <div
@@ -154,33 +167,33 @@ export const GooeyBubbleButton: React.FC<GooeyBubbleButtonProps> = ({
       <button
         type="button"
         onClick={onClick}
-        className="button--bubble relative z-10 flex items-center gap-3.5 px-4 py-2 sm:py-2.5 rounded-full bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/20 hover:border-cyan/90 shadow-[0_8px_30px_rgba(0,153,255,0.08)] hover:shadow-[0_0_30px_rgba(0,210,255,0.55)] transition-all duration-300 cursor-pointer focus:outline-none"
+        className="button--bubble relative z-10 flex items-center gap-2 sm:gap-3.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-full bg-white/5 hover:bg-white/15 active:bg-white/20 backdrop-blur-md border border-white/20 hover:border-cyan/90 shadow-[0_8px_30px_rgba(0,153,255,0.08)] hover:shadow-[0_0_30px_rgba(0,210,255,0.55)] transition-all duration-300 cursor-pointer focus:outline-none"
       >
         {align === 'left' && (
-          <div className="relative w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/85 via-navy/60 to-cyan/85 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.9)] transition-all duration-500 flex-shrink-0">
+          <div className="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/85 via-navy/60 to-cyan/85 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.9)] transition-all duration-500 flex-shrink-0">
             <span className="absolute inset-0 rounded-full border border-cyan/40 animate-ping opacity-40 pointer-events-none" />
             <span className="absolute -inset-1 rounded-full border border-cyan/30 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 pointer-events-none" />
-            <Icon className="w-5 h-5 text-white group-hover:rotate-[360deg] transition-transform duration-700 ease-out" />
+            <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:rotate-[360deg] transition-transform duration-700 ease-out" />
           </div>
         )}
 
         <div className={align === 'right' ? 'text-right' : 'text-left'}>
           <div
-            className="text-base sm:text-lg font-display font-black tracking-widest text-[#07172C] group-hover:text-cyan transition-colors"
+            className="text-xs sm:text-base lg:text-lg font-display font-black tracking-wider sm:tracking-widest text-[#07172C] group-hover:text-cyan transition-colors leading-tight"
             style={{ textShadow: '0 0 16px rgba(255,255,255,1), 0 1px 2px rgba(255,255,255,0.9)' }}
           >
             {country}
           </div>
-          <div className="text-[9px] sm:text-[10px] font-extrabold text-[#0B2545]/85 uppercase tracking-wider">
+          <div className="text-[8px] sm:text-[10px] font-extrabold text-[#0B2545]/85 uppercase tracking-wider hidden xs:block sm:block leading-tight">
             {subtitle}
           </div>
         </div>
 
         {align === 'right' && (
-          <div className="relative w-11 h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/85 via-navy/60 to-cyan/85 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.9)] transition-all duration-500 flex-shrink-0">
+          <div className="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/85 via-navy/60 to-cyan/85 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.9)] transition-all duration-500 flex-shrink-0">
             <span className="absolute inset-0 rounded-full border border-cyan/40 animate-ping opacity-40 pointer-events-none" />
             <span className="absolute -inset-1 rounded-full border border-cyan/30 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 pointer-events-none" />
-            <Icon className="w-5 h-5 text-white group-hover:rotate-[360deg] transition-transform duration-700 ease-out" />
+            <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:rotate-[360deg] transition-transform duration-700 ease-out" />
           </div>
         )}
       </button>

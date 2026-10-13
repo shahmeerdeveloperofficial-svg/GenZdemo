@@ -25,9 +25,13 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // 2. Camera with adaptive perspective
+    // 2. Camera with adaptive perspective for mobile & desktop
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.z = 8.5;
+    const getTargetZ = (w: number) => (w < 480 ? 13.5 : w < 768 ? 11.5 : w < 1024 ? 9.8 : 8.5);
+    camera.position.z = getTargetZ(width);
+    if (width < 640) {
+      camera.position.y = 0.2;
+    }
 
     // 3. Renderer with transparent background and crisp pixel ratio
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -179,6 +183,12 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
       const newWidth = containerRef.current.clientWidth || window.innerWidth;
       const newHeight = containerRef.current.clientHeight || window.innerHeight;
       camera.aspect = newWidth / newHeight;
+      camera.position.z = getTargetZ(newWidth);
+      if (newWidth < 640) {
+        camera.position.y = 0.2;
+      } else {
+        camera.position.y = 0;
+      }
       camera.updateProjectionMatrix();
       renderer.setSize(newWidth, newHeight);
     };

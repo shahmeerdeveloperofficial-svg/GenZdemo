@@ -73,7 +73,7 @@ export const LMSAndCRMSection: React.FC<LMSCRMProps> = ({ onOpenPortalModal }) =
         </div>
 
         {/* 4 Multi-Role Tab Switcher */}
-        <div className="flex items-center justify-center flex-wrap gap-3 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex items-center justify-center gap-2.5 sm:gap-3 mb-8 sm:mb-12">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             const isActive = activeTab === tab.id;
@@ -81,22 +81,22 @@ export const LMSAndCRMSection: React.FC<LMSCRMProps> = ({ onOpenPortalModal }) =
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-6 py-3.5 rounded-2xl font-display text-xs sm:text-sm font-bold transition-all duration-300 ${
+                className={`flex items-center gap-2.5 sm:gap-3 px-4 sm:px-6 py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl font-display text-xs sm:text-sm font-bold transition-all duration-300 w-full sm:w-auto ${
                   isActive
-                    ? 'bg-navy text-white shadow-xl shadow-cyan/20 ring-2 ring-cyan/50 scale-105'
+                    ? 'bg-navy text-white shadow-xl shadow-cyan/20 ring-2 ring-cyan/50 scale-102 sm:scale-105'
                     : 'bg-white text-slate-700 hover:bg-slate-50 hover:text-navy border border-navy/10 shadow-sm'
                 }`}
               >
                 <div
-                  className={`w-8 h-8 rounded-xl flex items-center justify-center transition-colors ${
+                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg sm:rounded-xl flex items-center justify-center transition-colors flex-shrink-0 ${
                     isActive ? 'bg-cyan text-white' : 'bg-cyan/10 text-cyan'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div className="text-left">
-                  <div className="leading-tight">{tab.label}</div>
-                  <div className={`text-[10px] font-semibold ${isActive ? 'text-cyan-light' : 'text-slate-400'}`}>
+                  <div className="leading-tight text-xs sm:text-sm">{tab.label}</div>
+                  <div className={`text-[9px] sm:text-[10px] font-semibold ${isActive ? 'text-cyan-light' : 'text-slate-400'}`}>
                     {tab.tag}
                   </div>
                 </div>
@@ -106,29 +106,29 @@ export const LMSAndCRMSection: React.FC<LMSCRMProps> = ({ onOpenPortalModal }) =
         </div>
 
         {/* Dynamic Interactive Portal Dashboard Interface Container */}
-        <div className="bg-[#07172C] rounded-[32px] sm:rounded-[40px] p-4 sm:p-8 lg:p-10 border-4 border-slate-700/60 shadow-2xl relative overflow-hidden text-white">
+        <div className="bg-[#07172C] rounded-[24px] sm:rounded-[40px] p-3.5 sm:p-8 lg:p-10 border-2 sm:border-4 border-slate-700/60 shadow-2xl relative overflow-hidden text-white">
           {/* Top Browser / OS Window Bar */}
-          <div className="flex items-center justify-between pb-6 mb-6 border-b border-white/10 text-xs text-white/70">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-4 sm:pb-6 mb-4 sm:mb-6 border-b border-white/10 text-xs text-white/70">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="flex items-center gap-1.5">
-                <span className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <span className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500/80" />
+                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-rose-500/80" />
+                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-amber-500/80" />
+                <span className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-emerald-500/80" />
               </div>
               <span className="text-white/40 hidden sm:inline">|</span>
-              <span className="font-mono text-[11px] text-cyan-light hidden sm:inline">
+              <span className="font-mono text-[10px] sm:text-[11px] text-cyan-light hidden sm:inline">
                 https://portal.genz.edu.pk/cloud-core/{activeTab}
               </span>
             </div>
 
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] sm:text-[10px] font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
                 Live Cloud Sync
               </span>
               <button
                 onClick={() => onOpenPortalModal(activeTab)}
-                className="px-4 py-1.5 rounded-full bg-cyan hover:bg-cyan-light text-navy font-display font-bold text-xs uppercase tracking-wider transition-all shadow-md"
+                className="px-3 sm:px-4 py-1.5 rounded-full bg-cyan hover:bg-cyan-light text-navy font-display font-bold text-[10px] sm:text-xs uppercase tracking-wider transition-all shadow-md"
               >
                 Launch Demo Console
               </button>

@@ -84,9 +84,9 @@ export const AdmissionsFlightPlan: React.FC<AdmissionsProps> = ({ onOpenModal })
             className="relative w-full max-w-4xl mx-auto cursor-pointer"
           >
             {/* Main iPad Device Frame */}
-            <div className="relative z-10 w-full aspect-[16/11] sm:aspect-[16/10.5] rounded-[36px] sm:rounded-[48px] bg-gradient-to-b from-[#0F2A4A] to-[#07172C] p-3 sm:p-5 shadow-2xl border-4 border-slate-600/50">
+            <div className="relative z-10 w-full aspect-auto sm:aspect-[16/10.5] rounded-[24px] sm:rounded-[48px] bg-gradient-to-b from-[#0F2A4A] to-[#07172C] p-2 sm:p-5 shadow-2xl border-2 sm:border-4 border-slate-600/50">
               {/* Glossy Screen Rim */}
-              <div className="relative w-full h-full rounded-[26px] sm:rounded-[38px] bg-gradient-to-b from-[#0B2240] to-[#07172C] overflow-hidden flex flex-col justify-between p-4 sm:p-7 px-8 sm:px-14 md:px-24 shadow-inner border border-white/10 text-white">
+              <div className="relative w-full h-full rounded-[18px] sm:rounded-[38px] bg-gradient-to-b from-[#0B2240] to-[#07172C] overflow-hidden flex flex-col justify-between p-3.5 sm:p-7 px-3.5 sm:px-14 md:px-24 shadow-inner border border-white/10 text-white">
                 {/* Diagonal Glass Sheen */}
                 <div className="absolute -inset-full bg-gradient-to-tr from-transparent via-white/5 to-transparent rotate-12 pointer-events-none animate-pulse" />
 
@@ -205,7 +205,7 @@ export const AdmissionsFlightPlan: React.FC<AdmissionsProps> = ({ onOpenModal })
             </div>
 
             {/* Hands Layer: Positioned over the outer tablet bezel holding it firmly from left and right! */}
-            <div className="absolute -inset-x-8 sm:-inset-x-12 -inset-y-4 pointer-events-none z-30 flex items-center justify-center">
+            <div className="hidden md:flex absolute -inset-x-8 sm:-inset-x-12 -inset-y-4 pointer-events-none z-30 items-center justify-center">
               <img
                 src="/assets/images/mac-holdings-hands.webp"
                 alt="Hands holding iPad"
