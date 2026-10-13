@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { SlowMo } from 'gsap/EasePack';
+import { getCountryFlag } from './CountryFlags';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(SlowMo);
@@ -11,6 +12,7 @@ interface GooeyBubbleButtonProps {
   subtitle: string;
   icon: React.ComponentType<{ className?: string }>;
   align?: 'left' | 'right';
+  flagPlacement?: 'top' | 'bottom';
   onClick?: () => void;
   className?: string;
 }
@@ -20,9 +22,11 @@ export const GooeyBubbleButton: React.FC<GooeyBubbleButtonProps> = ({
   subtitle,
   icon: Icon,
   align = 'left',
+  flagPlacement = 'top',
   onClick,
   className = '',
 }) => {
+  const Flag = getCountryFlag(country);
   const containerRef = useRef<HTMLDivElement>(null);
   const effectContainerRef = useRef<HTMLDivElement>(null);
   const effectBtnRef = useRef<HTMLSpanElement>(null);
@@ -163,17 +167,37 @@ export const GooeyBubbleButton: React.FC<GooeyBubbleButtonProps> = ({
         <span ref={br2Ref} className="circle bottom-right" />
       </div>
 
-      {/* 2. In Front: 100% Fully Transparent Glass Button with Ramotion Spin Disc */}
+      {/* 2. In Front: 100% Fully Transparent Glass Button with Interactive Country Flag */}
       <button
         type="button"
         onClick={onClick}
         className="button--bubble relative z-10 flex items-center gap-2 sm:gap-3.5 px-2.5 sm:px-4 py-1.5 sm:py-2.5 rounded-full bg-white/5 hover:bg-white/15 active:bg-white/20 backdrop-blur-md border border-white/20 hover:border-cyan/90 shadow-[0_8px_30px_rgba(0,153,255,0.08)] hover:shadow-[0_0_30px_rgba(0,210,255,0.55)] transition-all duration-300 cursor-pointer focus:outline-none"
       >
         {align === 'left' && (
-          <div className="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/85 via-navy/60 to-cyan/85 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.9)] transition-all duration-500 flex-shrink-0">
+          <div className="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/90 via-navy/70 to-cyan/90 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.95)] transition-all duration-500 flex-shrink-0 overflow-hidden">
             <span className="absolute inset-0 rounded-full border border-cyan/40 animate-ping opacity-40 pointer-events-none" />
             <span className="absolute -inset-1 rounded-full border border-cyan/30 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 pointer-events-none" />
-            <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:rotate-[360deg] transition-transform duration-700 ease-out" />
+
+            {/* Default State: Icon */}
+            <div
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-500 transform ${
+                isHovered ? 'scale-0 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100'
+              }`}
+            >
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            </div>
+
+            {/* Hover State: Country National Flag Pops Open */}
+            {Flag && (
+              <div
+                className={`absolute inset-0 rounded-full overflow-hidden flex items-center justify-center transition-all duration-500 transform ${
+                  isHovered ? 'scale-100 rotate-0 opacity-100' : 'scale-0 -rotate-90 opacity-0'
+                }`}
+              >
+                <Flag className="w-full h-full object-cover scale-125" />
+                <div className="absolute inset-0 rounded-full ring-2 ring-cyan shadow-[inset_0_0_8px_rgba(0,210,255,0.7)] pointer-events-none" />
+              </div>
+            )}
           </div>
         )}
 
@@ -190,13 +214,66 @@ export const GooeyBubbleButton: React.FC<GooeyBubbleButtonProps> = ({
         </div>
 
         {align === 'right' && (
-          <div className="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/85 via-navy/60 to-cyan/85 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.9)] transition-all duration-500 flex-shrink-0">
+          <div className="relative w-8 h-8 sm:w-11 sm:h-11 rounded-full flex items-center justify-center bg-gradient-to-br from-[#0B2545]/90 via-navy/70 to-cyan/90 border border-white/30 shadow-md group-hover:border-cyan group-hover:shadow-[0_0_22px_rgba(0,210,255,0.95)] transition-all duration-500 flex-shrink-0 overflow-hidden">
             <span className="absolute inset-0 rounded-full border border-cyan/40 animate-ping opacity-40 pointer-events-none" />
             <span className="absolute -inset-1 rounded-full border border-cyan/30 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 pointer-events-none" />
-            <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white group-hover:rotate-[360deg] transition-transform duration-700 ease-out" />
+
+            {/* Default State: Icon */}
+            <div
+              className={`absolute inset-0 flex items-center justify-center transition-all duration-500 transform ${
+                isHovered ? 'scale-0 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100'
+              }`}
+            >
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+            </div>
+
+            {/* Hover State: Country National Flag Pops Open */}
+            {Flag && (
+              <div
+                className={`absolute inset-0 rounded-full overflow-hidden flex items-center justify-center transition-all duration-500 transform ${
+                  isHovered ? 'scale-100 rotate-0 opacity-100' : 'scale-0 -rotate-90 opacity-0'
+                }`}
+              >
+                <Flag className="w-full h-full object-cover scale-125" />
+                <div className="absolute inset-0 rounded-full ring-2 ring-cyan shadow-[inset_0_0_8px_rgba(0,210,255,0.7)] pointer-events-none" />
+              </div>
+            )}
           </div>
         )}
       </button>
+
+      {/* Floating Animated Flag Unfold Badge (Opens on hover) */}
+      {Flag && (
+        <div
+          className={`absolute ${
+            align === 'left' ? 'left-0 sm:left-1' : 'right-0 sm:right-1'
+          } ${
+            flagPlacement === 'bottom'
+              ? 'top-full mt-2 sm:mt-2.5'
+              : 'bottom-full mb-2 sm:mb-2.5'
+          } z-30 transition-all duration-400 ease-out transform pointer-events-none ${
+            isHovered
+              ? 'opacity-100 translate-y-0 scale-100'
+              : flagPlacement === 'bottom'
+              ? 'opacity-0 -translate-y-2 scale-90'
+              : 'opacity-0 translate-y-2 scale-90'
+          }`}
+        >
+          <div className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-white/95 backdrop-blur-xl border border-cyan/40 shadow-[0_12px_32px_rgba(0,153,255,0.3)] ring-1 ring-white/80">
+            <div className="w-7 h-5 sm:w-8 sm:h-5.5 rounded overflow-hidden shadow-sm border border-slate-300 flex-shrink-0 animate-pulse">
+              <Flag className="w-full h-full object-cover" />
+            </div>
+            <div className="flex flex-col whitespace-nowrap">
+              <span className="text-[11px] sm:text-xs font-black text-[#07172C] leading-none tracking-tight">
+                {country === 'USA' ? 'United States' : country === 'UK' ? 'United Kingdom' : country}
+              </span>
+              <span className="text-[8.5px] sm:text-[9.5px] font-bold text-cyan leading-none mt-0.5">
+                Official Destination
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -207,7 +207,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                   </motion.div>
                 </div>
 
-                {/* 2. THE 4 CORNERS: Ultra-Attractive Transparent Gooey Liquid Bubble Buttons */}
+                {/* 2. THE 4 CORNERS: Ultra-Attractive Transparent Gooey Liquid Bubble Buttons with Animated Flags */}
                 {/* CORNER 1: TOP-LEFT — USA */}
                 <div className="absolute top-12 sm:top-2 left-0 sm:left-2 pointer-events-auto">
                   <GooeyBubbleButton
@@ -215,6 +215,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                     subtitle="Ivy League & Top Unis"
                     icon={Globe2}
                     align="left"
+                    flagPlacement="bottom"
                     onClick={onOpenModal}
                   />
                 </div>
@@ -226,6 +227,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                     subtitle="Cambridge & Russell Group"
                     icon={GraduationCap}
                     align="right"
+                    flagPlacement="bottom"
                     onClick={onOpenModal}
                   />
                 </div>
@@ -237,6 +239,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                     subtitle="Asia-Pacific Education Hub"
                     icon={Compass}
                     align="left"
+                    flagPlacement="top"
                     onClick={onOpenModal}
                   />
                 </div>
@@ -248,6 +251,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                     subtitle="Eurasian Campuses & Awards"
                     icon={Award}
                     align="right"
+                    flagPlacement="top"
                     onClick={onOpenModal}
                   />
                 </div>
