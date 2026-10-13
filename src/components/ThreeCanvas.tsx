@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import airplaneModelUrl from '../assets/models/airplane.glb?url';
 
 interface ThreeCanvasProps {
   scrollProgress: number; // 0 to 1
@@ -273,7 +274,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     // Load Complete 3D Airliner Model (.glb)
     const gltfLoader = new GLTFLoader();
     gltfLoader.load(
-      '/models/airplane.glb',
+      airplaneModelUrl,
       (gltf) => {
         const model = gltf.scene;
         // Proportion matching orbital flight ring
