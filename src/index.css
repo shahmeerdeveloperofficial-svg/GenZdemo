@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-navy: #0B2545;
+  --color-navy-dark: #07172C;
+  --color-cyan: #0099FF;
+  --color-cyan-vibrant: #00A8FF;
+  --color-cyan-light: #38BDF8;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  color: #0B2545;
+  background-color: #F8FAFC;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #0099FF;
+}
+
+/* Blinking Cursor Reveal Effect */
+.heading-cursor-line {
+  display: inline-block;
+  color: #0099FF;
+  font-weight: 300;
+  animation: cursorBlink 1s infinite steps(1);
+  margin-left: 2px;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Traveling Animated SVG Circuit Line (Signature LA International Effect) */
+.webflow-animated-line {
+  stroke-dasharray: 25 140;
+  animation: travelingLineAnim 3s linear infinite;
+  stroke-linecap: round;
+}
+
+@keyframes travelingLineAnim {
+  0% { stroke-dashoffset: 25; }
+  100% { stroke-dashoffset: -140; }
+}
+
+/* Aerospace Jet Trail Float */
+@keyframes floatSwoosh {
+  0% { transform: translateY(0) rotate(0deg); }
+  100% { transform: translateY(-25px) rotate(-3deg); }
+}
+
+.animate-swoosh {
+  animation: floatSwoosh 12s infinite alternate ease-in-out;
+}
+
+/* Infinite Wave Marquee */
+@keyframes scrollMarquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+.animate-marquee {
+  display: flex;
+  min-width: 100%;
+  animation: scrollMarquee 30s linear infinite;
+}
+
+.animate-marquee-reverse {
+  display: flex;
+  min-width: 100%;
+  animation: scrollMarquee 30s linear infinite reverse;
+}
+
+/* Glassmorphic Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(11, 37, 69, 0.08);
+}
+
+.glass-panel-dark {
+  background: rgba(11, 37, 69, 0.85);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+/* Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
