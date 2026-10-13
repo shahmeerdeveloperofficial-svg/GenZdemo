@@ -6,6 +6,21 @@ export default defineConfig({
   server: {
     port: 5173,
     open: false,
-    host: true
-  }
+    host: true,
+  },
+  build: {
+    target: 'esnext',
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 800,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-three': ['three'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-gsap': ['gsap'],
+          'vendor-icons': ['lucide-react'],
+        },
+      },
+    },
+  },
 });

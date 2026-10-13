@@ -15,35 +15,44 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
   const [activeStageIdx, setActiveStageIdx] = useState(-1); // -1 = Hero Intro, 0..4 = Stages
 
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const containerHeight = containerRef.current.scrollHeight - window.innerHeight;
-      const scrolled = -rect.top;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (containerRef.current) {
+            const rect = containerRef.current.getBoundingClientRect();
+            const containerHeight = containerRef.current.scrollHeight - window.innerHeight;
+            const scrolled = -rect.top;
 
-      let progress = scrolled / containerHeight;
-      progress = Math.max(0, Math.min(1, progress));
-      setScrollProgress(progress);
+            let progress = scrolled / containerHeight;
+            progress = Math.max(0, Math.min(1, progress));
+            setScrollProgress(progress);
 
-      // Phase distribution:
-      // 0.00 - 0.16 : Hero Intro Screen with 3D Globe
-      // 0.16 - 0.33 : Stage 01 (Early Years Foundation)
-      // 0.33 - 0.50 : Stage 02 (Primary Continuum)
-      // 0.50 - 0.67 : Stage 03 (Middle Years Academy)
-      // 0.67 - 0.84 : Stage 04 (Senior Cambridge A-Levels)
-      // 0.84 - 1.00 : Stage 05 (Beyond GenZ Flight Path)
-      if (progress < 0.15) {
-        setActiveStageIdx(-1);
-      } else if (progress < 0.32) {
-        setActiveStageIdx(0);
-      } else if (progress < 0.49) {
-        setActiveStageIdx(1);
-      } else if (progress < 0.66) {
-        setActiveStageIdx(2);
-      } else if (progress < 0.83) {
-        setActiveStageIdx(3);
-      } else {
-        setActiveStageIdx(4);
+            // Phase distribution:
+            // 0.00 - 0.16 : Hero Intro Screen with 3D Globe
+            // 0.16 - 0.33 : Stage 01 (Early Years Foundation)
+            // 0.33 - 0.50 : Stage 02 (Primary Continuum)
+            // 0.50 - 0.67 : Stage 03 (Middle Years Academy)
+            // 0.67 - 0.84 : Stage 04 (Senior Cambridge A-Levels)
+            // 0.84 - 1.00 : Stage 05 (Beyond GenZ Flight Path)
+            if (progress < 0.15) {
+              setActiveStageIdx(-1);
+            } else if (progress < 0.32) {
+              setActiveStageIdx(0);
+            } else if (progress < 0.49) {
+              setActiveStageIdx(1);
+            } else if (progress < 0.66) {
+              setActiveStageIdx(2);
+            } else if (progress < 0.83) {
+              setActiveStageIdx(3);
+            } else {
+              setActiveStageIdx(4);
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 

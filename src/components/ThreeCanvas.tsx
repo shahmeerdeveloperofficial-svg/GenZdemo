@@ -33,10 +33,18 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
       camera.position.y = 0.2;
     }
 
-    // 3. Renderer with transparent background and crisp pixel ratio
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    // 3. High-Performance Renderer with adaptive mobile DPR
+    const isMobile = width < 768;
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.75 : 2);
+    const renderer = new THREE.WebGLRenderer({
+      antialias: !isMobile || dpr < 2,
+      alpha: true,
+      powerPreference: 'high-performance',
+      stencil: false,
+      depth: true,
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(dpr);
     renderer.domElement.style.width = '100%';
     renderer.domElement.style.height = '100%';
     renderer.domElement.style.display = 'block';
@@ -151,30 +159,52 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     scene.add(particles);
     particlesRef.current = particles;
 
-    // Animation Loop
-    let animationFrameId: number;
+    // Animation Loop with Visibility Caching
+    let animationFrameId: number = 0;
+    let isVisible = true;
+
     const animate = () => {
+      if (!isVisible) {
+        animationFrameId = 0;
+        return;
+      }
       animationFrameId = requestAnimationFrame(animate);
 
       // Ambient continuous idle rotation
       if (globeGroupRef.current) {
-        globeGroupRef.current.rotation.y += 0.003;
+        globeGroupRef.current.rotation.y += 0.0025;
       }
       if (ringRef.current) {
-        ringRef.current.rotation.z += 0.01;
+        ringRef.current.rotation.z += 0.008;
       }
       if (ring2Ref.current) {
-        ring2Ref.current.rotation.z -= 0.007;
+        ring2Ref.current.rotation.z -= 0.005;
       }
       if (ring3Ref.current) {
-        ring3Ref.current.rotation.z += 0.005;
+        ring3Ref.current.rotation.z += 0.004;
       }
       if (particlesRef.current) {
-        particlesRef.current.rotation.y -= 0.0007;
+        particlesRef.current.rotation.y -= 0.0005;
       }
 
       renderer.render(scene, camera);
     };
+
+    // IntersectionObserver to pause rendering when offscreen
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== 'undefined' && containerRef.current) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          isVisible = entry.isIntersecting;
+          if (isVisible && !animationFrameId) {
+            animate();
+          }
+        },
+        { rootMargin: '120px' }
+      );
+      observer.observe(containerRef.current);
+    }
+
     animate();
 
     // Resize Handler
@@ -195,8 +225,11 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     window.addEventListener('resize', handleResize);
 
     return () => {
+      if (observer) observer.disconnect();
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationFrameId);
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
       if (renderer.domElement && renderer.domElement.parentNode) {
         renderer.domElement.parentNode.removeChild(renderer.domElement);
       }

@@ -9,10 +9,10 @@ export const SmoothScroll: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     // 1. Initialize Lenis with smooth inertial scrolling
     const lenis = new Lenis({
-      duration: 1.4,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.0,
     });
 
     // 2. Synchronize Lenis with GSAP's ScrollTrigger
@@ -23,7 +23,7 @@ export const SmoothScroll: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     gsap.ticker.add(tickerCallback);
-    gsap.ticker.lagSmoothing(0);
+    gsap.ticker.lagSmoothing(500, 33);
 
     return () => {
       gsap.ticker.remove(tickerCallback);
