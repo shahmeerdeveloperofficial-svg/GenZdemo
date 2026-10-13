@@ -113,3 +113,69 @@ html {
     scroll-behavior: auto !important;
   }
 }
+
+/* Gooey Liquid Bubble Button System */
+.button--bubble__container {
+  position: relative;
+  display: inline-block;
+}
+
+.button--bubble {
+  position: relative;
+  z-index: 2;
+  background: transparent;
+  user-select: none;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.button--bubble:active {
+  transform: scale(0.96);
+}
+
+.button--bubble__effect-container {
+  position: absolute;
+  display: block;
+  width: 220%;
+  height: 420%;
+  top: -160%;
+  left: -60%;
+  -webkit-filter: url("#goo");
+  filter: url("#goo");
+  pointer-events: none;
+  z-index: 0;
+}
+
+.button--bubble__effect-container .circle {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00f0ff 0%, #0088ff 100%);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.9);
+  transition: background 0.15s ease-out;
+}
+
+.button--bubble__effect-container .circle.top-left {
+  top: 40%;
+  left: 28%;
+}
+
+.button--bubble__effect-container .circle.bottom-right {
+  bottom: 40%;
+  right: 28%;
+}
+
+.button--bubble__effect-container .effect-button {
+  position: absolute;
+  width: 46%;
+  height: 24%;
+  top: 50%;
+  left: 27%;
+  z-index: 1;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.45) 0%, rgba(0, 136, 255, 0.35) 100%);
+  border: 1.5px solid rgba(0, 240, 255, 0.7);
+  box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+  transition: background 0.15s ease-out;
+}

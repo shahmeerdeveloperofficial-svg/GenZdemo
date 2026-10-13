@@ -56,13 +56,13 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     scene.add(globeGroup);
     globeGroupRef.current = globeGroup;
 
-    // Ethereal Holographic Latitude & Longitude Sphere (Clean, futuristic, non-intrusive)
-    const sphereGeo = new THREE.SphereGeometry(2.35, 24, 18);
+    // Ethereal Holographic Latitude & Longitude Sphere (Crisp, futuristic, glowing cyan)
+    const sphereGeo = new THREE.SphereGeometry(2.35, 22, 16);
     const sphereMat = new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
+      color: 0x0099ff,
       wireframe: true,
       transparent: true,
-      opacity: 0.22,
+      opacity: 0.38,
     });
     const sphere = new THREE.Mesh(sphereGeo, sphereMat);
     globeGroup.add(sphere);
@@ -70,9 +70,9 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     // Inner glowing sphere with soft cyan ambient radiance
     const innerGeo = new THREE.SphereGeometry(1.9, 32, 32);
     const innerMat = new THREE.MeshBasicMaterial({
-      color: 0x0099ff,
+      color: 0x00a8ff,
       transparent: true,
-      opacity: 0.08,
+      opacity: 0.12,
       wireframe: false,
     });
     const innerSphere = new THREE.Mesh(innerGeo, innerMat);
@@ -81,9 +81,9 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     // Primary Orbital Ring (Matching logo airplane flight path)
     const ringGeo = new THREE.TorusGeometry(3.3, 0.045, 16, 120);
     const ringMat = new THREE.MeshBasicMaterial({
-      color: 0x00a8ff,
+      color: 0x0099ff,
       transparent: true,
-      opacity: 0.9,
+      opacity: 0.95,
     });
     const ring = new THREE.Mesh(ringGeo, ringMat);
     ring.rotation.x = Math.PI / 2.8;
@@ -92,11 +92,11 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     ringRef.current = ring;
 
     // Secondary tilted ring
-    const ringGeo2 = new THREE.TorusGeometry(3.8, 0.025, 16, 120);
+    const ringGeo2 = new THREE.TorusGeometry(3.8, 0.028, 16, 120);
     const ringMat2 = new THREE.MeshBasicMaterial({
       color: 0x38bdf8,
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.8,
     });
     const ring2 = new THREE.Mesh(ringGeo2, ringMat2);
     ring2.rotation.x = -Math.PI / 3.4;
@@ -105,11 +105,11 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     ring2Ref.current = ring2;
 
     // Outer Expansive Orbital Ring (spans wide across the full header as requested)
-    const ringGeo3 = new THREE.TorusGeometry(4.4, 0.018, 16, 140);
+    const ringGeo3 = new THREE.TorusGeometry(4.4, 0.02, 16, 140);
     const ringMat3 = new THREE.MeshBasicMaterial({
-      color: 0x0099ff,
+      color: 0x00a8ff,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.6,
     });
     const ring3 = new THREE.Mesh(ringGeo3, ringMat3);
     ring3.rotation.x = Math.PI / 2.2;

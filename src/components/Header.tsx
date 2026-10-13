@@ -94,17 +94,17 @@ export const Header: React.FC<HeaderProps> = ({ onOpenModal, onOpenPortalModal }
       <nav
         className={`sticky top-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-md py-3 border-b border-navy/5'
-            : 'bg-white/85 backdrop-blur-sm py-4 border-b border-navy/5'
+            ? 'bg-white/95 backdrop-blur-md shadow-md py-2 border-b border-navy/5'
+            : 'bg-white/90 backdrop-blur-sm py-2.5 sm:py-3 border-b border-navy/5'
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-          {/* Brand Logo */}
-          <a href="#" className="flex items-center gap-3 group py-1">
+          {/* Brand Logo - Cleanly aligned on the left and neatly proportioned */}
+          <a href="#" className="flex items-center -ml-1 sm:ml-0 group">
             <img
               src="/assets/images/genz-logo.png"
               alt="GenZ International School Logo"
-              className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto max-h-[105px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-md"
+              className="h-12 sm:h-14 md:h-16 w-auto max-h-[64px] object-contain transition-transform duration-300 group-hover:scale-105 filter drop-shadow-sm"
             />
           </a>
 

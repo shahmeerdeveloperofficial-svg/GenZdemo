@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Compass, Calendar, ArrowRight, Sparkles, CheckCircle2, ChevronDown } from 'lucide-react';
+import { Compass, Calendar, ArrowRight, Sparkles, CheckCircle2, ChevronDown, GraduationCap, Cpu, Globe2, Award } from 'lucide-react';
 import { ThreeCanvas } from './ThreeCanvas';
 import { CONTINUUM_STAGES } from '../data/schoolData';
+import { GooeyBubbleButton } from './GooeyBubbleButton';
 
 interface HeroScrollPinnedProps {
   onOpenModal: () => void;
@@ -12,19 +13,6 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeStageIdx, setActiveStageIdx] = useState(-1); // -1 = Hero Intro, 0..4 = Stages
-  const [headlineMouse, setHeadlineMouse] = useState<{ x: number; y: number } | null>(null);
-
-  const handleHeadlineMouseMove = (e: React.MouseEvent<HTMLHeadingElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setHeadlineMouse({
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    });
-  };
-
-  const handleHeadlineMouseLeave = () => {
-    setHeadlineMouse(null);
-  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -90,6 +78,27 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
     >
       {/* Sticky Fullscreen Viewport */}
       <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-between py-6 px-6 sm:px-10 lg:px-16">
+        {/* SVG Goo Filter for Organic Liquid Bubbles */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          className="absolute w-0 h-0 pointer-events-none opacity-0 -z-50"
+          aria-hidden="true"
+        >
+          <defs>
+            <filter id="goo">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+              <feColorMatrix
+                in="blur"
+                mode="matrix"
+                values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
+                result="goo"
+              />
+              <feComposite in="SourceGraphic" in2="goo" />
+            </filter>
+          </defs>
+        </svg>
+
         {/* Authentic Drifting Soft Clouds */}
         <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
           <img
@@ -116,7 +125,9 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
 
 
         {/* Right Sleek Minimalist Stage Dots Indicator (Replacing the removed clunky bottom bar) */}
-        <div className="hidden lg:flex fixed right-8 top-1/2 -translate-y-1/2 z-30 flex-col items-end gap-3 pointer-events-auto">
+        <div className={`hidden lg:flex fixed right-8 top-1/2 -translate-y-1/2 z-30 flex-col items-end gap-3 pointer-events-auto transition-opacity duration-300 ${
+          activeStageIdx === -1 ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}>
           {/* Overview Dot */}
           <button
             onClick={() => scrollToStage(-1)}
@@ -161,76 +172,75 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
         <div className="relative z-20 max-w-7xl mx-auto w-full my-auto">
           <AnimatePresence mode="wait">
             {activeStageIdx === -1 ? (
-              /* Phase 0: Hero Intro Screen */
+              /* Phase 0: Hero Intro - 4 Transparent Corner Buttons + Top "Welcome to GenZ" */
               <motion.div
                 key="hero-intro"
-                className="relative text-center max-w-4xl mx-auto py-10 sm:py-12 px-6 sm:px-12 rounded-[2.5rem] backdrop-blur-md bg-white/75 border border-white/90 shadow-[0_25px_70px_rgba(11,37,69,0.07)] overflow-hidden"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
+                className="relative w-full h-[76vh] flex flex-col justify-between"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0, scale: 0.95, y: -20 }}
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
-                {/* Luminous Inner Glass Shimmer */}
-                <div className="absolute -top-32 -left-32 w-80 h-80 rounded-full bg-cyan/15 blur-3xl pointer-events-none" />
-                <div className="absolute -bottom-32 -right-32 w-80 h-80 rounded-full bg-blue-500/15 blur-3xl pointer-events-none" />
-
-                <div className="relative inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-cyan/30 text-navy font-display text-xs font-bold uppercase tracking-wider mb-6 shadow-sm">
-                  <Compass className="w-3.5 h-3.5 text-cyan" />
-                  <span>A School Where Inquiry Shapes the Future</span>
+                {/* 1. TOP-CENTER: "Welcome to GenZ" Floating Badge */}
+                <div className="w-full flex justify-center pointer-events-auto">
+                  <motion.div
+                    initial={{ opacity: 0, y: -15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                  >
+                    <div className="inline-flex items-center gap-3 px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-white/70 backdrop-blur-xl border border-white/80 shadow-[0_15px_35px_rgba(0,153,255,0.15)] hover:shadow-[0_20px_45px_rgba(0,153,255,0.25)] hover:scale-105 transition-all duration-300 group cursor-default">
+                      <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-cyan animate-pulse group-hover:rotate-45 transition-transform" />
+                      <span className="font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl text-[#07172C] tracking-tight">
+                        Welcome to <span className="bg-gradient-to-r from-navy via-cyan to-blue-600 bg-clip-text text-transparent group-hover:from-cyan group-hover:to-cyan-light transition-all">GenZ</span>
+                      </span>
+                      <span className="w-2.5 h-2.5 rounded-full bg-cyan animate-ping" />
+                    </div>
+                  </motion.div>
                 </div>
 
-                <h1
-                  onMouseMove={handleHeadlineMouseMove}
-                  onMouseLeave={handleHeadlineMouseLeave}
-                  className="relative font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold text-[#07172C] tracking-tight leading-[1.08] mb-6 drop-shadow-sm select-none cursor-default py-2"
-                >
-                  {/* Interactive cursor spotlight glow behind letters */}
-                  {headlineMouse && (
-                    <span
-                      className="pointer-events-none absolute w-72 h-72 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan/20 blur-3xl transition-opacity duration-300 -z-10"
-                      style={{ left: headlineMouse.x, top: headlineMouse.y }}
-                    />
-                  )}
-
-                  <motion.span whileHover={{ y: -5, scale: 1.05 }} className="inline-block transition-all duration-200 hover:text-cyan hover:drop-shadow-[0_0_20px_rgba(0,153,255,0.7)]">
-                    Where
-                  </motion.span>{' '}
-                  <motion.span whileHover={{ y: -5, scale: 1.05 }} className="inline-block transition-all duration-200 hover:text-cyan hover:drop-shadow-[0_0_20px_rgba(0,153,255,0.7)]">
-                    Curiosity
-                  </motion.span>{' '}
-                  <motion.span whileHover={{ y: -5, scale: 1.05 }} className="inline-block transition-all duration-200 hover:text-cyan hover:drop-shadow-[0_0_20px_rgba(0,153,255,0.7)]">
-                    Ignites
-                  </motion.span>{' '}
-                  <motion.span
-                    whileHover={{ y: -5, scale: 1.06 }}
-                    className="inline-block bg-gradient-to-r from-navy via-cyan to-cyan-light bg-clip-text text-transparent transition-all duration-300 hover:drop-shadow-[0_0_30px_rgba(0,153,255,0.9)]"
-                  >
-                    Global Ambition
-                  </motion.span>
-                  <span className="text-cyan animate-pulse">|</span>
-                </h1>
-
-                <p className="relative text-slate-700 font-medium text-base sm:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-                  Authorised British Cambridge education seamlessly articulating from Early Years through A-Levels and into the world's most prestigious universities.
-                </p>
-
-                <div className="relative flex flex-wrap items-center justify-center gap-4">
-                  <button
+                {/* 2. THE 4 CORNERS: Ultra-Attractive Transparent Gooey Liquid Bubble Buttons */}
+                {/* CORNER 1: TOP-LEFT — USA */}
+                <div className="absolute top-2 left-0 sm:left-2 pointer-events-auto">
+                  <GooeyBubbleButton
+                    country="USA"
+                    subtitle="Ivy League & Top Unis"
+                    icon={Globe2}
+                    align="left"
                     onClick={onOpenModal}
-                    className="inline-flex items-center gap-3 px-8 py-4 bg-navy text-white rounded-full font-display font-bold text-sm tracking-wide hover:bg-navy-dark shadow-xl hover:shadow-cyan-glow transition-all transform hover:-translate-y-0.5 group"
-                  >
-                    <Calendar className="w-4 h-4 text-cyan-light" />
-                    <span>Book Private Campus Tour</span>
-                    <span className="w-2 h-2 rounded-full bg-cyan group-hover:scale-150 transition-transform" />
-                  </button>
+                  />
+                </div>
 
-                  <button
-                    onClick={() => scrollToStage(0)}
-                    className="inline-flex items-center gap-2 px-7 py-4 bg-white/95 text-navy hover:text-cyan border border-navy/10 rounded-full font-display font-bold text-sm hover:border-cyan transition-all shadow-md group"
-                  >
-                    <span>Scroll to Discover Stages</span>
-                    <ArrowRight className="w-4 h-4 text-cyan group-hover:translate-x-1 transition-transform" />
-                  </button>
+                {/* CORNER 2: TOP-RIGHT — UK */}
+                <div className="absolute top-2 right-0 sm:right-2 pointer-events-auto">
+                  <GooeyBubbleButton
+                    country="UK"
+                    subtitle="Cambridge & Russell Group"
+                    icon={GraduationCap}
+                    align="right"
+                    onClick={onOpenModal}
+                  />
+                </div>
+
+                {/* CORNER 3: BOTTOM-LEFT — MALAYSIA */}
+                <div className="absolute bottom-4 left-0 sm:left-2 pointer-events-auto">
+                  <GooeyBubbleButton
+                    country="MALAYSIA"
+                    subtitle="Asia-Pacific Education Hub"
+                    icon={Compass}
+                    align="left"
+                    onClick={onOpenModal}
+                  />
+                </div>
+
+                {/* CORNER 4: BOTTOM-RIGHT — TURKEY */}
+                <div className="absolute bottom-4 right-0 sm:right-2 pointer-events-auto">
+                  <GooeyBubbleButton
+                    country="TURKEY"
+                    subtitle="Eurasian Campuses & Awards"
+                    icon={Award}
+                    align="right"
+                    onClick={onOpenModal}
+                  />
                 </div>
               </motion.div>
             ) : currentStage ? (
@@ -319,17 +329,31 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
           </AnimatePresence>
         </div>
 
-        {/* Clean, Non-intrusive Bottom Scroll Cue (Old clunky timeline pill removed as requested) */}
-        <div className="relative z-20 flex items-center justify-center pb-2">
+        {/* Compact Bottom Action Dock - Exactly at the bottom position requested by user */}
+        <div className="relative z-30 flex flex-col items-center justify-center pb-3 pointer-events-auto">
           {activeStageIdx === -1 && (
             <motion.div
-              animate={{ y: [0, 6, 0] }}
-              transition={{ repeat: Infinity, duration: 2, ease: 'easeInOut' }}
-              className="flex items-center gap-2 text-xs font-bold text-slate-400 cursor-pointer"
-              onClick={() => scrollToStage(0)}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex items-center gap-2 sm:gap-3 backdrop-blur-xl bg-white/90 p-1.5 rounded-full border border-white/90 shadow-[0_8px_25px_rgba(11,37,69,0.12)]"
             >
-              <span>Scroll to discover educational stages</span>
-              <ChevronDown className="w-4 h-4 text-cyan" />
+              <button
+                onClick={onOpenModal}
+                className="inline-flex items-center gap-2 px-4 sm:px-5 py-2 bg-navy text-white rounded-full font-display font-bold text-xs tracking-wide hover:bg-navy-dark shadow-md hover:shadow-cyan-glow transition-all transform hover:-translate-y-0.5 group"
+              >
+                <Calendar className="w-3.5 h-3.5 text-cyan-light" />
+                <span>Book Private Campus Tour</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan group-hover:scale-150 transition-transform" />
+              </button>
+
+              <button
+                onClick={() => scrollToStage(0)}
+                className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-2 bg-white/95 text-navy hover:text-cyan border border-navy/15 rounded-full font-display font-bold text-xs hover:border-cyan transition-all shadow-sm group"
+              >
+                <span>Scroll to Discover Stages</span>
+                <ChevronDown className="w-3.5 h-3.5 text-cyan group-hover:translate-y-0.5 transition-transform" />
+              </button>
             </motion.div>
           )}
         </div>
