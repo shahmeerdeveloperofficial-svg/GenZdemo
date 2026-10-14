@@ -12,9 +12,8 @@ import {
   MapPin,
   ArrowRight,
   X,
-  Star,
-  Globe2,
-  Award
+  Mail,
+  Globe2
 } from 'lucide-react';
 import { LEADERSHIP_PROFILES } from '../data/leadershipData';
 import { LeadershipProfile } from '../types';
@@ -26,61 +25,25 @@ interface LeadershipSectionProps {
 
 export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenConsultation }) => {
   const [activeDossier, setActiveDossier] = useState<LeadershipProfile | null>(null);
-  const [hoveredCardId, setHoveredCardId] = useState<string | null>(null);
 
-  // Filter out the CEO since the CEO has his dedicated section above
+  // Exclude CEO since CEO has his own dedicated section above
   const directors = LEADERSHIP_PROFILES.filter((p) => p.title.toLowerCase().includes('director'));
 
   return (
     <section
-      className="py-24 md:py-36 bg-gradient-to-b from-[#07172C] via-[#0B2545] to-[#040E1B] relative overflow-hidden text-white border-b border-cyan/20"
+      className="py-24 md:py-36 bg-gradient-to-b from-[#07172C] via-[#0B2545] to-[#040E1B] relative overflow-hidden text-navy border-b border-cyan/20"
       id="leadership"
     >
-      {/* Ambient Logo Theme Cyber Backdrops & Dot Matrix (As in Reference Poster) */}
+      {/* Ambient Logo Theme Backdrops */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Top Left Cyan Glow */}
         <div className="absolute top-1/4 -left-48 w-[40rem] h-[40rem] bg-cyan/15 rounded-full blur-[180px] animate-pulse" />
-        {/* Bottom Right Blue Orb */}
         <div className="absolute bottom-1/4 -right-48 w-[40rem] h-[40rem] bg-blue-600/15 rounded-full blur-[180px]" />
-        {/* Center Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45rem] h-[45rem] bg-cyan/10 rounded-full blur-[200px]" />
-
-        {/* Dot Matrix Pattern (Bottom Right - Reference Image Signature) */}
-        <div
-          className="absolute bottom-10 right-10 w-96 h-96 opacity-25"
-          style={{
-            backgroundImage: `radial-gradient(circle, #0099FF 1.5px, transparent 1.5px)`,
-            backgroundSize: '20px 20px'
-          }}
-        />
-
-        {/* Dot Matrix Pattern (Top Left) */}
-        <div
-          className="absolute top-10 left-10 w-72 h-72 opacity-20"
-          style={{
-            backgroundImage: `radial-gradient(circle, #38BDF8 1.5px, transparent 1.5px)`,
-            backgroundSize: '24px 24px'
-          }}
-        />
-
-        {/* Elegant Curved Circuit Lines (Alternating Connecting Path) */}
-        <svg
-          className="absolute inset-0 w-full h-full opacity-15 hidden lg:block"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M 250,200 Q 600,450 950,700 T 300,1200"
-            fill="none"
-            stroke="#0099FF"
-            strokeWidth="1.5"
-            strokeDasharray="8 8"
-          />
-        </svg>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50rem] h-[50rem] bg-cyan/10 rounded-full blur-[220px]" />
       </div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
+        <div className="text-center max-w-3xl mx-auto mb-20 text-white">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -98,7 +61,7 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
             transition={{ delay: 0.1 }}
             className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.18] mb-5"
           >
-            European & British Executive Directors<span className="heading-cursor-line">|</span>
+            Executive Leadership & Directorate Messages<span className="heading-cursor-line">|</span>
           </motion.h2>
 
           <motion.p
@@ -108,14 +71,13 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
             transition={{ delay: 0.2 }}
             className="text-slate-300 text-sm sm:text-base leading-relaxed"
           >
-            Direct guidance from European doctoral scholars, British enterprise leaders, and scholarship chairs from Aarhus, Copenhagen, Bangor, and London — forging uncompromised international pathways for our scholars.
+            European doctoral scholars, scholarship chairs, and British enterprise founders guiding our scholars directly into world powerhouses.
           </motion.p>
         </div>
 
         {/* ALTERNATING ZIG-ZAG CARDS (Left -> Right -> Left) */}
-        <div className="space-y-16 lg:space-y-24">
+        <div className="space-y-20 lg:space-y-28">
           {directors.map((profile, idx) => {
-            // Alternating alignment: Even index = Left, Odd index = Right
             const isRightAligned = idx % 2 === 1;
 
             return (
@@ -123,15 +85,13 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
                 key={profile.id}
                 className={`flex w-full ${isRightAligned ? 'justify-end' : 'justify-start'}`}
               >
-                <div className="w-full lg:w-[85%] xl:w-[78%]">
-                  <DevntomStyleCard
+                <div className="w-full lg:w-[86%] xl:w-[82%]">
+                  <AinexPosterCard
                     profile={profile}
                     index={idx}
                     isRightAligned={isRightAligned}
-                    isHovered={hoveredCardId === profile.id}
-                    onHover={() => setHoveredCardId(profile.id)}
-                    onLeave={() => setHoveredCardId(null)}
                     onOpenDossier={() => setActiveDossier(profile)}
+                    onOpenConsultation={() => onOpenConsultation?.(profile)}
                   />
                 </div>
               </div>
@@ -144,7 +104,7 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-20 p-8 rounded-3xl bg-gradient-to-r from-white/[0.06] via-cyan/[0.08] to-white/[0.04] border border-cyan/30 backdrop-blur-xl relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+          className="mt-24 p-8 rounded-3xl bg-gradient-to-r from-white/[0.06] via-cyan/[0.08] to-white/[0.04] border border-cyan/30 backdrop-blur-xl relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
             <div className="text-center md:text-left">
@@ -189,45 +149,41 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
 };
 
 /* -------------------------------------------------------------------------- */
-/* DEVNTOM STYLE EXECUTIVE CARD (Recreation of Reference Poster Image)        */
+/* AINEX / LARGE HEROIC PORTRAIT POSTER CARD (Exact Reference Replication)     */
 /* -------------------------------------------------------------------------- */
-interface DevntomStyleCardProps {
+interface AinexPosterCardProps {
   profile: LeadershipProfile;
   index: number;
   isRightAligned: boolean;
-  isHovered: boolean;
-  onHover: () => void;
-  onLeave: () => void;
   onOpenDossier: () => void;
+  onOpenConsultation: () => void;
 }
 
-const DevntomStyleCard: React.FC<DevntomStyleCardProps> = ({
+const AinexPosterCard: React.FC<AinexPosterCardProps> = ({
   profile,
   index,
   isRightAligned,
-  isHovered,
-  onHover,
-  onLeave,
-  onOpenDossier
+  onOpenDossier,
+  onOpenConsultation
 }) => {
-  // Custom zoom & focal position for each photo
+  // Custom zoom & focal position for each photo to keep face huge and prominent
   const getImageStyling = () => {
     switch (profile.id) {
       case 'zahid-bajwa':
-        return 'object-cover object-[50%_25%] scale-[1.2]';
+        return 'object-cover object-[50%_22%] scale-[1.08]';
       case 'muzaffar-hussain':
-        return 'object-cover object-[50%_28%] scale-[1.2]';
+        return 'object-cover object-[50%_25%] scale-[1.08]';
       case 'suhaib-cheema':
-        return 'object-cover object-[52%_15%] scale-[2.1] origin-[52%_15%]';
+        return 'object-cover object-[52%_15%] scale-[1.75] origin-[52%_15%]';
       default:
         return 'object-cover object-top';
     }
   };
 
   const renderFlag = () => {
-    if (profile.countryCode === 'DK') return <DenmarkFlag className="w-4 h-3 rounded-sm shadow-sm" />;
-    if (profile.countryCode === 'GB') return <UKFlag className="w-4 h-3 rounded-sm shadow-sm" />;
-    return <span className="text-xs">{profile.countryFlagEmoji}</span>;
+    if (profile.countryCode === 'DK') return <DenmarkFlag className="w-5 h-3.5 rounded-sm shadow-sm" />;
+    if (profile.countryCode === 'GB') return <UKFlag className="w-5 h-3.5 rounded-sm shadow-sm" />;
+    return <span className="text-sm">{profile.countryFlagEmoji}</span>;
   };
 
   const getWebsiteUrl = () => {
@@ -248,169 +204,157 @@ const DevntomStyleCard: React.FC<DevntomStyleCardProps> = ({
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: 0.1 }}
-      onMouseEnter={onHover}
-      onMouseLeave={onLeave}
       className="relative group w-full"
     >
-      {/* Top Organization Header outside Card (Just like Devntom Solutions in Poster) */}
-      <div
-        className={`flex items-center gap-2 mb-3 px-2 ${
-          isRightAligned ? 'justify-end' : 'justify-start'
-        }`}
-      >
-        <div className="flex items-center gap-2 text-cyan font-display font-extrabold text-xs sm:text-sm tracking-wider uppercase">
-          <Globe2 className="w-4 h-4 text-cyan" />
-          <span>Gen Z International Directorate</span>
-        </div>
-      </div>
+      {/* Outer Card Glow */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-cyan/30 via-blue-500/20 to-cyan/30 rounded-[3rem] opacity-50 group-hover:opacity-100 blur-xl transition-all duration-500 pointer-events-none" />
 
-      {/* Main Card Container (Exact Recreation of Devntom Reference Shape & Look) */}
-      <div
-        className={`relative rounded-[2.5rem] bg-gradient-to-br from-[#0F356B] via-[#0B2A58] to-[#071E40] border-2 p-7 sm:p-10 shadow-[0_25px_60px_rgba(0,0,0,0.6)] transition-all duration-500 overflow-hidden ${
-          isHovered
-            ? 'border-cyan shadow-[0_30px_80px_rgba(0,153,255,0.4)] -translate-y-1.5'
-            : 'border-cyan/40 hover:border-cyan/70'
-        }`}
-      >
-        {/* Soft Background Radial Light inside Card */}
-        <div className="absolute top-0 right-1/4 w-80 h-80 bg-cyan/15 rounded-full blur-[100px] pointer-events-none" />
+      {/* Main White / Light Card Container (Recreation of Reference Poster) */}
+      <div className="relative rounded-[2.5rem] sm:rounded-[3rem] bg-white text-navy p-6 sm:p-10 md:p-12 shadow-[0_25px_70px_rgba(0,0,0,0.6)] border-4 border-slate-100 overflow-hidden transition-all duration-300 group-hover:border-cyan/40">
+        {/* Hexagon Honeycomb Background Pattern (Exact Reference Detail) */}
+        <div
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill-rule='evenodd' stroke='%230B2545' stroke-width='1' fill='none' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM0 0h28v49H0z'/%3E%3C/svg%3E")`,
+            backgroundSize: '56px 98px'
+          }}
+        />
 
-        {/* TOP ROW: Large Opening Quote on Left + Name/Title + Circular Portrait on Right */}
-        <div className="flex flex-col-reverse sm:flex-row sm:items-start justify-between gap-6 relative z-10 mb-6">
-          {/* Left: Large Solid Opening Quote + Name & Title */}
-          <div className="flex items-start gap-4 flex-1">
-            {/* Solid Cyan Opening Quote Icon (Exact Devntom Iconography) */}
-            <div
-              className={`shrink-0 w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-cyan/20 border border-cyan/40 flex items-center justify-center text-cyan shadow-[0_0_20px_rgba(0,153,255,0.3)] transition-transform duration-300 ${
-                isHovered ? 'scale-110 shadow-[0_0_30px_rgba(0,153,255,0.6)]' : ''
-              }`}
-            >
-              <Quote className="w-8 h-8 sm:w-9 sm:h-9 text-cyan fill-cyan" />
-            </div>
+        {/* Diagonal Accent Slashes (Exact Reference Detail) */}
+        <div className="absolute -right-16 top-1/2 w-72 h-14 bg-gradient-to-r from-cyan via-blue-600 to-transparent -rotate-25 rounded-full opacity-80 pointer-events-none" />
+        <div className="absolute -left-16 bottom-1/4 w-60 h-10 bg-slate-100 -rotate-25 rounded-full opacity-60 pointer-events-none" />
 
-            {/* Name & Title */}
-            <div>
-              <div className="flex items-center gap-2 flex-wrap mb-1">
-                <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                  {profile.name}
-                </h3>
-              </div>
-
-              <div className="flex items-center gap-2 text-cyan-light text-xs sm:text-sm font-semibold mb-1">
-                <span>{profile.title}, Gen Z International</span>
-                <span>•</span>
-                <span className="inline-flex items-center gap-1 text-white">
-                  {renderFlag()}
-                  <span>{profile.nationality}</span>
-                </span>
-              </div>
-
-              <p className="text-slate-300 text-xs font-medium line-clamp-1">
-                {profile.roleBadge}
-              </p>
-            </div>
+        {/* 1. TOP BRAND HEADER (Exact Reference Placement) */}
+        <div className="relative z-10 flex flex-col items-center mb-6">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="font-display font-black text-2xl sm:text-3xl text-navy tracking-tight">
+              GEN<span className="text-cyan">Z</span>
+            </span>
+            <div className="h-4 w-[1.5px] bg-slate-300" />
+            <span className="text-xs uppercase font-display font-bold tracking-widest text-slate-500">
+              International
+            </span>
           </div>
 
-          {/* Right: Circular Headshot with White Border Ring (Exact Reference Style) */}
-          <div className="shrink-0 self-center sm:self-start">
-            <div
-              className={`relative w-24 h-24 sm:w-28 sm:h-28 rounded-full border-4 border-white shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden bg-navy-dark transition-all duration-500 ${
-                isHovered
-                  ? 'ring-4 ring-cyan shadow-[0_0_35px_rgba(0,153,255,0.6)] scale-105'
-                  : ''
-              }`}
-            >
+          {/* Dark Navy Statement Banner (Exact Reference Placement) */}
+          <div className="w-full max-w-2xl px-6 py-3.5 rounded-2xl bg-[#07172C] text-white text-center shadow-lg border border-cyan/20">
+            <p className="text-xs sm:text-sm font-medium leading-relaxed">
+              At <strong className="text-cyan-light font-bold">Gen Z International</strong>, we don’t just teach curriculum — we architect prestigious global scholarships, British careers, and lifelong international leadership.
+            </p>
+          </div>
+        </div>
+
+        {/* 2. THE LARGE HEROIC CIRCULAR PORTRAIT (Centerpiece of the Design) */}
+        <div className="relative z-10 flex justify-center my-6 sm:my-8">
+          <div className="relative">
+            {/* Deep Navy Semi-Circle Backdrop (Exact Reference Arch Shape) */}
+            <div className="absolute -inset-6 sm:-inset-10 bg-[#0B2545] rounded-t-full rounded-b-none opacity-95 shadow-2xl" />
+
+            {/* Glowing Accent Arc Ring */}
+            <div className="absolute -inset-7 sm:-inset-11 border-4 border-cyan/40 rounded-t-full pointer-events-none" />
+
+            {/* Massive Circular Portrait Container (Huge, Clear, Sharp!) */}
+            <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full border-8 border-white shadow-[0_15px_40px_rgba(11,37,69,0.35)] overflow-hidden bg-navy-dark transition-transform duration-500 group-hover:scale-[1.02]">
               <img
                 src={profile.image}
                 alt={profile.name}
                 className={`w-full h-full filter brightness-105 contrast-105 transition-transform duration-700 ${getImageStyling()}`}
               />
+
+              {/* Bottom Subtle Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/40 via-transparent to-transparent pointer-events-none" />
+            </div>
+
+            {/* Floating Nationality Badge at Portrait Base */}
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white shadow-xl border-2 border-slate-200 text-navy text-xs font-display font-bold">
+              {renderFlag()}
+              <span>{profile.nationality}</span>
             </div>
           </div>
         </div>
 
-        {/* MIDDLE: Testimonial/Vision Quote Body with Hover Effects */}
-        <div className="relative z-10 mb-6">
-          <div
-            className={`p-5 rounded-2xl transition-all duration-300 ${
-              isHovered
-                ? 'bg-white/[0.08] border border-cyan/40 shadow-inner'
-                : 'bg-white/[0.04] border border-white/10'
-            }`}
-          >
-            <p className="text-slate-100 text-sm sm:text-base leading-relaxed font-normal">
+        {/* 3. NAME, ROLE & FRAMED QUOTATION */}
+        <div className="relative z-10 text-center max-w-2xl mx-auto mt-6 mb-6">
+          <h3 className="font-display text-3xl sm:text-4xl font-black text-navy tracking-tight mb-1">
+            {profile.name}
+          </h3>
+
+          <p className="text-sm sm:text-base font-semibold text-slate-500 mb-6">
+            {profile.title} · {profile.roleBadge}
+          </p>
+
+          {/* Quotation Area Framed with Big Quotes (Exact Reference Detail) */}
+          <div className="relative px-8 sm:px-14 py-4 group-hover:bg-slate-50/80 rounded-2xl transition-colors duration-300">
+            {/* Big Solid Navy Opening Quote on Left */}
+            <div className="absolute left-0 top-0 text-navy select-none">
+              <Quote className="w-8 h-8 sm:w-11 sm:h-11 text-navy fill-navy" />
+            </div>
+
+            {/* Authentic Quote Text */}
+            <p className="text-slate-700 text-sm sm:text-base md:text-lg leading-relaxed font-normal italic">
               "{profile.quote || profile.experience[0]}"
             </p>
-          </div>
-        </div>
 
-        {/* Verified Qualifications Strip (PhD, Erasmus Mundus, London Met) */}
-        <div className="relative z-10 space-y-2 mb-6">
-          {profile.qualifications.map((qual, qIdx) => (
-            <div
-              key={qIdx}
-              className="flex items-center gap-2 text-xs sm:text-sm text-slate-200"
-            >
-              <CheckCircle2 className="w-4 h-4 text-cyan shrink-0" />
-              <span>
-                <strong className="text-white font-bold">{qual.degree}:</strong> {qual.institution}
-                {qual.country ? ` (${qual.country})` : ''}
-              </span>
+            {/* Big Solid Navy Closing Quote on Right */}
+            <div className="absolute right-0 bottom-0 text-navy select-none">
+              <Quote className="w-8 h-8 sm:w-11 sm:h-11 text-navy fill-navy rotate-180" />
             </div>
-          ))}
-        </div>
+          </div>
 
-        {/* Star Rating Strip (Exact Reference Detail) */}
-        <div className="relative z-10 flex items-center gap-2 mb-6">
-          <div className="flex items-center gap-1 text-amber-400">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+          {/* Academic Degrees & Honors Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
+            {profile.qualifications.map((q, qIdx) => (
+              <span
+                key={qIdx}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-navy text-xs font-semibold"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5 text-cyan shrink-0" />
+                <span>
+                  <strong>{q.degree}:</strong> {q.institution}
+                </span>
+              </span>
             ))}
           </div>
-          <span className="text-xs font-semibold text-slate-300 ml-1">
-            Verified Global Leadership Authority
-          </span>
         </div>
 
-        {/* BOTTOM ROW: Website Link / Dossier Action + Huge Closing Quote (Exact Poster Detail) */}
-        <div className="relative z-10 pt-4 border-t border-white/15 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          {/* Website Link or Credentials Trigger */}
-          <div className="flex items-center gap-4 flex-wrap">
-            {profile.ventures && profile.ventures.length > 0 ? (
-              <a
-                href={getWebsiteHref()}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-cyan hover:text-white transition-colors group/link"
-              >
-                <span>{getWebsiteUrl()}</span>
-                <ExternalLink className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
-              </a>
-            ) : (
-              <span className="text-xs sm:text-sm font-semibold text-cyan">
-                {getWebsiteUrl()}
-              </span>
-            )}
-
-            <button
-              onClick={onOpenDossier}
-              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-cyan text-white text-xs font-display font-bold uppercase tracking-wider transition-all duration-300 shadow-md hover:shadow-cyan-glow flex items-center gap-1.5"
-            >
-              <span>View Full Credentials</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
-          </div>
-
-          {/* Huge Solid Cyan Closing Quote Mark (Exact Poster Positioning) */}
-          <div
-            className={`self-end sm:self-auto text-cyan/70 select-none pointer-events-none transition-transform duration-500 ${
-              isHovered ? 'scale-110 text-cyan' : ''
-            }`}
+        {/* 4. BOTTOM PILL ACTION BUTTONS (Exact Reference Detail) */}
+        <div className="relative z-10 pt-6 border-t-2 border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+          {/* Left Pill: Direct Advisory Button */}
+          <button
+            onClick={onOpenConsultation}
+            className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#07172C] hover:bg-cyan text-white text-xs sm:text-sm font-display font-bold shadow-md hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-2 group/btn"
           >
-            <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-cyan/20 border border-cyan/40 flex items-center justify-center text-cyan shadow-[0_0_20px_rgba(0,153,255,0.3)]">
-              <Quote className="w-8 h-8 sm:w-9 sm:h-9 text-cyan fill-cyan rotate-180" />
+            <Mail className="w-4 h-4 text-cyan group-hover/btn:text-white" />
+            <span>Advisory & Mentorship Office</span>
+          </button>
+
+          {/* Center: Inspect Full Dossier */}
+          <button
+            onClick={onOpenDossier}
+            className="text-xs sm:text-sm font-display font-bold text-navy hover:text-cyan transition-colors underline underline-offset-4 flex items-center gap-1"
+          >
+            <span>View Complete Credentials Dossier</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Right Pill: Website Link */}
+          {profile.ventures && profile.ventures.length > 0 ? (
+            <a
+              href={getWebsiteHref()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#07172C] hover:bg-cyan text-white text-xs sm:text-sm font-display font-bold shadow-md hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-2 group/link"
+            >
+              <Globe2 className="w-4 h-4 text-cyan group-hover/link:text-white" />
+              <span>{getWebsiteUrl()}</span>
+              <ExternalLink className="w-3 h-3 ml-1" />
+            </a>
+          ) : (
+            <div className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#07172C] text-white text-xs sm:text-sm font-display font-bold shadow-md flex items-center justify-center gap-2">
+              <Globe2 className="w-4 h-4 text-cyan" />
+              <span>{getWebsiteUrl()}</span>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </motion.div>
@@ -434,11 +378,11 @@ const ExecutiveDossierModal: React.FC<ExecutiveDossierModalProps> = ({
   const getImageStyling = () => {
     switch (profile.id) {
       case 'zahid-bajwa':
-        return 'object-cover object-[50%_25%] scale-[1.2]';
+        return 'object-cover object-[50%_22%] scale-[1.08]';
       case 'muzaffar-hussain':
-        return 'object-cover object-[50%_28%] scale-[1.2]';
+        return 'object-cover object-[50%_25%] scale-[1.08]';
       case 'suhaib-cheema':
-        return 'object-cover object-[52%_15%] scale-[2.1] origin-[52%_15%]';
+        return 'object-cover object-[52%_15%] scale-[1.75] origin-[52%_15%]';
       default:
         return 'object-cover object-top';
     }
@@ -469,9 +413,9 @@ const ExecutiveDossierModal: React.FC<ExecutiveDossierModalProps> = ({
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Circular Headshot & Action */}
+          {/* Left Column: Big Circular Headshot & Action */}
           <div className="lg:col-span-5 flex flex-col items-center text-center">
-            <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full border-4 border-white shadow-[0_0_35px_rgba(0,153,255,0.4)] overflow-hidden bg-navy-dark mb-4">
+            <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-full border-4 border-white shadow-[0_0_35px_rgba(0,153,255,0.4)] overflow-hidden bg-navy-dark mb-4">
               <img
                 src={profile.image}
                 alt={profile.name}
