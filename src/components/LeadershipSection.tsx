@@ -34,16 +34,30 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
       className="py-24 md:py-36 bg-gradient-to-b from-[#07172C] via-[#0B2545] to-[#040E1B] relative overflow-hidden text-navy border-b border-cyan/20"
       id="leadership"
     >
-      {/* Ambient Logo Theme Backdrops */}
+      {/* Ambient Logo Theme Cyber Backdrops */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/4 -left-48 w-[40rem] h-[40rem] bg-cyan/15 rounded-full blur-[180px] animate-pulse" />
         <div className="absolute bottom-1/4 -right-48 w-[40rem] h-[40rem] bg-blue-600/15 rounded-full blur-[180px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50rem] h-[50rem] bg-cyan/10 rounded-full blur-[220px]" />
+
+        {/* Elegant Curved Circuit Connecting Line between cards */}
+        <svg
+          className="absolute inset-0 w-full h-full opacity-15 hidden lg:block"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M 300,250 C 700,500 800,800 350,1100"
+            fill="none"
+            stroke="#0099FF"
+            strokeWidth="2"
+            strokeDasharray="8 8"
+          />
+        </svg>
       </div>
 
       <div className="max-w-6xl mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-20 text-white">
+        <div className="text-center max-w-3xl mx-auto mb-16 md:mb-24 text-white">
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -71,12 +85,12 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
             transition={{ delay: 0.2 }}
             className="text-slate-300 text-sm sm:text-base leading-relaxed"
           >
-            European doctoral scholars, scholarship chairs, and British enterprise founders guiding our scholars directly into world powerhouses.
+            European doctoral fellows, Erasmus Mundus scholars, and British enterprise leaders providing personal mentorship into the world's most prestigious institutions.
           </motion.p>
         </div>
 
-        {/* ALTERNATING ZIG-ZAG CARDS (Left -> Right -> Left) */}
-        <div className="space-y-20 lg:space-y-28">
+        {/* ALTERNATING ZIG-ZAG POSTER CARDS (Left -> Right -> Left) */}
+        <div className="space-y-16 md:space-y-24">
           {directors.map((profile, idx) => {
             const isRightAligned = idx % 2 === 1;
 
@@ -85,8 +99,9 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
                 key={profile.id}
                 className={`flex w-full ${isRightAligned ? 'justify-end' : 'justify-start'}`}
               >
-                <div className="w-full lg:w-[86%] xl:w-[82%]">
-                  <AinexPosterCard
+                {/* Fixed Max-Width Poster Container for Exact Proportions */}
+                <div className="w-full max-w-[540px]">
+                  <AinexExactPosterCard
                     profile={profile}
                     index={idx}
                     isRightAligned={isRightAligned}
@@ -104,7 +119,7 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
           initial={{ opacity: 0, y: 25 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-24 p-8 rounded-3xl bg-gradient-to-r from-white/[0.06] via-cyan/[0.08] to-white/[0.04] border border-cyan/30 backdrop-blur-xl relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white"
+          className="mt-20 p-8 rounded-3xl bg-gradient-to-r from-white/[0.06] via-cyan/[0.08] to-white/[0.04] border border-cyan/30 backdrop-blur-xl relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] text-white"
         >
           <div className="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
             <div className="text-center md:text-left">
@@ -149,9 +164,9 @@ export const LeadershipSection: React.FC<LeadershipSectionProps> = ({ onOpenCons
 };
 
 /* -------------------------------------------------------------------------- */
-/* AINEX / LARGE HEROIC PORTRAIT POSTER CARD (Exact Reference Replication)     */
+/* AINEX EXACT REPLICATION POSTER CARD                                        */
 /* -------------------------------------------------------------------------- */
-interface AinexPosterCardProps {
+interface AinexExactPosterCardProps {
   profile: LeadershipProfile;
   index: number;
   isRightAligned: boolean;
@@ -159,31 +174,31 @@ interface AinexPosterCardProps {
   onOpenConsultation: () => void;
 }
 
-const AinexPosterCard: React.FC<AinexPosterCardProps> = ({
+const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
   profile,
   index,
   isRightAligned,
   onOpenDossier,
   onOpenConsultation
 }) => {
-  // Custom zoom & focal position for each photo to keep face huge and prominent
+  // Custom zoom & focal position for each photo to keep face perfectly centered
   const getImageStyling = () => {
     switch (profile.id) {
       case 'zahid-bajwa':
-        return 'object-cover object-[50%_22%] scale-[1.08]';
+        return 'object-cover object-[50%_25%] scale-[1.12]';
       case 'muzaffar-hussain':
-        return 'object-cover object-[50%_25%] scale-[1.08]';
+        return 'object-cover object-[50%_28%] scale-[1.12]';
       case 'suhaib-cheema':
-        return 'object-cover object-[52%_15%] scale-[1.75] origin-[52%_15%]';
+        return 'object-cover object-[52%_15%] scale-[1.8] origin-[52%_15%]';
       default:
         return 'object-cover object-top';
     }
   };
 
   const renderFlag = () => {
-    if (profile.countryCode === 'DK') return <DenmarkFlag className="w-5 h-3.5 rounded-sm shadow-sm" />;
-    if (profile.countryCode === 'GB') return <UKFlag className="w-5 h-3.5 rounded-sm shadow-sm" />;
-    return <span className="text-sm">{profile.countryFlagEmoji}</span>;
+    if (profile.countryCode === 'DK') return <DenmarkFlag className="w-4 h-3 rounded-sm shadow-sm" />;
+    if (profile.countryCode === 'GB') return <UKFlag className="w-4 h-3 rounded-sm shadow-sm" />;
+    return <span className="text-xs">{profile.countryFlagEmoji}</span>;
   };
 
   const getWebsiteUrl = () => {
@@ -200,61 +215,62 @@ const AinexPosterCard: React.FC<AinexPosterCardProps> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, x: isRightAligned ? 40 : -40 }}
+      initial={{ opacity: 0, x: isRightAligned ? 35 : -35 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: 0.1 }}
       className="relative group w-full"
     >
-      {/* Outer Card Glow */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-cyan/30 via-blue-500/20 to-cyan/30 rounded-[3rem] opacity-50 group-hover:opacity-100 blur-xl transition-all duration-500 pointer-events-none" />
+      {/* Outer Subtle Card Glow */}
+      <div className="absolute -inset-1 bg-gradient-to-r from-cyan/30 via-blue-500/20 to-cyan/30 rounded-[2.5rem] opacity-60 group-hover:opacity-100 blur-xl transition-all duration-500 pointer-events-none" />
 
-      {/* Main White / Light Card Container (Recreation of Reference Poster) */}
-      <div className="relative rounded-[2.5rem] sm:rounded-[3rem] bg-white text-navy p-6 sm:p-10 md:p-12 shadow-[0_25px_70px_rgba(0,0,0,0.6)] border-4 border-slate-100 overflow-hidden transition-all duration-300 group-hover:border-cyan/40">
-        {/* Hexagon Honeycomb Background Pattern (Exact Reference Detail) */}
+      {/* Main Crisp White Card Container (Exact Poster Geometry) */}
+      <div className="relative rounded-[2rem] sm:rounded-[2.5rem] bg-white text-navy p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-slate-100 overflow-hidden transition-all duration-300 group-hover:border-cyan/40">
+        {/* Hexagon Pattern in Upper Background (Exact Reference Detail) */}
         <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          className="absolute inset-0 opacity-[0.035] pointer-events-none"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cpath fill-rule='evenodd' stroke='%230B2545' stroke-width='1' fill='none' d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM0 0h28v49H0z'/%3E%3C/svg%3E")`,
-            backgroundSize: '56px 98px'
+            backgroundSize: '48px 84px'
           }}
         />
 
-        {/* Diagonal Accent Slashes (Exact Reference Detail) */}
-        <div className="absolute -right-16 top-1/2 w-72 h-14 bg-gradient-to-r from-cyan via-blue-600 to-transparent -rotate-25 rounded-full opacity-80 pointer-events-none" />
-        <div className="absolute -left-16 bottom-1/4 w-60 h-10 bg-slate-100 -rotate-25 rounded-full opacity-60 pointer-events-none" />
+        {/* Diagonal Accent Slashes on Right (Exact Reference Detail) */}
+        <div className="absolute -right-12 top-[46%] w-48 h-3.5 bg-gradient-to-r from-cyan to-blue-600 -rotate-25 rounded-full opacity-90 pointer-events-none" />
+        <div className="absolute -right-8 top-[52%] w-36 h-2 bg-slate-200 -rotate-25 rounded-full opacity-70 pointer-events-none" />
+        <div className="absolute -left-10 bottom-[35%] w-32 h-2.5 bg-slate-100 -rotate-25 rounded-full opacity-60 pointer-events-none" />
 
-        {/* 1. TOP BRAND HEADER (Exact Reference Placement) */}
-        <div className="relative z-10 flex flex-col items-center mb-6">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="font-display font-black text-2xl sm:text-3xl text-navy tracking-tight">
+        {/* 1. TOP BRAND LOGO (Exact Reference Placement) */}
+        <div className="relative z-10 flex flex-col items-center mb-4">
+          <div className="flex items-center gap-1.5 mb-3">
+            <span className="font-display font-black text-xl sm:text-2xl text-navy tracking-tight">
               GEN<span className="text-cyan">Z</span>
             </span>
-            <div className="h-4 w-[1.5px] bg-slate-300" />
-            <span className="text-xs uppercase font-display font-bold tracking-widest text-slate-500">
+            <div className="h-3.5 w-[1.5px] bg-slate-300 mx-1" />
+            <span className="text-[10px] uppercase font-display font-extrabold tracking-widest text-slate-500">
               International
             </span>
           </div>
 
-          {/* Dark Navy Statement Banner (Exact Reference Placement) */}
-          <div className="w-full max-w-2xl px-6 py-3.5 rounded-2xl bg-[#07172C] text-white text-center shadow-lg border border-cyan/20">
-            <p className="text-xs sm:text-sm font-medium leading-relaxed">
-              At <strong className="text-cyan-light font-bold">Gen Z International</strong>, we don’t just teach curriculum — we architect prestigious global scholarships, British careers, and lifelong international leadership.
+          {/* Dark Navy Statement Banner (Exact Reference Placement & Proportions) */}
+          <div className="w-full px-4 py-2.5 rounded-xl bg-[#07172C] text-white text-center shadow-md border border-cyan/20">
+            <p className="text-[11px] sm:text-xs font-medium leading-relaxed">
+              At <strong className="text-cyan-light font-bold">Gen Z International</strong>, we don’t just teach curriculum — we architect prestigious scholarships, global careers, and international leadership.
             </p>
           </div>
         </div>
 
-        {/* 2. THE LARGE HEROIC CIRCULAR PORTRAIT (Centerpiece of the Design) */}
-        <div className="relative z-10 flex justify-center my-6 sm:my-8">
+        {/* 2. THE LARGE CIRCULAR PORTRAIT WITH NAVY SEMI-CIRCLE ARCH (Exact Proportions) */}
+        <div className="relative z-10 flex justify-center my-4 sm:my-5">
           <div className="relative">
-            {/* Deep Navy Semi-Circle Backdrop (Exact Reference Arch Shape) */}
-            <div className="absolute -inset-6 sm:-inset-10 bg-[#0B2545] rounded-t-full rounded-b-none opacity-95 shadow-2xl" />
+            {/* Deep Navy Semi-Circle / Arch Backdrop Behind Circle */}
+            <div className="absolute -inset-x-6 sm:-inset-x-8 -top-6 sm:-top-8 bottom-0 bg-[#0B2545] rounded-t-full opacity-95 shadow-lg" />
 
-            {/* Glowing Accent Arc Ring */}
-            <div className="absolute -inset-7 sm:-inset-11 border-4 border-cyan/40 rounded-t-full pointer-events-none" />
+            {/* Cyan Accent Ring on Arch Edge */}
+            <div className="absolute -inset-x-6 sm:-inset-x-8 -top-6 sm:-top-8 bottom-0 border-t-2 border-x-2 border-cyan/40 rounded-t-full pointer-events-none" />
 
-            {/* Massive Circular Portrait Container (Huge, Clear, Sharp!) */}
-            <div className="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 rounded-full border-8 border-white shadow-[0_15px_40px_rgba(11,37,69,0.35)] overflow-hidden bg-navy-dark transition-transform duration-500 group-hover:scale-[1.02]">
+            {/* Circular Portrait Frame (Well-Proportioned: w-52 h-52 sm:w-60 sm:h-60) */}
+            <div className="relative w-52 h-52 sm:w-60 sm:h-60 rounded-full border-4 sm:border-[6px] border-white shadow-[0_12px_30px_rgba(11,37,69,0.35)] overflow-hidden bg-navy-dark transition-transform duration-500 group-hover:scale-105">
               <img
                 src={profile.image}
                 alt={profile.name}
@@ -262,79 +278,81 @@ const AinexPosterCard: React.FC<AinexPosterCardProps> = ({
               />
 
               {/* Bottom Subtle Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-navy-dark/30 via-transparent to-transparent pointer-events-none" />
             </div>
 
-            {/* Floating Nationality Badge at Portrait Base */}
-            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white shadow-xl border-2 border-slate-200 text-navy text-xs font-display font-bold">
+            {/* Nationality Pill Badge at Portrait Base */}
+            <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white shadow-md border border-slate-200 text-navy text-[11px] font-display font-bold">
               {renderFlag()}
               <span>{profile.nationality}</span>
             </div>
           </div>
         </div>
 
-        {/* 3. NAME, ROLE & FRAMED QUOTATION */}
-        <div className="relative z-10 text-center max-w-2xl mx-auto mt-6 mb-6">
-          <h3 className="font-display text-3xl sm:text-4xl font-black text-navy tracking-tight mb-1">
+        {/* 3. NAME, ROLE & FRAMED QUOTATION (Exact Reference Typography) */}
+        <div className="relative z-10 text-center mt-4 mb-4">
+          <h3 className="font-display text-2xl sm:text-3xl font-black text-navy tracking-tight mb-0.5">
             {profile.name}
           </h3>
 
-          <p className="text-sm sm:text-base font-semibold text-slate-500 mb-6">
-            {profile.title} · {profile.roleBadge}
+          <p className="text-xs sm:text-sm font-semibold text-slate-500 mb-4">
+            {profile.nationality} · {profile.title}
           </p>
 
-          {/* Quotation Area Framed with Big Quotes (Exact Reference Detail) */}
-          <div className="relative px-8 sm:px-14 py-4 group-hover:bg-slate-50/80 rounded-2xl transition-colors duration-300">
-            {/* Big Solid Navy Opening Quote on Left */}
-            <div className="absolute left-0 top-0 text-navy select-none">
-              <Quote className="w-8 h-8 sm:w-11 sm:h-11 text-navy fill-navy" />
+          {/* Quotation Area Framed with Big Solid Quotes (Exact Reference Detail) */}
+          <div className="relative px-6 sm:px-8 py-2 group-hover:bg-slate-50/80 rounded-2xl transition-colors duration-300">
+            {/* Solid Navy Opening Quote on Left */}
+            <div className="absolute left-0 top-0 text-[#0B2545] select-none">
+              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-[#0B2545] fill-[#0B2545]" />
             </div>
 
             {/* Authentic Quote Text */}
-            <p className="text-slate-700 text-sm sm:text-base md:text-lg leading-relaxed font-normal italic">
+            <p className="text-slate-700 text-xs sm:text-[13px] sm:leading-relaxed font-normal italic px-2">
               "{profile.quote || profile.experience[0]}"
             </p>
 
-            {/* Big Solid Navy Closing Quote on Right */}
-            <div className="absolute right-0 bottom-0 text-navy select-none">
-              <Quote className="w-8 h-8 sm:w-11 sm:h-11 text-navy fill-navy rotate-180" />
+            {/* Solid Navy Closing Quote on Right */}
+            <div className="absolute right-0 bottom-0 text-[#0B2545] select-none">
+              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-[#0B2545] fill-[#0B2545] rotate-180" />
             </div>
           </div>
 
           {/* Academic Degrees & Honors Badges */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-6">
-            {profile.qualifications.map((q, qIdx) => (
+          <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4">
+            {profile.qualifications.slice(0, 2).map((q, qIdx) => (
               <span
                 key={qIdx}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 border border-slate-200 text-navy text-xs font-semibold"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-navy text-[11px] font-semibold"
               >
-                <CheckCircle2 className="w-3.5 h-3.5 text-cyan shrink-0" />
+                <CheckCircle2 className="w-3 h-3 text-cyan shrink-0" />
                 <span>
                   <strong>{q.degree}:</strong> {q.institution}
                 </span>
               </span>
             ))}
           </div>
+
+          {/* Discreet Credentials Dossier Link */}
+          <div className="mt-3">
+            <button
+              onClick={onOpenDossier}
+              className="text-[11px] font-display font-bold text-navy hover:text-cyan transition-colors underline underline-offset-4 inline-flex items-center gap-1"
+            >
+              <span>View Full Credentials & Academic Dossier</span>
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
         </div>
 
-        {/* 4. BOTTOM PILL ACTION BUTTONS (Exact Reference Detail) */}
-        <div className="relative z-10 pt-6 border-t-2 border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-          {/* Left Pill: Direct Advisory Button */}
+        {/* 4. BOTTOM PILL ACTION BUTTONS (Exact Reference Replication) */}
+        <div className="relative z-10 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 flex-wrap">
+          {/* Left Pill: info/advisory email */}
           <button
             onClick={onOpenConsultation}
-            className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#07172C] hover:bg-cyan text-white text-xs sm:text-sm font-display font-bold shadow-md hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-2 group/btn"
+            className="flex-1 min-w-[140px] px-3.5 py-2 rounded-full bg-[#334155] hover:bg-cyan text-white text-[11px] font-display font-semibold shadow-sm hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-1.5 group/btn"
           >
-            <Mail className="w-4 h-4 text-cyan group-hover/btn:text-white" />
-            <span>Advisory & Mentorship Office</span>
-          </button>
-
-          {/* Center: Inspect Full Dossier */}
-          <button
-            onClick={onOpenDossier}
-            className="text-xs sm:text-sm font-display font-bold text-navy hover:text-cyan transition-colors underline underline-offset-4 flex items-center gap-1"
-          >
-            <span>View Complete Credentials Dossier</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <Mail className="w-3.5 h-3.5 text-cyan-light group-hover/btn:text-white" />
+            <span>Advisory Office</span>
           </button>
 
           {/* Right Pill: Website Link */}
@@ -343,16 +361,16 @@ const AinexPosterCard: React.FC<AinexPosterCardProps> = ({
               href={getWebsiteHref()}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#07172C] hover:bg-cyan text-white text-xs sm:text-sm font-display font-bold shadow-md hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-2 group/link"
+              className="flex-1 min-w-[140px] px-3.5 py-2 rounded-full bg-[#334155] hover:bg-cyan text-white text-[11px] font-display font-semibold shadow-sm hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-1.5 group/link"
             >
-              <Globe2 className="w-4 h-4 text-cyan group-hover/link:text-white" />
-              <span>{getWebsiteUrl()}</span>
-              <ExternalLink className="w-3 h-3 ml-1" />
+              <Globe2 className="w-3.5 h-3.5 text-cyan-light group-hover/link:text-white" />
+              <span className="truncate">{getWebsiteUrl()}</span>
+              <ExternalLink className="w-2.5 h-2.5 ml-0.5 shrink-0" />
             </a>
           ) : (
-            <div className="w-full sm:w-auto px-6 py-3 rounded-full bg-[#07172C] text-white text-xs sm:text-sm font-display font-bold shadow-md flex items-center justify-center gap-2">
-              <Globe2 className="w-4 h-4 text-cyan" />
-              <span>{getWebsiteUrl()}</span>
+            <div className="flex-1 min-w-[140px] px-3.5 py-2 rounded-full bg-[#334155] text-white text-[11px] font-display font-semibold shadow-sm flex items-center justify-center gap-1.5">
+              <Globe2 className="w-3.5 h-3.5 text-cyan-light" />
+              <span className="truncate">{getWebsiteUrl()}</span>
             </div>
           )}
         </div>
@@ -378,11 +396,11 @@ const ExecutiveDossierModal: React.FC<ExecutiveDossierModalProps> = ({
   const getImageStyling = () => {
     switch (profile.id) {
       case 'zahid-bajwa':
-        return 'object-cover object-[50%_22%] scale-[1.08]';
+        return 'object-cover object-[50%_25%] scale-[1.12]';
       case 'muzaffar-hussain':
-        return 'object-cover object-[50%_25%] scale-[1.08]';
+        return 'object-cover object-[50%_28%] scale-[1.12]';
       case 'suhaib-cheema':
-        return 'object-cover object-[52%_15%] scale-[1.75] origin-[52%_15%]';
+        return 'object-cover object-[52%_15%] scale-[1.8] origin-[52%_15%]';
       default:
         return 'object-cover object-top';
     }
@@ -413,7 +431,7 @@ const ExecutiveDossierModal: React.FC<ExecutiveDossierModalProps> = ({
         </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          {/* Left Column: Big Circular Headshot & Action */}
+          {/* Left Column: Headshot & Action */}
           <div className="lg:col-span-5 flex flex-col items-center text-center">
             <div className="relative w-44 h-44 sm:w-52 sm:h-52 rounded-full border-4 border-white shadow-[0_0_35px_rgba(0,153,255,0.4)] overflow-hidden bg-navy-dark mb-4">
               <img
