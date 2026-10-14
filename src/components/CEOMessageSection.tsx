@@ -190,31 +190,31 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
 
               {/* Main Card Frame */}
               <div className="relative rounded-3xl overflow-hidden bg-navy-dark border-2 border-cyan/40 shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
-                {/* Portrait Image */}
-                <div className="relative aspect-[4/5] overflow-hidden">
+                {/* Top Clean Badges Bar (Outside Face) */}
+                <div className="p-3 bg-navy-dark/95 border-b border-white/10 flex items-center justify-between">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan/15 border border-cyan/40 text-cyan-light text-xs font-semibold">
+                    <ShieldCheck className="w-3.5 h-3.5 text-cyan" />
+                    <span>Chief Executive Officer</span>
+                  </div>
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 text-xs text-slate-300 font-medium">
+                    <span>🇵🇰 Pakistan</span>
+                  </div>
+                </div>
+
+                {/* Portrait Image with Perfect Face Focus */}
+                <div className="relative aspect-[4/4.8] overflow-hidden bg-navy-deep">
                   <img
                     src="/assets/images/team/muhammad-nawaz.jpg"
                     alt="Muhammad Nawaz - CEO Gen Z Consultant"
-                    className="w-full h-full object-cover object-top filter brightness-105 contrast-105 group-hover:scale-105 transition-transform duration-700 ease-out"
+                    className="w-full h-full object-cover object-[30%_15%] scale-[1.75] origin-[30%_15%] filter brightness-105 contrast-105 group-hover:scale-[1.85] transition-transform duration-700 ease-out"
                   />
 
                   {/* Gradient Fade Overlays for Cinematic Depth */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/30 to-transparent opacity-90" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-navy-dark/40 via-transparent to-navy-dark/30 pointer-events-none" />
-
-                  {/* Top Floating Badge */}
-                  <div className="absolute top-4 left-4 inline-flex items-center gap-2 px-3 py-1 rounded-full bg-navy-deep/85 backdrop-blur-md border border-cyan/30 text-white text-xs font-semibold shadow-lg">
-                    <ShieldCheck className="w-4 h-4 text-cyan" />
-                    <span>Chief Executive Officer</span>
-                  </div>
-
-                  {/* Top Right Flag */}
-                  <div className="absolute top-4 right-4 px-2.5 py-1 rounded-full bg-navy-deep/85 backdrop-blur-md border border-white/20 text-sm shadow-lg">
-                    🇵🇰 Pakistan
-                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-navy-dark via-navy-dark/40 to-transparent opacity-95" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-navy-dark/40 via-transparent to-navy-dark/20 pointer-events-none" />
 
                   {/* Bottom Typography (Warren Buffet Signature Placement) */}
-                  <div className="absolute bottom-6 left-6 right-6 z-10">
+                  <div className="absolute bottom-5 left-6 right-6 z-10">
                     <div className="text-cyan text-xs font-display font-extrabold uppercase tracking-widest mb-1 flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-cyan" />
                       <span>Executive Leadership</span>
