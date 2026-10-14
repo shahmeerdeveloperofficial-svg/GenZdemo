@@ -59,11 +59,42 @@ export const TurkeyFlag: React.FC<{ className?: string }> = ({ className = 'w-fu
   </svg>
 );
 
+export const DenmarkFlag: React.FC<{ className?: string }> = ({ className = 'w-full h-full' }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className={className}>
+    <rect width="640" height="480" fill="#c60c30" />
+    <rect width="70" height="480" x="190" fill="#ffffff" />
+    <rect width="640" height="70" y="205" fill="#ffffff" />
+  </svg>
+);
+
+export const PakistanFlag: React.FC<{ className?: string }> = ({ className = 'w-full h-full' }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" className={className}>
+    <rect width="640" height="480" fill="#01411C" />
+    <rect width="160" height="480" fill="#ffffff" />
+    <g transform="translate(400, 240) rotate(-45)">
+      {/* Crescent */}
+      <circle cx="0" cy="0" r="110" fill="#ffffff" />
+      <circle cx="32" cy="-18" r="96" fill="#01411C" />
+      {/* Star */}
+      <polygon
+        fill="#ffffff"
+        points="
+          20,-75 29,-45 60,-45 35,-27 44,3 20,-15 -4,3 5,-27 -20,-45 11,-45
+        "
+        transform="translate(15, -45) scale(0.65)"
+      />
+    </g>
+  </svg>
+);
+
 export const getCountryFlag = (country: string) => {
   const c = country.toUpperCase();
+  if (c.includes('DENMARK') || c.includes('DK')) return DenmarkFlag;
+  if (c.includes('PAKISTAN') || c.includes('PK')) return PakistanFlag;
   if (c.includes('USA') || c.includes('UNITED STATES')) return USFlag;
-  if (c.includes('UK') || c.includes('BRITAIN')) return UKFlag;
+  if (c.includes('UK') || c.includes('BRITAIN') || c.includes('UNITED KINGDOM')) return UKFlag;
   if (c.includes('MALAYSIA')) return MalaysiaFlag;
   if (c.includes('TURKEY') || c.includes('TURKIYE')) return TurkeyFlag;
   return null;
 };
+

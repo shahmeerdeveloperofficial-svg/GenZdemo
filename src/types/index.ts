@@ -61,3 +61,37 @@ export interface NewsEvent {
   excerpt: string;
   image: string;
 }
+
+export interface LeadershipQualification {
+  degree: string;
+  field?: string;
+  institution: string;
+  country?: string;
+  highlight?: boolean;
+}
+
+export interface LeadershipVenture {
+  name: string;
+  url?: string;
+  role: string;
+  description: string;
+}
+
+export interface LeadershipProfile {
+  id: string;
+  name: string;
+  title: string;
+  roleBadge: string;
+  nationality: string;
+  countryCode: 'DK' | 'GB' | 'PK' | 'GLOBAL';
+  countryFlagEmoji: string;
+  image: string;
+  quote?: string;
+  qualifications: LeadershipQualification[];
+  experience: string[];
+  specializations: string[];
+  ventures?: LeadershipVenture[];
+  achievements?: string[];
+  featuredBadge?: string;
+}
+

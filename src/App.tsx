@@ -5,6 +5,7 @@ import { HeroScrollPinned } from './components/HeroScrollPinned';
 import { StatsBar } from './components/StatsBar';
 import { LMSAndCRMSection } from './components/LMSAndCRMSection';
 import { WelcomeSection } from './components/WelcomeSection';
+import { LeadershipSection } from './components/LeadershipSection';
 import { PhilosophySection } from './components/PhilosophySection';
 import { WhyUsSection } from './components/WhyUsSection';
 import { SuccessStoriesSection } from './components/SuccessStoriesSection';
@@ -50,6 +51,9 @@ export const App: React.FC = () => {
 
           {/* Welcome & Head of School Editorial Overview */}
           <WelcomeSection />
+
+          {/* Executive Leadership & Global Advisory Directorate */}
+          <LeadershipSection onOpenConsultation={handleOpenModal} />
 
           {/* Educational Philosophy & 4 Core Pillars */}
           <PhilosophySection />
