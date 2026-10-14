@@ -152,37 +152,54 @@ export const LEADERSHIP_PROFILES: LeadershipProfile[] = [
     id: 'muhammad-nawaz',
     name: 'Muhammad Nawaz',
     title: 'CEO',
-    roleBadge: 'Chief Executive Officer & Strategic Visionary',
+    roleBadge: 'Chief Executive Officer | Human Development & Leadership Consultant',
     nationality: 'Pakistan',
     countryCode: 'PK',
     countryFlagEmoji: '🇵🇰',
     image: '/assets/images/team/muhammad-nawaz.jpg',
-    featuredBadge: 'M.Sc UWS Scotland UK · Strategic Institutional Leader',
-    quote: 'Our commitment is uncompromising: to arm our students with global credentials, intellectual fearlessness, and direct conduits to world powerhouses.',
+    featuredBadge: 'MSc UK & Punjab · 15+ Yrs Leadership · 50K+ Mentored',
+    quote: 'Converting Human Potential into Human Capital. Our mission is to develop capable, confident, and purpose-driven individuals who lead themselves, advance their careers, and create a lasting positive impact on society.',
     qualifications: [
       {
-        degree: 'M.Sc',
-        field: 'Strategic Leadership & Management',
-        institution: 'University of the West of Scotland (UWS)',
+        degree: 'MSc',
+        field: 'Waste Management and Environmental Sciences',
+        institution: 'United Kingdom Higher Education',
         country: 'United Kingdom',
         highlight: true
+      },
+      {
+        degree: 'MSc',
+        field: 'Geography',
+        institution: 'University of the Punjab',
+        country: 'Pakistan',
+        highlight: true
+      },
+      {
+        degree: 'M.Sc',
+        field: 'Institutional Strategy & Management',
+        institution: 'University of the West of Scotland (UWS)',
+        country: 'United Kingdom',
+        highlight: false
       }
     ],
     experience: [
-      'Chief Executive Officer spearheading GenZ International School & Education Consultants into a globally articulated educational powerhouse.',
-      'Spearheading multi-campus infrastructure, intelligent LMS/CRM platforms, and international scholarship consortiums.',
-      'Direct liaison connecting top European, British, and North American academic institutions with exceptional Pakistani student talent.',
-      'Executive governance ensuring full compliance with Cambridge Assessment International Education (CAIE) and global best practices.'
+      'Over 15+ years of distinguished leadership in personal development, executive training, human performance, and youth empowerment across Pakistan.',
+      'Trained more than 50,000 individuals through immersive personal growth, executive leadership, and human development workshops.',
+      'Facilitated high-impact, 3-day Life Mastery retreats for over 1,500 participants and led youth leadership camps for 1,000+ young leaders.',
+      'Delivered hundreds of high-stakes one-to-one executive coaching sessions for corporate heads, educators, and scholars.'
     ],
     specializations: [
-      'Executive Institutional Leadership & Vision',
-      'Transnational Academic Partnerships',
-      'Cambridge International Accreditation Strategy',
-      'Next-Gen Educational Technology & LMS Systems'
+      'Leadership & Executive Coaching',
+      'Personal & Human Development',
+      'Youth Empowerment & Mindset Transformation',
+      'Life Mastery & Peak Performance',
+      'Converting Human Potential into Capital'
     ],
     achievements: [
-      'Founder and Chief Executive Officer of GenZ International School & Consultants',
-      'Pioneered premier UK-Pakistan academic collaboration pathways'
+      'Trained 50,000+ individuals across personal and professional domains',
+      'Conducted 3-Day Life Mastery Retreats for 1,500+ participants',
+      'Pioneered human development and global education consultancy model at Gen Z'
     ]
   }
+
 ];

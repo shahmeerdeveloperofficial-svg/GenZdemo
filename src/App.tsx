@@ -5,6 +5,7 @@ import { HeroScrollPinned } from './components/HeroScrollPinned';
 import { StatsBar } from './components/StatsBar';
 import { LMSAndCRMSection } from './components/LMSAndCRMSection';
 import { WelcomeSection } from './components/WelcomeSection';
+import { CEOMessageSection } from './components/CEOMessageSection';
 import { LeadershipSection } from './components/LeadershipSection';
 import { PhilosophySection } from './components/PhilosophySection';
 import { WhyUsSection } from './components/WhyUsSection';
@@ -51,6 +52,9 @@ export const App: React.FC = () => {
 
           {/* Welcome & Head of School Editorial Overview */}
           <WelcomeSection />
+
+          {/* CEO Leadership Spotlight & Keynote Vision (Warren Buffet Inspired Style) */}
+          <CEOMessageSection onOpenConsultation={handleOpenModal} />
 
           {/* Executive Leadership & Global Advisory Directorate */}
           <LeadershipSection onOpenConsultation={handleOpenModal} />

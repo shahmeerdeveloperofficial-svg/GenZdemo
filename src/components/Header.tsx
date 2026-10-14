@@ -15,7 +15,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenModal, onOpenPortalModal }
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 40);
 
-      const sections = ['continuum', 'about', 'leadership', 'philosophy', 'why-us', 'success', 'campus', 'admissions', 'news'];
+      const sections = ['continuum', 'about', 'ceo-message', 'leadership', 'philosophy', 'why-us', 'success', 'campus', 'admissions', 'news'];
       for (const sectionId of sections) {
         const el = document.getElementById(sectionId);
         if (el) {
@@ -35,12 +35,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenModal, onOpenPortalModal }
   const navLinks = [
     { name: 'Continuum', href: '#continuum', id: 'continuum' },
     { name: 'LMS & CRM', href: '#lms-crm', id: 'lms-crm' },
+    { name: 'CEO Vision', href: '#ceo-message', id: 'ceo-message' },
     { name: 'Directorate', href: '#leadership', id: 'leadership' },
     { name: 'Philosophy', href: '#philosophy', id: 'philosophy' },
     { name: 'Why GenZ', href: '#why-us', id: 'why-us' },
     { name: 'Placements', href: '#success', id: 'success' },
     { name: 'Admissions', href: '#admissions', id: 'admissions' },
   ];
+
 
 
   return (
