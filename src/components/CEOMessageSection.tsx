@@ -1,205 +1,316 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Sparkles, ArrowRight, GraduationCap } from 'lucide-react';
+import React, { useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import {
+  Sparkles,
+  ArrowRight,
+  GraduationCap,
+  Trophy,
+  Users,
+  Compass,
+  Award,
+  CheckCircle2,
+  ShieldCheck,
+  Zap,
+  TrendingUp,
+  Target
+} from 'lucide-react';
 
 interface CEOMessageSectionProps {
   onOpenConsultation?: () => void;
 }
 
 export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenConsultation }) => {
+  // 3D Mouse Parallax Tilt for the CEO Showcase Card
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 20, stiffness: 200 };
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [8, -8]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-8, 8]), springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+    setIsHovered(false);
+  };
+
+  const impactMetrics = [
+    { value: '50,000+', label: 'Individuals Trained', sub: 'Across Personal & Executive Programs', icon: Users },
+    { value: '15+', label: 'Years Experience', sub: 'Leadership & Human Development', icon: Trophy },
+    { value: '1,500+', label: 'Life Mastery Scholars', sub: '3-Day Immersive Retreats', icon: Compass },
+    { value: '1,000+', label: 'Youth Leaders Camp', sub: 'Summer Leadership Programs', icon: Target }
+  ];
+
   return (
     <section
-      className="py-20 md:py-28 bg-gradient-to-br from-[#040E1B] via-[#071A36] to-[#0A264E] relative overflow-hidden text-white border-y border-cyan/20"
+      className="py-24 md:py-32 bg-gradient-to-br from-[#030B17] via-[#07172C] to-[#0A2548] relative overflow-hidden text-white border-y border-cyan/25"
       id="ceo-message"
     >
-      {/* Ambient Radial Spotlight (Exact Warren Buffet Poster Backlight Effect) */}
-      <div className="absolute top-1/4 right-1/4 w-[38rem] h-[38rem] bg-cyan/20 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-[30rem] h-[30rem] bg-blue-600/15 rounded-full blur-[160px] pointer-events-none" />
+      {/* 3D Ambient Animated Glowing Orbs & Tech Particles */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Animated Radial Beam 1: Electric Cyan */}
+        <motion.div
+          animate={{
+            scale: [1, 1.15, 1],
+            opacity: [0.2, 0.35, 0.2]
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-1/4 -left-32 w-[38rem] h-[38rem] bg-cyan/20 rounded-full blur-[160px]"
+        />
 
-      {/* Subtle Geometric Overlay */}
-      <div
-        className="absolute inset-0 opacity-[0.03] pointer-events-none"
-        style={{
-          backgroundImage: `radial-gradient(circle at 1.5px 1.5px, #0099FF 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }}
-      />
+        {/* Animated Radial Beam 2: Royal Blue */}
+        <motion.div
+          animate={{
+            scale: [1.1, 1, 1.1],
+            opacity: [0.25, 0.4, 0.25]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-1/3 -right-32 w-[42rem] h-[42rem] bg-blue-600/25 rounded-full blur-[180px]"
+        />
+
+        {/* Central Luminous Core */}
+        <div className="absolute bottom-10 left-1/3 w-[35rem] h-[35rem] bg-cyan/10 rounded-full blur-[180px]" />
+
+        {/* High-Tech Circuit Matrix Overlay */}
+        <div
+          className="absolute inset-0 opacity-[0.035]"
+          style={{
+            backgroundImage: `radial-gradient(circle at 1.5px 1.5px, #0099FF 1px, transparent 0)`,
+            backgroundSize: '36px 36px'
+          }}
+        />
+
+        {/* Animated Cyber Slashes */}
+        <div className="absolute top-20 right-1/4 w-96 h-[1px] bg-gradient-to-r from-transparent via-cyan/40 to-transparent rotate-12" />
+        <div className="absolute bottom-32 left-1/5 w-80 h-[1px] bg-gradient-to-r from-transparent via-blue-500/30 to-transparent -rotate-12" />
+      </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* MAIN POSTER HERO GRID (Exact Warren Buffet Poster Structure) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center min-h-[640px]">
-          {/* LEFT COLUMN: Quote, Thin Geometric Line, Narrative, and Credentials */}
-          <div className="lg:col-span-6 flex flex-col justify-center relative z-20">
-            {/* Top Creator / CEO Badge (Matching Top-Left Avatar in Reference) */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="flex items-center gap-3 mb-6"
-            >
-              <div className="w-11 h-11 rounded-full overflow-hidden border-2 border-cyan shadow-[0_0_15px_rgba(0,153,255,0.4)] bg-navy-dark shrink-0">
-                <img
-                  src="/assets/images/team/muhammad-nawaz.jpg"
-                  alt="Muhammad Nawaz"
-                  className="w-full h-full object-cover object-[28%_15%] scale-[1.7]"
-                />
+        {/* Top Tag Badge */}
+        <div className="flex items-center justify-between flex-wrap gap-4 mb-10 pb-5 border-b border-white/10">
+          <div className="inline-flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan via-blue-500 to-cyan p-[2px] shadow-[0_0_20px_rgba(0,153,255,0.4)] animate-pulse">
+              <div className="w-full h-full rounded-[10px] bg-navy-dark flex items-center justify-center">
+                <Zap className="w-5 h-5 text-cyan" />
               </div>
-              <div>
-                <div className="font-display font-extrabold text-sm text-white tracking-wide">
-                  Muhammad Nawaz
-                </div>
-                <div className="text-cyan text-xs font-semibold tracking-wider uppercase">
-                  Chief Executive Officer
-                </div>
-              </div>
-            </motion.div>
-
-            {/* The Big Iconic Statement (Matching Typography & Accent of Warren Buffet Quote) */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="space-y-4 mb-6"
-            >
-              <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight tracking-tight">
-                "Converting <span className="text-cyan font-black">Human Potential</span> into{' '}
-                <span className="text-cyan font-black">Human Capital</span>."
-              </h2>
-
-              <p className="text-slate-200 text-base sm:text-lg lg:text-xl font-normal leading-relaxed">
-                It takes <strong>15 years</strong> of dedication to build a foundation of excellence, and{' '}
-                <strong>unwavering purpose</strong> to empower the next generation.
-              </p>
-
-              <p className="text-cyan-light text-base sm:text-lg font-medium leading-relaxed">
-                If you empower the mindset of youth, <strong>you transform the entire future.</strong>
-              </p>
-            </motion.div>
-
-            {/* Thin Geometric Connecting Line (Signature Warren Buffet Poster Detail) */}
-            <div className="relative mb-6 hidden sm:block">
-              <div className="w-44 h-10 border-l-2 border-b-2 border-cyan/40" />
             </div>
-
-            {/* CEO Narrative Text */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="space-y-3.5 text-slate-300 text-sm sm:text-base leading-relaxed mb-6"
-            >
-              <p>
-                <strong className="text-white font-semibold">Muhammad Nawaz</strong> is a leadership and human development professional with over{' '}
-                <span className="text-cyan-light font-bold">15 years of proven experience</span> in personal development, leadership training, human performance, and youth development in Pakistan.
-              </p>
-
-              <p className="text-xs sm:text-sm text-slate-400">
-                At Gen Z Consultant, he bridges the gap between education, personal development, and career success — empowering scholars with the mindset and capabilities to thrive internationally.
-              </p>
-            </motion.div>
-
-            {/* Academic Qualifications */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.25 }}
-              className="flex flex-wrap items-center gap-2 mb-8"
-            >
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan/15 border border-cyan/30 text-cyan-light text-xs font-semibold">
-                <GraduationCap className="w-3.5 h-3.5 text-cyan" />
-                <span>MSc Waste Management & Environmental Sciences (UK)</span>
+            <div>
+              <span className="text-xs font-display font-extrabold uppercase tracking-widest text-cyan-light flex items-center gap-1.5">
+                <span>Executive Leadership Spotlight</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan animate-ping" />
               </span>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-slate-200 text-xs font-semibold">
-                <GraduationCap className="w-3.5 h-3.5 text-slate-300" />
-                <span>MSc Geography (University of the Punjab)</span>
-              </span>
-            </motion.div>
-
-            {/* Action CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-            >
-              <button
-                onClick={onOpenConsultation}
-                className="group relative px-8 py-4 rounded-xl bg-gradient-to-r from-cyan via-blue-500 to-cyan bg-[length:200%_auto] hover:bg-right font-display text-sm font-bold text-white shadow-[0_0_30px_rgba(0,153,255,0.45)] hover:shadow-[0_0_45px_rgba(0,153,255,0.7)] transition-all duration-500 hover:scale-105 active:scale-95 flex items-center gap-3"
-              >
-                <Sparkles className="w-4 h-4 text-white" />
-                <span>Connect with CEO & Mentorship Office</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </button>
-            </motion.div>
+              <h4 className="text-white text-sm font-semibold">
+                Keynote Message from Chief Executive Officer
+              </h4>
+            </div>
           </div>
 
-          {/* RIGHT COLUMN: Seamless Cinematic Portrait (Exact Warren Buffet Poster Placement) */}
-          <div className="lg:col-span-6 relative flex justify-center lg:justify-end items-end h-[520px] sm:h-[620px] lg:h-[680px]">
-            {/* Ambient Cyan Radial Rim Light behind Head */}
-            <div className="absolute top-10 right-10 sm:right-20 w-80 h-80 bg-gradient-to-br from-cyan/35 to-blue-600/25 rounded-full blur-[90px] pointer-events-none" />
-
-            {/* Heroic Portrait Blended Seamlessly into Canvas (NO BOXES, NO PHONES!) */}
-            <div className="relative w-full max-w-[480px] h-full overflow-hidden">
-              <img
-                src="/assets/images/team/muhammad-nawaz.jpg"
-                alt="Muhammad Nawaz - CEO Gen Z Consultant"
-                className="w-full h-full object-cover object-[28%_15%] scale-[1.38] filter brightness-105 contrast-105"
-              />
-
-              {/* Edge Gradient Fades for Seamless Canvas Integration */}
-              {/* Left Edge Fade */}
-              <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#040E1B] via-[#040E1B]/80 to-transparent pointer-events-none" />
-              {/* Bottom Edge Fade */}
-              <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-[#040E1B] via-[#071A36]/90 to-transparent pointer-events-none" />
-              {/* Top Edge Fade */}
-              <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[#040E1B]/80 to-transparent pointer-events-none" />
-
-              {/* Huge Bold Typography Overlaid on Bottom Right (Exact Warren Buffet Placement) */}
-              <div className="absolute bottom-6 sm:bottom-10 right-4 sm:right-8 z-30 text-right">
-                <h3 className="font-display text-4xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-[0.92] drop-shadow-[0_4px_15px_rgba(0,0,0,0.8)]">
-                  Muhammad
-                  <br />
-                  Nawaz
-                </h3>
-                <p className="text-cyan text-sm sm:text-base font-extrabold mt-3 tracking-wide drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                  Chief Executive Officer (CEO)
-                </p>
-                <p className="text-slate-300 text-xs sm:text-sm font-medium tracking-wider drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                  Human Development & Leadership Consultant
-                </p>
-              </div>
-            </div>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan/10 border border-cyan/30 text-xs font-display font-bold text-cyan-light backdrop-blur-md shadow-[0_0_15px_rgba(0,153,255,0.2)]">
+            <ShieldCheck className="w-4 h-4 text-cyan" />
+            <span>Gen Z Consultant (Private Limited)</span>
           </div>
         </div>
 
-        {/* Minimalist Bottom Impact Numbers Strip (Clean & Non-Cluttered) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 mt-12 border-t border-white/10 relative z-10">
-          <div className="text-center md:text-left">
-            <div className="font-display text-3xl sm:text-4xl font-black text-cyan">50,000+</div>
-            <div className="text-xs font-semibold text-slate-300 mt-1">Individuals Trained</div>
-            <div className="text-[11px] text-slate-500">Across Leadership Programs</div>
+        {/* MAIN SPLIT POSTER HERO: Narrative on Left + 3D Tilt Heroic Portrait on Right */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          {/* LEFT COLUMN: The Bold Quote, Message, and Philosophy */}
+          <div className="lg:col-span-6 flex flex-col justify-center">
+            {/* Signature L-Bracket Line & Keynote Headline */}
+            <div className="relative pl-6 sm:pl-8 border-l-4 border-cyan mb-8">
+              {/* Top Accent Dot */}
+              <div className="absolute -top-1.5 -left-[7px] w-3 h-3 rounded-full bg-cyan shadow-[0_0_10px_#0099FF]" />
+              {/* Bottom Accent Dot */}
+              <div className="absolute -bottom-1.5 -left-[7px] w-3 h-3 rounded-full bg-cyan shadow-[0_0_10px_#0099FF]" />
+
+              <span className="text-xs font-display font-extrabold uppercase tracking-widest text-cyan mb-2 block">
+                The Core Leadership Philosophy
+              </span>
+
+              <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.12]">
+                "Converting{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-light via-cyan to-blue-400">
+                  Human Potential
+                </span>{' '}
+                into{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan via-blue-400 to-cyan-light">
+                  Human Capital
+                </span>
+                ."
+              </h2>
+            </div>
+
+            {/* CEO Narrative Text with Glowing Micro-Cards */}
+            <div className="space-y-4 mb-8">
+              <motion.div
+                whileHover={{ x: 5, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
+                className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-cyan/50 transition-all duration-300 backdrop-blur-md shadow-lg group"
+              >
+                <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                  <strong className="text-white font-semibold group-hover:text-cyan transition-colors">
+                    Muhammad Nawaz
+                  </strong>{' '}
+                  is a leadership and human development professional with over{' '}
+                  <span className="text-cyan-light font-bold">15 years of proven authority</span> in personal transformation, executive coaching, and youth empowerment in Pakistan.
+                </p>
+              </motion.div>
+
+              <motion.div
+                whileHover={{ x: 5, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
+                className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-cyan/50 transition-all duration-300 backdrop-blur-md shadow-lg group"
+              >
+                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
+                  "At Gen Z Consultant, we bridge the gap between academic education, personal growth, and global career success. My mission is to develop capable, confident, and purpose-driven leaders who can lead themselves, advance their careers, and create a lasting positive impact on society."
+                </p>
+              </motion.div>
+            </div>
+
+            {/* Verified Academic Degrees Badges */}
+            <div className="flex flex-wrap items-center gap-2.5 mb-8">
+              <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-cyan/15 border border-cyan/40 text-cyan-light text-xs font-semibold shadow-sm hover:scale-105 transition-transform">
+                <GraduationCap className="w-4 h-4 text-cyan" />
+                <span>MSc Waste Management & Environmental Sciences — United Kingdom</span>
+              </span>
+              <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/10 border border-white/20 text-slate-200 text-xs font-semibold shadow-sm hover:scale-105 transition-transform">
+                <GraduationCap className="w-4 h-4 text-slate-300" />
+                <span>MSc Geography — University of the Punjab, Pakistan</span>
+              </span>
+            </div>
+
+            {/* Heavy Animated CTA Button */}
+            <div>
+              <button
+                onClick={onOpenConsultation}
+                className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan via-blue-500 to-cyan bg-[length:200%_auto] hover:bg-right font-display text-sm font-bold text-white shadow-[0_0_35px_rgba(0,153,255,0.45)] hover:shadow-[0_0_55px_rgba(0,153,255,0.75)] transition-all duration-500 hover:scale-105 active:scale-95 flex items-center gap-3"
+              >
+                <Sparkles className="w-4 h-4 text-white animate-spin-slow" />
+                <span>Connect with CEO & Mentorship Office</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+            </div>
           </div>
 
-          <div className="text-center md:text-left">
-            <div className="font-display text-3xl sm:text-4xl font-black text-white">15+ Years</div>
-            <div className="text-xs font-semibold text-slate-300 mt-1">Executive Leadership</div>
-            <div className="text-[11px] text-slate-500">Proven Human Performance Track Record</div>
-          </div>
+          {/* RIGHT COLUMN: 3D Parallax Tilt Portrait (100% Unclipped Head, Eye-Touching Polish) */}
+          <div className="lg:col-span-6 flex justify-center items-center perspective-1000">
+            <motion.div
+              ref={cardRef}
+              style={{
+                rotateX,
+                rotateY,
+                transformStyle: 'preserve-3d'
+              }}
+              onMouseMove={handleMouseMove}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={handleMouseLeave}
+              className="relative w-full max-w-[480px] rounded-[2.5rem] bg-gradient-to-b from-[#0F356B] via-[#0B2545] to-[#040E1B] p-2.5 sm:p-3 border-2 border-cyan/40 shadow-[0_30px_90px_rgba(0,0,0,0.85)] group cursor-pointer transition-shadow duration-500 hover:border-cyan hover:shadow-[0_35px_100px_rgba(0,153,255,0.4)]"
+            >
+              {/* Outer Pulsing Neon Aura */}
+              <div className="absolute -inset-2 bg-gradient-to-r from-cyan via-blue-500 to-cyan rounded-[3rem] opacity-40 group-hover:opacity-80 blur-xl transition-all duration-500 pointer-events-none" />
 
-          <div className="text-center md:text-left">
-            <div className="font-display text-3xl sm:text-4xl font-black text-cyan">1,500+</div>
-            <div className="text-xs font-semibold text-slate-300 mt-1">Life Mastery Scholars</div>
-            <div className="text-[11px] text-slate-500">3-Day Immersive Retreats</div>
-          </div>
+              {/* Main Photo Frame (With breathing room at top so his head is NEVER cut off!) */}
+              <div className="relative rounded-[2rem] overflow-hidden bg-[#07172C] aspect-[4/4.8]">
+                {/* Background Ambient Radial Light behind his head */}
+                <div className="absolute top-6 left-1/4 w-64 h-64 bg-cyan/25 rounded-full blur-[80px] pointer-events-none" />
 
-          <div className="text-center md:text-left">
-            <div className="font-display text-3xl sm:text-4xl font-black text-white">1,000+</div>
-            <div className="text-xs font-semibold text-slate-300 mt-1">Youth Leaders Camp</div>
-            <div className="text-[11px] text-slate-500">Summer Camps & Youth Retreats</div>
+                {/* THE HEROIC PORTRAIT: Perfectly focused on face, 100% of head and hair visible! */}
+                <img
+                  src="/assets/images/team/muhammad-nawaz.jpg"
+                  alt="Muhammad Nawaz - CEO Gen Z Consultant"
+                  className="w-full h-full object-cover object-[30%_3%] transition-transform duration-700 ease-out group-hover:scale-105"
+                />
+
+                {/* Smooth Vignette Fades at Bottom and Edges */}
+                <div className="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-[#040E1B] via-[#040E1B]/80 to-transparent pointer-events-none" />
+                <div className="absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-[#040E1B]/50 to-transparent pointer-events-none" />
+
+                {/* Floating 3D Badge Top-Right: Nationality */}
+                <div
+                  style={{ transform: 'translateZ(45px)' }}
+                  className="absolute top-4 right-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#040E1B]/85 backdrop-blur-md border border-cyan/40 text-white text-xs font-display font-bold shadow-lg"
+                >
+                  <span>🇵🇰</span>
+                  <span>Pakistan HQ</span>
+                </div>
+
+                {/* Floating 3D Badge Top-Left: Authority Tag */}
+                <div
+                  style={{ transform: 'translateZ(45px)' }}
+                  className="absolute top-4 left-4 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan/20 backdrop-blur-md border border-cyan/50 text-cyan-light text-xs font-display font-bold shadow-lg"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-cyan" />
+                  <span>Chief Executive Officer</span>
+                </div>
+
+                {/* Overlaid Bold Typography at Bottom (Warren Buffet Style Placement) */}
+                <div
+                  style={{ transform: 'translateZ(55px)' }}
+                  className="absolute bottom-5 left-5 right-5 z-20"
+                >
+                  <div className="text-cyan text-xs font-display font-extrabold uppercase tracking-widest mb-1 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-cyan" />
+                    <span>Executive Leadership</span>
+                  </div>
+
+                  <h3 className="font-display text-3xl sm:text-4xl font-black text-white tracking-tight leading-none drop-shadow-[0_4px_12px_rgba(0,0,0,0.8)]">
+                    Muhammad Nawaz
+                  </h3>
+
+                  <p className="text-cyan-light text-sm font-bold mt-1.5 drop-shadow">
+                    Chief Executive Officer (CEO)
+                  </p>
+                  <p className="text-slate-300 text-xs font-medium drop-shadow">
+                    Human Development & Leadership Consultant
+                  </p>
+                </div>
+              </div>
+
+              {/* Floating Bottom Holographic Ribbon in 3D Space */}
+              <div
+                style={{ transform: 'translateZ(60px)' }}
+                className="mt-3 p-3 rounded-2xl bg-white/[0.05] border border-white/10 backdrop-blur-md flex items-center justify-between gap-2"
+              >
+                <div className="flex items-center gap-2 text-xs">
+                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="text-slate-200 font-semibold">15+ Yrs Authority</span>
+                </div>
+                <div className="text-xs font-display font-bold text-cyan">
+                  50,000+ Leaders Trained
+                </div>
+              </div>
+            </motion.div>
           </div>
+        </div>
+
+        {/* 4 Bottom Animated Metric Cards across section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mt-16 pt-12 border-t border-white/10 relative z-10">
+          {impactMetrics.map((metric, mIdx) => {
+            const Icon = metric.icon;
+            return (
+              <motion.div
+                key={mIdx}
+                whileHover={{ y: -5, borderColor: '#0099FF' }}
+                className="p-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.07] border border-white/10 transition-all duration-300 shadow-md group"
+              >
+                <Icon className="w-6 h-6 text-cyan mb-2.5 group-hover:scale-110 transition-transform" />
+                <div className="font-display text-2xl sm:text-3xl font-black text-white mb-1 group-hover:text-cyan transition-colors">
+                  {metric.value}
+                </div>
+                <div className="text-xs font-semibold text-slate-200">{metric.label}</div>
+                <div className="text-[11px] text-slate-400 mt-0.5">{metric.sub}</div>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
