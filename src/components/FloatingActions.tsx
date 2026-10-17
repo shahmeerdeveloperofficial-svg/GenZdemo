@@ -9,15 +9,31 @@ export const FloatingActions: React.FC<FloatingActionsProps> = ({ onOpenModal })
   const [showBackToTop, setShowBackToTop] = useState(false);
 
   useEffect(() => {
+    let show = false;
+    let ticking = false;
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const shouldShow = window.scrollY > 400;
+          if (shouldShow !== show) {
+            show = shouldShow;
+            setShowBackToTop(shouldShow);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (window.__lenis) {
+      window.__lenis.scrollTo(0, { duration: 0.85 });
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   return (

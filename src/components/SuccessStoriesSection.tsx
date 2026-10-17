@@ -7,7 +7,7 @@ export const SuccessStoriesSection: React.FC = () => {
   return (
     <section className="py-28 bg-navy-dark text-white relative overflow-hidden" id="success">
       {/* Background Radial Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] bg-cyan/15 blur-[140px] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[550px] bg-cyan/15 blur-3xl transform-gpu pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header with Blinking Cursor */}

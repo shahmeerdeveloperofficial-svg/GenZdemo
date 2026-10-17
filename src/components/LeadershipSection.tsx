@@ -307,6 +307,8 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
               <img
                 src={profile.image}
                 alt={profile.name}
+                loading="lazy"
+                decoding="async"
                 className={`w-full h-full filter brightness-105 contrast-105 transition-transform duration-700 ease-out group-hover:scale-110 ${getImageStyling()}`}
               />
 

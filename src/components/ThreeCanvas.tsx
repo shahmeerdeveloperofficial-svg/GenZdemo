@@ -4,10 +4,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import airplaneModelUrl from '../assets/models/airplane.glb?url';
 
 interface ThreeCanvasProps {
-  scrollProgress: number; // 0 to 1
+  scrollProgress?: number; // 0 to 1
+  scrollProgressRef?: React.MutableRefObject<number>;
 }
 
-export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
+export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress = 0, scrollProgressRef }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sceneRef = useRef<THREE.Scene | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
@@ -41,9 +42,9 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
 
     // 3. High-Performance Renderer with adaptive mobile DPR
     const isMobile = width < 768;
-    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.75 : 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.2 : 1.5);
     const renderer = new THREE.WebGLRenderer({
-      antialias: !isMobile || dpr < 2,
+      antialias: !isMobile,
       alpha: true,
       powerPreference: 'high-performance',
       stencil: false,
@@ -358,9 +359,22 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
 
       const time = performance.now() * 0.001;
 
-      // Ambient continuous idle rotation
+      // Dynamic smooth lerp based on scroll progress (zero React re-render overhead)
       if (globeGroupRef.current) {
-        globeGroupRef.current.rotation.y += 0.0025;
+        const currentProgress = scrollProgressRef ? scrollProgressRef.current : scrollProgress;
+        const targetRotY = currentProgress * Math.PI * 4;
+        const targetRotX = (currentProgress - 0.5) * 0.7;
+        const targetScale = 1 + Math.sin(currentProgress * Math.PI) * 0.2;
+
+        globeGroupRef.current.rotation.y += (targetRotY - globeGroupRef.current.rotation.y) * 0.12;
+        globeGroupRef.current.rotation.x += (targetRotX - globeGroupRef.current.rotation.x) * 0.12;
+        
+        const curScale = globeGroupRef.current.scale.x;
+        const nextScale = curScale + (targetScale - curScale) * 0.12;
+        globeGroupRef.current.scale.set(nextScale, nextScale, nextScale);
+
+        // Ambient continuous idle rotation
+        globeGroupRef.current.rotation.y += 0.0018;
       }
       if (ringRef.current) {
         ringRef.current.rotation.z += 0.008;
@@ -377,9 +391,7 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
 
       // Airplane Dynamic Flight Dynamics (Banking & Pitching)
       if (airplaneRef.current) {
-        // Dynamic banking roll into the flight curve
         airplaneRef.current.rotation.y = -0.32 + Math.sin(time * 2.2) * 0.06;
-        // Subtle aerodynamic pitch oscillation
         airplaneRef.current.rotation.z = Math.sin(time * 1.6) * 0.03;
       }
 
@@ -448,18 +460,5 @@ export const ThreeCanvas: React.FC<ThreeCanvasProps> = ({ scrollProgress }) => {
     };
   }, []);
 
-  // Update 3D rotation and scale based on scroll progress
-  useEffect(() => {
-    if (!globeGroupRef.current) return;
-
-    const targetRotY = scrollProgress * Math.PI * 4;
-    const targetRotX = (scrollProgress - 0.5) * 0.7;
-    const scale = 1 + Math.sin(scrollProgress * Math.PI) * 0.2;
-
-    globeGroupRef.current.rotation.y = targetRotY;
-    globeGroupRef.current.rotation.x = targetRotX;
-    globeGroupRef.current.scale.set(scale, scale, scale);
-  }, [scrollProgress]);
-
-  return <div ref={containerRef} className="w-full h-full pointer-events-none" />;
+  return <div ref={containerRef} className="w-full h-full pointer-events-none transform-gpu" />;
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { MapPin, Phone, Calendar, Lock, ArrowRight, Menu, X, Sparkles } from 'lucide-react';
 
 interface HeaderProps {
@@ -7,29 +7,51 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onOpenModal, onOpenPortalModal }) => {
+  const isScrolledRef = useRef(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
-
-      const sections = ['continuum', 'about', 'ceo-message', 'leadership', 'philosophy', 'why-us', 'success', 'campus', 'admissions', 'news'];
-      for (const sectionId of sections) {
-        const el = document.getElementById(sectionId);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 140 && rect.bottom >= 140) {
-            setActiveSection(sectionId);
-            break;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.scrollY > 40;
+          if (scrolled !== isScrolledRef.current) {
+            isScrolledRef.current = scrolled;
+            setIsScrolled(scrolled);
           }
-        }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+
+    // High-performance IntersectionObserver: offloads scroll calculation from main thread with zero forced reflows
+    const sections = ['continuum', 'about', 'ceo-message', 'leadership', 'philosophy', 'why-us', 'success', 'campus', 'admissions', 'news'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-100px 0px -60% 0px' }
+    );
+
+    sections.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      observer.disconnect();
+    };
   }, []);
 
   const navLinks = [

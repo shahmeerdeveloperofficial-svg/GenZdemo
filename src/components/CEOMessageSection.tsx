@@ -76,11 +76,11 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
         {/* Animated Radial Beam 1: Electric Cyan */}
         <motion.div
           animate={{
-            scale: [1, 1.15, 1],
+            scale: [1, 1.1, 1],
             opacity: [0.2, 0.35, 0.2]
           }}
           transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/4 -left-32 w-[38rem] h-[38rem] bg-cyan/20 rounded-full blur-[160px]"
+          className="absolute top-1/4 -left-32 w-[34rem] h-[34rem] bg-cyan/20 rounded-full blur-3xl transform-gpu pointer-events-none will-change-transform"
         />
 
         {/* Animated Radial Beam 2: Royal Blue */}
@@ -90,11 +90,11 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
             opacity: [0.25, 0.4, 0.25]
           }}
           transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/3 -right-32 w-[42rem] h-[42rem] bg-blue-600/25 rounded-full blur-[180px]"
+          className="absolute top-1/3 -right-32 w-[36rem] h-[36rem] bg-blue-600/25 rounded-full blur-3xl transform-gpu pointer-events-none will-change-transform"
         />
 
         {/* Central Luminous Core */}
-        <div className="absolute bottom-10 left-1/3 w-[35rem] h-[35rem] bg-cyan/10 rounded-full blur-[180px]" />
+        <div className="absolute bottom-10 left-1/3 w-[30rem] h-[30rem] bg-cyan/10 rounded-full blur-3xl transform-gpu pointer-events-none" />
 
         {/* High-Tech Circuit Matrix Overlay */}
         <div
@@ -271,6 +271,8 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
                 <img
                   src="/assets/images/team/muhammad-nawaz.jpg"
                   alt="Muhammad Nawaz - CEO Gen Z Consultant"
+                  loading="lazy"
+                  decoding="async"
                   className="w-full h-full object-cover object-[30%_3%] transition-transform duration-700 ease-out group-hover:scale-105"
                 />
 

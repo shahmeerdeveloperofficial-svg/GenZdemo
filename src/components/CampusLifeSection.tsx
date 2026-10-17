@@ -37,6 +37,11 @@ export const CampusLifeSection: React.FC<CampusLifeProps> = ({ onOpenModal }) =>
 
     master.add(bellTl, 0).add(clapperTl, 0.08);
 
+    // High-performance quickTo setter avoids GC churn and tween rebuilds during scrolling
+    const tiltSetter = bellContainerRef.current
+      ? gsap.quickTo(bellContainerRef.current, 'rotation', { duration: 0.4, ease: 'power1.out' })
+      : null;
+
     // ScrollTrigger to play pendulum when in viewport + add scroll velocity reaction
     const trigger = ScrollTrigger.create({
       trigger: sectionRef.current,
@@ -47,16 +52,10 @@ export const CampusLifeSection: React.FC<CampusLifeProps> = ({ onOpenModal }) =>
         else master.pause();
       },
       onUpdate: (self) => {
-        // Add subtle tilt impulse on scroll velocity
-        if (bellContainerRef.current) {
+        if (tiltSetter) {
           const velocity = self.getVelocity() / 350;
           const clampedVelocity = Math.max(-12, Math.min(12, velocity));
-          gsap.to(bellContainerRef.current, {
-            rotation: clampedVelocity,
-            duration: 0.4,
-            ease: 'power1.out',
-            overwrite: 'auto',
-          });
+          tiltSetter(clampedVelocity);
         }
       },
     });

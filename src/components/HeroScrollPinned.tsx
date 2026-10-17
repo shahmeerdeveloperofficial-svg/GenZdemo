@@ -11,7 +11,8 @@ interface HeroScrollPinnedProps {
 
 export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const scrollProgressRef = useRef(0);
+  const activeStageIdxRef = useRef(-1);
   const [activeStageIdx, setActiveStageIdx] = useState(-1); // -1 = Hero Intro, 0..4 = Stages
 
   useEffect(() => {
@@ -27,7 +28,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
 
             let progress = scrolled / containerHeight;
             progress = Math.max(0, Math.min(1, progress));
-            setScrollProgress(progress);
+            scrollProgressRef.current = progress;
 
             // Phase distribution:
             // 0.00 - 0.16 : Hero Intro Screen with 3D Globe
@@ -36,18 +37,24 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
             // 0.50 - 0.67 : Stage 03 (Middle Years Academy)
             // 0.67 - 0.84 : Stage 04 (Senior Cambridge A-Levels)
             // 0.84 - 1.00 : Stage 05 (Beyond GenZ Flight Path)
+            let nextStage = -1;
             if (progress < 0.15) {
-              setActiveStageIdx(-1);
+              nextStage = -1;
             } else if (progress < 0.32) {
-              setActiveStageIdx(0);
+              nextStage = 0;
             } else if (progress < 0.49) {
-              setActiveStageIdx(1);
+              nextStage = 1;
             } else if (progress < 0.66) {
-              setActiveStageIdx(2);
+              nextStage = 2;
             } else if (progress < 0.83) {
-              setActiveStageIdx(3);
+              nextStage = 3;
             } else {
-              setActiveStageIdx(4);
+              nextStage = 4;
+            }
+
+            if (nextStage !== activeStageIdxRef.current) {
+              activeStageIdxRef.current = nextStage;
+              setActiveStageIdx(nextStage);
             }
           }
           ticking = false;
@@ -74,7 +81,11 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
     else if (stageIdx === 4) targetRatio = 0.92;
 
     const targetY = containerTop + containerHeight * targetRatio;
-    window.scrollTo({ top: targetY, behavior: 'smooth' });
+    if (window.__lenis) {
+      window.__lenis.scrollTo(targetY, { duration: 0.85 });
+    } else {
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
   };
 
   const currentStage = activeStageIdx >= 0 ? CONTINUUM_STAGES[activeStageIdx] : null;
@@ -113,18 +124,18 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
           <img
             src="/assets/images/cream-top-cloud.webp"
             alt=""
-            className="absolute top-0 -left-10 w-[450px] opacity-40 animate-pulse"
+            className="absolute top-0 -left-10 w-[450px] opacity-40 animate-pulse pointer-events-none"
           />
           <img
             src="/assets/images/cream-bottom-cloud.webp"
             alt=""
-            className="absolute bottom-10 right-0 w-[500px] opacity-40 animate-pulse"
+            className="absolute bottom-10 right-0 w-[500px] opacity-40 animate-pulse pointer-events-none"
           />
         </div>
 
-        {/* Full-Header 3D Interactive Canvas: Blue lines orbit across entire header without any border clipping! */}
+        {/* Full-Header 3D Interactive Canvas */}
         <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden w-full h-full">
-          <ThreeCanvas scrollProgress={scrollProgress} />
+          <ThreeCanvas scrollProgressRef={scrollProgressRef} />
 
           {/* Ambient blurred glow circles */}
           <div className="absolute top-1/4 left-10 w-96 h-96 rounded-full bg-cyan/15 blur-3xl pointer-events-none" />
