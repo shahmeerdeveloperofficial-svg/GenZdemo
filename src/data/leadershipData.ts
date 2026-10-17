@@ -184,22 +184,26 @@ export const LEADERSHIP_PROFILES: LeadershipProfile[] = [
     ],
     experience: [
       'Over 15+ years of distinguished leadership in personal development, executive training, human performance, and youth empowerment across Pakistan.',
-      'Trained more than 50,000 individuals through immersive personal growth, executive leadership, and human development workshops.',
-      'Facilitated high-impact, 3-day Life Mastery retreats for over 1,500 participants and led youth leadership camps for 1,000+ young leaders.',
-      'Delivered hundreds of high-stakes one-to-one executive coaching sessions for corporate heads, educators, and scholars.'
+      'Trained more than 50,000 individuals through personal development, leadership, and human development initiatives.',
+      'Facilitated immersive, 3-day Life Mastery retreats for over 1,500 participants, led summer camps and youth retreats for more than 1,000 young people, and delivered hundreds of one-to-one coaching and leadership coaching sessions.',
+      'Focused on helping individuals discover their potential, strengthen character, build self-confidence, develop leadership capabilities, and translate personal growth into meaningful professional and life outcomes.',
+      'Committed to bridging the gap between education, personal development, and career success to empower young people for a competitive global environment.'
     ],
     specializations: [
-      'Leadership & Executive Coaching',
+      'Leadership Development',
       'Personal & Human Development',
-      'Youth Empowerment & Mindset Transformation',
-      'Life Mastery & Peak Performance',
-      'Converting Human Potential into Capital'
+      'Executive & Leadership Coaching',
+      'Youth Empowerment',
+      'Life Mastery & Personal Transformation',
+      'Performance Development'
     ],
     achievements: [
-      'Trained 50,000+ individuals across personal and professional domains',
-      'Conducted 3-Day Life Mastery Retreats for 1,500+ participants',
-      'Pioneered human development and global education consultancy model at Gen Z'
+      'Trained 50,000+ individuals across personal, leadership, and youth development',
+      'Facilitated 3-Day Immersive Life Mastery Retreats for 1,500+ participants',
+      'Led youth leadership retreats for 1,000+ young scholars across Pakistan',
+      'Delivered hundreds of executive one-to-one leadership coaching sessions'
     ]
   }
+
 
 ];

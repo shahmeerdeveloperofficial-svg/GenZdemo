@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import {
   Quote,
   Sparkles,
@@ -181,6 +181,29 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
   onOpenDossier,
   onOpenConsultation
 }) => {
+  // 3D Parallax Tilt for Director card
+  const cardRef = useRef<HTMLDivElement>(null);
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 20, stiffness: 220 };
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [6, -6]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-6, 6]), springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    mouseX.set(x);
+    mouseY.set(y);
+  };
+
+  const handleMouseLeave = () => {
+    mouseX.set(0);
+    mouseY.set(0);
+  };
+
   // Custom zoom & focal position for each photo to keep face perfectly centered
   const getImageStyling = () => {
     switch (profile.id) {
@@ -219,13 +242,23 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true, margin: '-50px' }}
       transition={{ duration: 0.6, delay: 0.1 }}
-      className="relative group w-full"
+      className="relative group w-full perspective-1000"
     >
-      {/* Outer Subtle Card Glow */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-cyan/30 via-blue-500/20 to-cyan/30 rounded-[2.5rem] opacity-60 group-hover:opacity-100 blur-xl transition-all duration-500 pointer-events-none" />
+      {/* Outer Dynamic Cyan Glow on Hover */}
+      <div className="absolute -inset-1.5 bg-gradient-to-r from-cyan via-blue-500 to-cyan rounded-[3rem] opacity-30 group-hover:opacity-80 blur-xl transition-all duration-500 pointer-events-none" />
 
-      {/* Main Crisp White Card Container (Exact Poster Geometry) */}
-      <div className="relative rounded-[2rem] sm:rounded-[2.5rem] bg-white text-navy p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-slate-100 overflow-hidden transition-all duration-300 group-hover:border-cyan/40">
+      {/* Main Crisp White Card Container with 3D Parallax Tilt */}
+      <motion.div
+        ref={cardRef}
+        style={{
+          rotateX,
+          rotateY,
+          transformStyle: 'preserve-3d'
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
+        className="relative rounded-[2rem] sm:rounded-[2.5rem] bg-white text-navy p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-2 border-slate-100 overflow-hidden transition-all duration-500 group-hover:border-cyan group-hover:shadow-[0_30px_90px_rgba(0,153,255,0.4)] group-hover:-translate-y-2 cursor-pointer"
+      >
         {/* Hexagon Pattern in Upper Background (Exact Reference Detail) */}
         <div
           className="absolute inset-0 opacity-[0.035] pointer-events-none"
@@ -270,11 +303,11 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
             <div className="absolute -inset-x-6 sm:-inset-x-8 -top-6 sm:-top-8 bottom-0 border-t-2 border-x-2 border-cyan/40 rounded-t-full pointer-events-none" />
 
             {/* Circular Portrait Frame (Well-Proportioned: w-52 h-52 sm:w-60 sm:h-60) */}
-            <div className="relative w-52 h-52 sm:w-60 sm:h-60 rounded-full border-4 sm:border-[6px] border-white shadow-[0_12px_30px_rgba(11,37,69,0.35)] overflow-hidden bg-navy-dark transition-transform duration-500 group-hover:scale-105">
+            <div className="relative w-52 h-52 sm:w-60 sm:h-60 rounded-full border-4 sm:border-[6px] border-white shadow-[0_12px_30px_rgba(11,37,69,0.35)] overflow-hidden bg-navy-dark transition-all duration-500 group-hover:scale-105 group-hover:border-cyan/40 group-hover:ring-4 group-hover:ring-cyan/20">
               <img
                 src={profile.image}
                 alt={profile.name}
-                className={`w-full h-full filter brightness-105 contrast-105 transition-transform duration-700 ${getImageStyling()}`}
+                className={`w-full h-full filter brightness-105 contrast-105 transition-transform duration-700 ease-out group-hover:scale-110 ${getImageStyling()}`}
               />
 
               {/* Bottom Subtle Gradient */}
@@ -282,16 +315,16 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
             </div>
 
             {/* Nationality Pill Badge at Portrait Base */}
-            <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white shadow-md border border-slate-200 text-navy text-[11px] font-display font-bold">
+            <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white shadow-md border border-slate-200 text-navy text-[11px] font-display font-bold group-hover:border-cyan/50 group-hover:shadow-[0_0_15px_rgba(0,153,255,0.3)] transition-all">
               {renderFlag()}
               <span>{profile.nationality}</span>
             </div>
           </div>
         </div>
 
-        {/* 3. NAME, ROLE & FRAMED QUOTATION (Exact Reference Typography) */}
+        {/* 3. NAME, ROLE & FRAMED QUOTATION (Exact Reference Typography with Hover Effects) */}
         <div className="relative z-10 text-center mt-4 mb-4">
-          <h3 className="font-display text-2xl sm:text-3xl font-black text-navy tracking-tight mb-0.5">
+          <h3 className="font-display text-2xl sm:text-3xl font-black text-navy tracking-tight mb-0.5 group-hover:text-cyan transition-colors duration-300">
             {profile.name}
           </h3>
 
@@ -299,30 +332,30 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
             {profile.nationality} · {profile.title}
           </p>
 
-          {/* Quotation Area Framed with Big Solid Quotes (Exact Reference Detail) */}
-          <div className="relative px-6 sm:px-8 py-2 group-hover:bg-slate-50/80 rounded-2xl transition-colors duration-300">
+          {/* Quotation Area Framed with Big Solid Quotes (Exact Reference Detail with Hover Glow) */}
+          <div className="relative px-6 sm:px-8 py-3 rounded-2xl transition-all duration-300 border border-transparent group-hover:border-cyan/30 group-hover:bg-cyan/[0.04] group-hover:shadow-inner">
             {/* Solid Navy Opening Quote on Left */}
-            <div className="absolute left-0 top-0 text-[#0B2545] select-none">
-              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-[#0B2545] fill-[#0B2545]" />
+            <div className="absolute left-0 top-1 text-[#0B2545] select-none transition-transform duration-300 group-hover:scale-125 group-hover:text-cyan">
+              <Quote className="w-7 h-7 sm:w-8 sm:h-8 fill-current" />
             </div>
 
             {/* Authentic Quote Text */}
-            <p className="text-slate-700 text-xs sm:text-[13px] sm:leading-relaxed font-normal italic px-2">
+            <p className="text-slate-700 text-xs sm:text-[13px] sm:leading-relaxed font-normal italic px-2 transition-colors duration-300 group-hover:text-navy">
               "{profile.quote || profile.experience[0]}"
             </p>
 
             {/* Solid Navy Closing Quote on Right */}
-            <div className="absolute right-0 bottom-0 text-[#0B2545] select-none">
-              <Quote className="w-7 h-7 sm:w-8 sm:h-8 text-[#0B2545] fill-[#0B2545] rotate-180" />
+            <div className="absolute right-0 bottom-1 text-[#0B2545] select-none transition-transform duration-300 group-hover:scale-125 group-hover:text-cyan">
+              <Quote className="w-7 h-7 sm:w-8 sm:h-8 fill-current rotate-180" />
             </div>
           </div>
 
-          {/* Academic Degrees & Honors Badges */}
+          {/* Academic Degrees & Honors Badges with Hover Pop */}
           <div className="flex flex-wrap items-center justify-center gap-1.5 mt-4">
             {profile.qualifications.slice(0, 2).map((q, qIdx) => (
               <span
                 key={qIdx}
-                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-navy text-[11px] font-semibold"
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-100 border border-slate-200 text-navy text-[11px] font-semibold transition-all duration-200 hover:scale-105 hover:bg-cyan/15 hover:border-cyan/50 hover:text-navy cursor-default"
               >
                 <CheckCircle2 className="w-3 h-3 text-cyan shrink-0" />
                 <span>
@@ -333,25 +366,25 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
           </div>
 
           {/* Discreet Credentials Dossier Link */}
-          <div className="mt-3">
+          <div className="mt-3.5">
             <button
               onClick={onOpenDossier}
-              className="text-[11px] font-display font-bold text-navy hover:text-cyan transition-colors underline underline-offset-4 inline-flex items-center gap-1"
+              className="text-[11px] font-display font-bold text-navy hover:text-cyan transition-colors underline underline-offset-4 inline-flex items-center gap-1.5 group/link"
             >
               <span>View Full Credentials & Academic Dossier</span>
-              <ArrowRight className="w-3 h-3" />
+              <ArrowRight className="w-3 h-3 group-hover/link:translate-x-1.5 transition-transform" />
             </button>
           </div>
         </div>
 
-        {/* 4. BOTTOM PILL ACTION BUTTONS (Exact Reference Replication) */}
+        {/* 4. BOTTOM PILL ACTION BUTTONS (Exact Reference Replication with Hover Glow) */}
         <div className="relative z-10 pt-4 border-t border-slate-100 flex items-center justify-between gap-2 flex-wrap">
           {/* Left Pill: info/advisory email */}
           <button
             onClick={onOpenConsultation}
-            className="flex-1 min-w-[140px] px-3.5 py-2 rounded-full bg-[#334155] hover:bg-cyan text-white text-[11px] font-display font-semibold shadow-sm hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-1.5 group/btn"
+            className="flex-1 min-w-[140px] px-3.5 py-2.5 rounded-full bg-[#334155] hover:bg-cyan text-white text-[11px] font-display font-semibold shadow-sm hover:shadow-[0_0_20px_rgba(0,153,255,0.4)] transition-all duration-300 flex items-center justify-center gap-1.5 group/btn active:scale-95"
           >
-            <Mail className="w-3.5 h-3.5 text-cyan-light group-hover/btn:text-white" />
+            <Mail className="w-3.5 h-3.5 text-cyan-light group-hover/btn:text-white transition-colors" />
             <span>Advisory Office</span>
           </button>
 
@@ -361,23 +394,24 @@ const AinexExactPosterCard: React.FC<AinexExactPosterCardProps> = ({
               href={getWebsiteHref()}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 min-w-[140px] px-3.5 py-2 rounded-full bg-[#334155] hover:bg-cyan text-white text-[11px] font-display font-semibold shadow-sm hover:shadow-cyan-glow transition-all duration-300 flex items-center justify-center gap-1.5 group/link"
+              className="flex-1 min-w-[140px] px-3.5 py-2.5 rounded-full bg-[#334155] hover:bg-cyan text-white text-[11px] font-display font-semibold shadow-sm hover:shadow-[0_0_20px_rgba(0,153,255,0.4)] transition-all duration-300 flex items-center justify-center gap-1.5 group/link active:scale-95"
             >
-              <Globe2 className="w-3.5 h-3.5 text-cyan-light group-hover/link:text-white" />
+              <Globe2 className="w-3.5 h-3.5 text-cyan-light group-hover/link:text-white transition-colors" />
               <span className="truncate">{getWebsiteUrl()}</span>
-              <ExternalLink className="w-2.5 h-2.5 ml-0.5 shrink-0" />
+              <ExternalLink className="w-2.5 h-2.5 ml-0.5 shrink-0 group-hover/link:rotate-12 transition-transform" />
             </a>
           ) : (
-            <div className="flex-1 min-w-[140px] px-3.5 py-2 rounded-full bg-[#334155] text-white text-[11px] font-display font-semibold shadow-sm flex items-center justify-center gap-1.5">
+            <div className="flex-1 min-w-[140px] px-3.5 py-2.5 rounded-full bg-[#334155] text-white text-[11px] font-display font-semibold shadow-sm flex items-center justify-center gap-1.5">
               <Globe2 className="w-3.5 h-3.5 text-cyan-light" />
               <span className="truncate">{getWebsiteUrl()}</span>
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
+
 
 /* -------------------------------------------------------------------------- */
 /* FULL EXECUTIVE DOSSIER MODAL                                              */

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import {
   Sparkles,
   ArrowRight,
@@ -11,8 +11,13 @@ import {
   CheckCircle2,
   ShieldCheck,
   Zap,
-  TrendingUp,
-  Target
+  Target,
+  HeartHandshake,
+  Lightbulb,
+  X,
+  FileText,
+  Briefcase,
+  Star
 } from 'lucide-react';
 
 interface CEOMessageSectionProps {
@@ -20,10 +25,10 @@ interface CEOMessageSectionProps {
 }
 
 export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenConsultation }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+
   // 3D Mouse Parallax Tilt for the CEO Showcase Card
   const cardRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
-
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -43,14 +48,22 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
   const handleMouseLeave = () => {
     mouseX.set(0);
     mouseY.set(0);
-    setIsHovered(false);
   };
 
+  const areasOfExpertise = [
+    'Leadership Development',
+    'Personal & Human Development',
+    'Executive & Leadership Coaching',
+    'Youth Empowerment',
+    'Life Mastery & Personal Transformation',
+    'Performance Development'
+  ];
+
   const impactMetrics = [
-    { value: '50,000+', label: 'Individuals Trained', sub: 'Across Personal & Executive Programs', icon: Users },
-    { value: '15+', label: 'Years Experience', sub: 'Leadership & Human Development', icon: Trophy },
-    { value: '1,500+', label: 'Life Mastery Scholars', sub: '3-Day Immersive Retreats', icon: Compass },
-    { value: '1,000+', label: 'Youth Leaders Camp', sub: 'Summer Leadership Programs', icon: Target }
+    { value: '50,000+', label: 'Individuals Trained', sub: 'Personal & Leadership Initiatives', icon: Users },
+    { value: '15+', label: 'Years Experience', sub: 'Human Performance & Youth Leadership', icon: Trophy },
+    { value: '1,500+', label: 'Life Mastery Scholars', sub: 'Immersive 3-Day Retreats', icon: Compass },
+    { value: '1,000+', label: 'Youth Leaders Camp', sub: 'Empowered for Global Futures', icon: Target }
   ];
 
   return (
@@ -128,7 +141,7 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
           {/* LEFT COLUMN: The Bold Quote, Message, and Philosophy */}
           <div className="lg:col-span-6 flex flex-col justify-center">
             {/* Signature L-Bracket Line & Keynote Headline */}
-            <div className="relative pl-6 sm:pl-8 border-l-4 border-cyan mb-8">
+            <div className="relative pl-6 sm:pl-8 border-l-4 border-cyan mb-6">
               {/* Top Accent Dot */}
               <div className="absolute -top-1.5 -left-[7px] w-3 h-3 rounded-full bg-cyan shadow-[0_0_10px_#0099FF]" />
               {/* Bottom Accent Dot */}
@@ -152,17 +165,17 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
             </div>
 
             {/* CEO Narrative Text with Glowing Micro-Cards */}
-            <div className="space-y-4 mb-8">
+            <div className="space-y-4 mb-6">
               <motion.div
                 whileHover={{ x: 5, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
                 className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-cyan/50 transition-all duration-300 backdrop-blur-md shadow-lg group"
               >
-                <p className="text-slate-200 text-base sm:text-lg leading-relaxed font-normal">
+                <p className="text-slate-200 text-sm sm:text-base leading-relaxed font-normal">
                   <strong className="text-white font-semibold group-hover:text-cyan transition-colors">
                     Muhammad Nawaz
                   </strong>{' '}
                   is a leadership and human development professional with over{' '}
-                  <span className="text-cyan-light font-bold">15 years of proven authority</span> in personal transformation, executive coaching, and youth empowerment in Pakistan.
+                  <span className="text-cyan-light font-bold">15 years of experience</span> in personal development, leadership training, human performance, and youth development in Pakistan. As CEO of Gen Z Consultant (Private Limited), he brings a powerful combination of leadership expertise, practical coaching experience, and a deep commitment to empowering the next generation.
                 </p>
               </motion.div>
 
@@ -170,33 +183,65 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
                 whileHover={{ x: 5, backgroundColor: 'rgba(255, 255, 255, 0.08)' }}
                 className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 hover:border-cyan/50 transition-all duration-300 backdrop-blur-md shadow-lg group"
               >
-                <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-                  "At Gen Z Consultant, we bridge the gap between academic education, personal growth, and global career success. My mission is to develop capable, confident, and purpose-driven leaders who can lead themselves, advance their careers, and create a lasting positive impact on society."
+                <p className="text-slate-300 text-sm leading-relaxed">
+                  "At Gen Z Consultant, Muhammad Nawaz is committed to bridging the gap between education, personal development, and career success. His vision is to empower young people with the mindset, capabilities, confidence, and leadership skills required to navigate an increasingly competitive global environment and build purposeful, successful futures."
                 </p>
               </motion.div>
+
+              {/* Mission Statement Box */}
+              <div className="p-4 rounded-2xl bg-cyan/10 border-l-4 border-cyan text-slate-200 text-xs sm:text-sm italic leading-relaxed">
+                <strong className="text-cyan font-bold not-italic">His Mission: </strong>
+                "To develop capable, confident, and purpose-driven individuals who can lead themselves, advance their careers, and create a positive impact on society."
+              </div>
+            </div>
+
+            {/* Areas of Expertise Glowing Badges */}
+            <div className="mb-6">
+              <div className="text-xs font-display font-bold text-slate-400 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                <Star className="w-3.5 h-3.5 text-cyan" />
+                <span>Areas of Expertise</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {areasOfExpertise.map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="px-3 py-1.5 rounded-xl bg-white/[0.05] hover:bg-cyan/20 border border-white/15 hover:border-cyan/50 text-slate-200 hover:text-white text-xs font-semibold transition-all duration-300 shadow-sm"
+                  >
+                    {item}
+                  </span>
+                ))}
+              </div>
             </div>
 
             {/* Verified Academic Degrees Badges */}
             <div className="flex flex-wrap items-center gap-2.5 mb-8">
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-cyan/15 border border-cyan/40 text-cyan-light text-xs font-semibold shadow-sm hover:scale-105 transition-transform">
                 <GraduationCap className="w-4 h-4 text-cyan" />
-                <span>MSc Waste Management & Environmental Sciences — United Kingdom</span>
+                <span>MSc in Waste Management and Environmental Sciences — United Kingdom</span>
               </span>
               <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/10 border border-white/20 text-slate-200 text-xs font-semibold shadow-sm hover:scale-105 transition-transform">
                 <GraduationCap className="w-4 h-4 text-slate-300" />
-                <span>MSc Geography — University of the Punjab, Pakistan</span>
+                <span>MSc in Geography — University of the Punjab, Pakistan</span>
               </span>
             </div>
 
-            {/* Heavy Animated CTA Button */}
-            <div>
+            {/* Action CTA Buttons */}
+            <div className="flex flex-wrap items-center gap-4">
               <button
                 onClick={onOpenConsultation}
-                className="group relative px-8 py-4 rounded-2xl bg-gradient-to-r from-cyan via-blue-500 to-cyan bg-[length:200%_auto] hover:bg-right font-display text-sm font-bold text-white shadow-[0_0_35px_rgba(0,153,255,0.45)] hover:shadow-[0_0_55px_rgba(0,153,255,0.75)] transition-all duration-500 hover:scale-105 active:scale-95 flex items-center gap-3"
+                className="group relative px-7 py-3.5 rounded-2xl bg-gradient-to-r from-cyan via-blue-500 to-cyan bg-[length:200%_auto] hover:bg-right font-display text-sm font-bold text-white shadow-[0_0_35px_rgba(0,153,255,0.45)] hover:shadow-[0_0_55px_rgba(0,153,255,0.75)] transition-all duration-500 hover:scale-105 active:scale-95 flex items-center gap-3"
               >
                 <Sparkles className="w-4 h-4 text-white animate-spin-slow" />
                 <span>Connect with CEO & Mentorship Office</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              </button>
+
+              <button
+                onClick={() => setModalOpen(true)}
+                className="px-5 py-3.5 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-display text-xs sm:text-sm font-semibold transition-all duration-300 flex items-center gap-2"
+              >
+                <FileText className="w-4 h-4 text-cyan" />
+                <span>Read Full Biography Dossier</span>
               </button>
             </div>
           </div>
@@ -211,7 +256,6 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
                 transformStyle: 'preserve-3d'
               }}
               onMouseMove={handleMouseMove}
-              onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={handleMouseLeave}
               className="relative w-full max-w-[480px] rounded-[2.5rem] bg-gradient-to-b from-[#0F356B] via-[#0B2545] to-[#040E1B] p-2.5 sm:p-3 border-2 border-cyan/40 shadow-[0_30px_90px_rgba(0,0,0,0.85)] group cursor-pointer transition-shadow duration-500 hover:border-cyan hover:shadow-[0_35px_100px_rgba(0,153,255,0.4)]"
             >
@@ -313,6 +357,144 @@ export const CEOMessageSection: React.FC<CEOMessageSectionProps> = ({ onOpenCons
           })}
         </div>
       </div>
+
+      {/* FULL CEO BIOGRAPHY & MISSION MODAL */}
+      <AnimatePresence>
+        {modalOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setModalOpen(false)}
+              className="fixed inset-0 bg-[#040E1B]/85 backdrop-blur-xl"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 25 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 25 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+              className="relative w-full max-w-4xl bg-gradient-to-b from-[#0F356B] via-[#0B2545] to-[#040E1B] border-2 border-cyan/40 rounded-3xl p-6 sm:p-10 shadow-[0_25px_80px_rgba(0,0,0,0.85)] text-white z-10 max-h-[90vh] overflow-y-auto"
+            >
+              <button
+                onClick={() => setModalOpen(false)}
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors z-20"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                {/* Left Column: Portrait & Meta */}
+                <div className="lg:col-span-5 flex flex-col items-center text-center">
+                  <div className="relative w-48 h-56 rounded-3xl overflow-hidden border-4 border-cyan/60 shadow-[0_0_35px_rgba(0,153,255,0.4)] bg-navy-dark mb-4">
+                    <img
+                      src="/assets/images/team/muhammad-nawaz.jpg"
+                      alt="Muhammad Nawaz"
+                      className="w-full h-full object-cover object-[30%_3%]"
+                    />
+                  </div>
+
+                  <h3 className="font-display text-xl font-bold text-white mb-1">
+                    Muhammad Nawaz
+                  </h3>
+                  <p className="text-xs text-cyan-light font-semibold mb-2">
+                    Chief Executive Officer (CEO)
+                  </p>
+                  <p className="text-xs text-slate-300 font-medium mb-4">
+                    Human Development & Leadership Consultant
+                  </p>
+
+                  <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-300 w-full mb-4">
+                    <div className="font-bold text-white mb-1">Impact Record</div>
+                    <div>50,000+ Individuals Trained</div>
+                    <div>1,500+ Life Mastery Retreats</div>
+                    <div>1,000+ Youth Camp Scholars</div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setModalOpen(false);
+                      onOpenConsultation?.();
+                    }}
+                    className="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-cyan via-blue-500 to-cyan bg-[length:200%_auto] hover:bg-right font-display text-xs sm:text-sm font-bold text-white shadow-[0_0_25px_rgba(0,153,255,0.4)] hover:shadow-[0_0_40px_rgba(0,153,255,0.6)] transition-all flex items-center justify-center gap-2"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    <span>Request Executive Consultation</span>
+                  </button>
+                </div>
+
+                {/* Right Column: Complete Biography, Expertise & Mission */}
+                <div className="lg:col-span-7 space-y-6">
+                  <div>
+                    <div className="inline-block text-xs font-display font-bold text-cyan uppercase tracking-wider mb-1">
+                      Executive Dossier
+                    </div>
+                    <h2 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
+                      Converting Human Potential into Human Capital
+                    </h2>
+                  </div>
+
+                  {/* Biography Paragraphs */}
+                  <div className="space-y-3.5 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <p>
+                      Muhammad Nawaz is a leadership and human development professional with over 15 years of experience in personal development, leadership training, human performance, and youth development in Pakistan. As CEO of Gen Z Consultant (Private Limited), he brings a powerful combination of leadership expertise, practical coaching experience, and a deep commitment to empowering the next generation.
+                    </p>
+                    <p>
+                      Throughout his career, he has trained more than 50,000 individuals through personal development, leadership, and human development initiatives. He has facilitated immersive, three-day Life Mastery retreats for over 1,500 participants, led summer camps and youth retreats for more than 1,000 young people, and delivered hundreds of one-to-one coaching and leadership coaching sessions.
+                    </p>
+                    <p>
+                      His work focuses on helping individuals discover their potential, strengthen their character, build self-confidence, develop leadership capabilities, and translate personal growth into meaningful professional and life outcomes.
+                    </p>
+                    <p>
+                      At Gen Z Consultant, Muhammad Nawaz is committed to bridging the gap between education, personal development, and career success. His vision is to empower young people with the mindset, capabilities, confidence, and leadership skills required to navigate an increasingly competitive global environment and build purposeful, successful futures.
+                    </p>
+                  </div>
+
+                  {/* Mission */}
+                  <div className="p-4 rounded-2xl bg-cyan/15 border-l-4 border-cyan text-slate-200 text-xs sm:text-sm italic leading-relaxed">
+                    <strong className="text-cyan font-bold not-italic">His Mission: </strong>
+                    "To develop capable, confident, and purpose-driven individuals who can lead themselves, advance their careers, and create a positive impact on society."
+                  </div>
+
+                  {/* Academic Qualifications */}
+                  <div>
+                    <h4 className="font-display text-sm font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2 mb-2.5">
+                      <GraduationCap className="w-4 h-4 text-cyan" />
+                      <span>Academic Qualifications</span>
+                    </h4>
+                    <div className="space-y-2">
+                      <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-200">
+                        🎓 <strong>MSc in Waste Management and Environmental Sciences</strong> — United Kingdom
+                      </div>
+                      <div className="p-3 rounded-xl bg-white/5 border border-white/10 text-xs text-slate-200">
+                        🎓 <strong>MSc in Geography</strong> — University of the Punjab, Pakistan
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Areas of Expertise */}
+                  <div>
+                    <h4 className="font-display text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                      Areas of Expertise
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {areasOfExpertise.map((item, idx) => (
+                        <span
+                          key={idx}
+                          className="px-2.5 py-1 rounded-lg bg-cyan/10 border border-cyan/30 text-cyan-light text-xs font-medium"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };
