@@ -1,0 +1,11 @@
+# M21 — Safe synthetic demo scenarios
+
+- Added an explicit `GenZDemoSeeder` (not called by the default `DatabaseSeeder`). It runs only in `local` or when `GENZ_DEMO_SEEDING=true` is explicitly enabled, always refuses production, and now also refuses every database except the isolated `genz_crm_lms_demo`. It bootstraps demo settings, USD/PKR currencies, English locale and GenZ-branded home options.
+- Seeder checks table/schema availability and uses stable demo identifiers for repeatability. The current isolated dataset contains three fictional destinations/universities and scholarships, four academic subject categories, four LMS tracks, ten free sample courses with intro curriculum, eight `.example` learner accounts, eleven `.example` CRM leads, four admissions, three sample events and three sample services. Course enrollments are spread across the previous twelve months so the dashboard trend charts have real database rows to chart.
+- The isolated local demo accounts use `GenZLocal!2026` for convenience; this credential is local-demo only and must never be used in production. Accounts use reserved `.example` emails. The seeder does not send email, SMS, WhatsApp, or payment requests. Public prices remain disabled. No demo data was seeded into the current populated database.
+- Created the separate MySQL database `genz_crm_lms_demo`, ran all 100 migrations there, and executed the seeder repeatedly. Latest verified counts: 3 universities, 3 academic programs, 3 scholarships, 11 CRM leads, 10 LMS courses, 26 active enrollments, 4 admissions, 3 appointments, 3 free-consultation requests, 3 events, 3 services, 4 subject categories, 3 study levels and 13 demo users. Repeated seeder runs kept these counts stable; appointments are explicitly free demo bookings and no payment transaction is fabricated.
+- Start/restart the isolated app from the project root in PowerShell with: `$env:APP_ENV='local'; $env:DB_DATABASE='genz_crm_lms_demo'; $env:MAIL_MAILER='log'; php artisan serve --host=127.0.0.1 --port=8068`.
+
+## Remaining
+
+- Extend relational examples to appointment booking, document review, task comments, quizzes, assignments, notifications, certificates and sandbox transaction states. Add a generated seed summary and fully test repeatability against a disposable local database before use.

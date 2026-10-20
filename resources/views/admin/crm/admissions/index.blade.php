@@ -1,0 +1,7 @@
+@extends('layouts.app')
+@push('title') Admissions @endpush
+@section('content')
+<div class="p-sm-30 p-15"><h1 class="fs-24 fw-700">Admissions pipeline</h1><p class="text-muted">Every transition is recorded. University decisions remain external and are not guaranteed.</p>
+<form class="mb-3"><select class="form-select w-auto d-inline" name="status"><option value="">All stages</option>@foreach(\App\Models\AdmissionApplication::STATUSES as $status)<option value="{{ $status }}" @selected(request('status')===$status)>{{ str_replace('_',' ',ucfirst($status)) }}</option>@endforeach</select><button class="btn btn-outline-primary">Filter</button></form>
+<div class="table-responsive bg-white rounded-3"><table class="table align-middle"><thead><tr><th>Reference</th><th>Student</th><th>Program</th><th>University</th><th>Stage</th><th>Deadline</th><th></th></tr></thead><tbody>@forelse($applications as $application)<tr><td>{{ $application->reference_code }}</td><td>{{ $application->student->first_name }} {{ $application->student->last_name }}</td><td>{{ $application->program->title }}</td><td>{{ $application->university->name }}</td><td>{{ str_replace('_',' ',ucfirst($application->status)) }}</td><td>{{ $application->application_deadline?->format('M d, Y') ?? '—' }}</td><td><a class="btn btn-sm btn-outline-primary" href="{{ route($routePrefix.'.show',$application) }}">Open</a></td></tr>@empty<tr><td colspan="7" class="text-center py-4">No applications match.</td></tr>@endforelse</tbody></table></div>{{ $applications->links() }}</div>
+@endsection

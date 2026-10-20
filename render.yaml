@@ -1,0 +1,75 @@
+# Render staging only. Persistent disks require a paid Render service.
+services:
+  - type: pserv
+    name: studylifter-render-staging-db
+    runtime: docker
+    region: singapore
+    dockerfilePath: ./docker/mysql.Dockerfile
+    dockerContext: .
+    envVars:
+      - key: MYSQL_DATABASE
+        value: studylifter_staging
+      - key: MYSQL_USER
+        value: studylifter_app
+      - key: MYSQL_PASSWORD
+        generateValue: true
+      - key: MYSQL_ROOT_PASSWORD
+        generateValue: true
+    disk:
+      name: studylifter-render-staging-mysql-data
+      mountPath: /var/lib/mysql
+      sizeGB: 1
+
+  - type: web
+    name: studylifter-render-staging
+    runtime: docker
+    region: singapore
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    disk:
+      name: studylifter-render-staging-storage
+      mountPath: /var/www/html/storage
+      sizeGB: 1
+    envVars:
+      - key: APP_ENV
+        value: staging
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        sync: false
+      - key: APP_URL
+        fromService:
+          type: web
+          name: studylifter-render-staging
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: DB_CONNECTION
+        value: mysql
+      - key: DB_HOST
+        fromService:
+          type: pserv
+          name: studylifter-render-staging-db
+          property: host
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        value: studylifter_staging
+      - key: DB_USERNAME
+        fromService:
+          type: pserv
+          name: studylifter-render-staging-db
+          envVarKey: MYSQL_USER
+      - key: DB_PASSWORD
+        fromService:
+          type: pserv
+          name: studylifter-render-staging-db
+          envVarKey: MYSQL_PASSWORD
+      - key: STORAGE_DRIVER
+        value: public
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: file
+      - key: CACHE_DRIVER
+        value: file
+      - key: QUEUE_CONNECTION
+        value: sync

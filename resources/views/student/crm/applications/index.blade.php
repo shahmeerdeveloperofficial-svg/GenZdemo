@@ -1,0 +1,6 @@
+@extends('layouts.app')
+@push('title') My Applications @endpush
+@section('content')
+<div class="p-sm-30 p-15"><header class="d-flex justify-content-between align-items-center mb-4"><div><h1 class="fs-24 fw-700">My applications</h1><p class="text-muted">Follow each university application independently.</p></div><a class="btn btn-primary" href="{{ route('student.admissions.create') }}">Start an application</a></header>
+<div class="table-responsive bg-white rounded-3"><table class="table align-middle"><thead><tr><th>Reference</th><th>Program</th><th>University</th><th>Intake</th><th>Status</th><th>Deadline</th><th></th></tr></thead><tbody>@forelse($applications as $application)<tr><td>{{ $application->reference_code }}</td><td>{{ $application->program->title }}</td><td>{{ $application->university->name }}</td><td>{{ $application->intake?->label ?? 'To be decided' }}</td><td>{{ str_replace('_',' ',ucfirst($application->status)) }}</td><td>{{ $application->application_deadline?->format('M d, Y') ?? '—' }}</td><td><a class="btn btn-sm btn-outline-primary" href="{{ route('student.admissions.show',$application) }}">View</a></td></tr>@empty<tr><td colspan="7" class="text-center py-4">You do not have any applications yet.</td></tr>@endforelse</tbody></table></div>{{ $applications->links() }}</div>
+@endsection

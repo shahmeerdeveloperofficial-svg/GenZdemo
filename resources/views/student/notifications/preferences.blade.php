@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@push('title'){{ __('Notification preferences') }}@endpush
+@section('content')<main class="p-sm-30 p-15"><h1 class="fs-24 fw-700">{{ __('Notification preferences') }}</h1><p>{{ __('Choose which in-app updates you want to receive.') }}</p><form method="POST" action="{{ route('student.notifications.preferences.update') }}">@csrf @foreach($events as $key=>$label)<label class="d-flex align-items-center justify-content-between bg-white border rounded p-3 mb-2"><span>{{ __($label) }}</span><input type="checkbox" name="preferences[{{ $key }}]" value="1" @checked(($preferences[$key]??true))></label>@endforeach<button class="btn btn-primary">{{ __('Save preferences') }}</button></form></main>@endsection

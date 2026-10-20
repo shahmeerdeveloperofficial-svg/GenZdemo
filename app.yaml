@@ -1,0 +1,29 @@
+kind: wasmer.io/App.v0
+owner: bilal-dev
+name: studylifter-production
+package: .
+
+env:
+  APP_ENV: production
+  APP_DEBUG: "false"
+  DB_CONNECTION: mysql
+  LOG_CHANNEL: stderr
+  PUBLIC_STORAGE_ROOT: /app/public/storage
+  STORAGE_DRIVER: public
+
+capabilities:
+  database:
+    engine: mysql
+
+volumes:
+  - name: studylifter-production-storage
+    mount: /app/storage
+  - name: studylifter-production-public-files
+    mount: /app/public/storage
+
+locality:
+  regions:
+    - fr-roub1
+
+scaling:
+  mode: single_concurrency

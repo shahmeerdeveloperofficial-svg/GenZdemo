@@ -1,0 +1,8 @@
+@extends('layouts.app')
+@push('title'){{ $quiz->title }}@endpush
+@section('content')<div class="p-sm-30 p-15"><h1 class="fs-24 fw-700">{{ $quiz->title }}</h1><p>{{ $quiz->description }}</p>@if($attempt->deadline_at)<p class="text-danger">{{ __('Time remaining') }}: <span id="quiz-countdown" data-deadline="{{ $attempt->deadline_at->toIso8601String() }}"></span></p>@endif
+<form id="quiz-attempt-form" method="POST" action="{{ route('student.my_courses.quizzes.submit',['enrollment_id'=>encodeId($enrollment->id),'attempt_id'=>$attempt->id]) }}">@csrf
+@foreach($questions as $index=>$question)<fieldset class="p-3 mb-3 bg-white border rounded"><legend class="h5">{{ $index+1 }}. {{ $question->question_text }} <small>({{ $question->points }} {{ __('points') }})</small></legend>@foreach($question->options as $option)<label class="d-block py-1"><input type="{{ $question->question_type==='multiple'?'checkbox':'radio' }}" name="answers[{{ $question->id }}][]" value="{{ $option->id }}"> {{ $option->option_text }}</label>@endforeach</fieldset>@endforeach
+<button class="btn btn-primary" type="submit">{{ __('Submit answers') }}</button></form></div>
+@endsection
+@push('script')<script>(function(){const clock=document.getElementById('quiz-countdown');if(!clock)return;const form=document.getElementById('quiz-attempt-form');const end=Date.parse(clock.dataset.deadline);const update=()=>{const left=Math.max(0,Math.floor((end-Date.now())/1000));clock.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');if(left<=0){clearInterval(timer);form.requestSubmit();}};update();const timer=setInterval(update,1000);})();</script>@endpush

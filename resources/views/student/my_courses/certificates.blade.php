@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@push('title'){{ __('My certificates') }}@endpush
+@section('content')<main class="p-sm-30 p-15"><h1 class="fs-24 fw-700">{{ __('My certificates') }}</h1>@forelse($certificates as $certificate)<article class="p-3 mb-3 bg-white border rounded"><h2 class="h5">{{ $certificate->course?->title }}</h2><p>{{ $certificate->certificate_number }} · {{ $certificate->issued_at->format('M j, Y') }} · {{ $certificate->revoked_at ? __('Revoked') : __('Valid') }}</p><a class="btn btn-primary" href="{{ route('student.my_courses.certificates.show',$certificate->id) }}">{{ __('View certificate') }}</a></article>@empty<p>{{ __('Certificates earned from completed courses will appear here.') }}</p>@endforelse{{ $certificates->links() }}</main>@endsection
