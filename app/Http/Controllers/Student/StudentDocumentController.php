@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\StudentProfile;
 use App\Models\StudentServiceOrder;
 use App\Models\AdmissionApplication;
+use App\Support\ListCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
@@ -87,15 +88,48 @@ class StudentDocumentController extends Controller
         ]);
     }
 
-    public function reviewQueue()
+    private function visibleDocuments()
     {
-        $documents = StudentDocument::with('student')->where('status', 'pending')->latest()->paginate(25);
+        $query = StudentDocument::query();
         if ((int) auth()->user()->role === USER_ROLE_CONSULTANT) {
             $assignedStudentIds = StudentServiceOrder::whereHas('assignees', fn ($query) => $query->where('assigned_to', auth()->id())->where('is_active', STATUS_ACTIVE))->pluck('student_id');
-            $documents = StudentDocument::with('student')->where('status', 'pending')->whereIn('user_id', $assignedStudentIds)->latest()->paginate(25);
+            $admissionStudentIds = AdmissionApplication::where('counselor_id', auth()->id())->pluck('student_id');
+            $query->whereIn('user_id', $assignedStudentIds->merge($admissionStudentIds)->unique());
         }
+        return $query;
+    }
+
+    public function reviewQueue(Request $request)
+    {
+        $request->validate([
+            'status' => ['nullable', Rule::in(StudentDocument::STATUSES)],
+            'category' => ['nullable', Rule::in(StudentDocument::CATEGORIES)],
+            'student_id' => ['nullable', 'integer'],
+            'branch' => ['nullable', Rule::in(array_keys(ListCriteria::branchOptions()))],
+            'period' => ['nullable', Rule::in(array_keys(ListCriteria::periods()))],
+        ]);
+        $query = $this->visibleDocuments()->with('student');
+        // A first visit shows pending reviews. Selecting "All" includes history.
+        $status = $request->input('status', 'pending');
+        if (filled($status)) $query->where('status', $status);
+        if ($request->filled('category')) $query->where('category', $request->input('category'));
+        if ($request->filled('student_id')) $query->where('user_id', $request->integer('student_id'));
+        if ($request->filled('branch')) {
+            $query->whereHas('student', fn ($q) => ListCriteria::applyBranch($q, 'users.branch', $request->input('branch')));
+        }
+        ListCriteria::applyPeriod($query, 'created_at', $request->input('period'));
+        $documents = $query->latest()->paginate(25)->withQueryString();
+        $students = User::whereIn('id', $this->visibleDocuments()->select('user_id'))
+            ->orderBy('first_name')->get(['id', 'first_name', 'last_name', 'email']);
+        $criteriaFields = [
+            ['name' => 'branch', 'label' => __('Branch'), 'options' => ListCriteria::branchOptions()],
+            ['name' => 'category', 'label' => __('Document type'), 'options' => collect(StudentDocument::CATEGORIES)->mapWithKeys(fn ($value) => [$value => __(str_replace('_', ' ', ucfirst($value)))])->all()],
+            ['name' => 'status', 'label' => __('Review status'), 'default' => 'pending', 'options' => collect(StudentDocument::STATUSES)->mapWithKeys(fn ($value) => [$value => __(ucfirst($value))])->all()],
+            ['name' => 'student_id', 'label' => __('Student'), 'options' => $students->mapWithKeys(fn ($student) => [$student->id => $student->name . ' (' . $student->email . ')'])->all()],
+            ['name' => 'period', 'label' => __('Uploaded'), 'options' => ListCriteria::periods()],
+        ];
         $routePrefix = (int) auth()->user()->role === USER_ROLE_CONSULTANT ? 'consultant.student_documents' : 'admin.student_documents';
-        return view('admin.crm.student-documents.index', compact('documents', 'routePrefix'));
+        return view('admin.crm.student-documents.index', compact('documents', 'routePrefix', 'criteriaFields'));
     }
 
     public function studentProfile(User $student)

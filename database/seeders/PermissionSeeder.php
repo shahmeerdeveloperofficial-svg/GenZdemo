@@ -33,12 +33,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'Manage Student Documents', 'guard_name' => 'web', 'created_at' => $now, 'updated_at' => $now],
         ];
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(
-                ['name' => $permission['name'], 'guard_name' => $permission['guard_name']],
-                ['created_at' => $permission['created_at'], 'updated_at' => $permission['updated_at']]
-            );
-        }
+        Permission::upsert($permissions, ['name', 'guard_name']);
         app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 }

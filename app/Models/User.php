@@ -22,6 +22,7 @@ class User extends Authenticatable
         'last_name',
         'email',
         'mobile',
+        'branch',
         'email_verified_at',
         'password',
         'gender',

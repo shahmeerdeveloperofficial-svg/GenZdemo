@@ -1,71 +1,7 @@
 @extends('layouts.app')
-
 @push('title'){{ __('Assignments') }}@endpush
-
-@section('content')
-    <div class="p-sm-30 p-15">
-        <h1 class="fs-24 fw-700">{{ __('Assignments') }}</h1>
-
-        @forelse($assignments as $assignment)
-            @php($submission = $assignment->submissions->first())
-            <article class="p-3 mb-3 bg-white border rounded">
-                <h2 class="h5">{{ $assignment->title }}</h2>
-                <p>{{ $assignment->instructions }}</p>
-                <p class="small text-muted">
-                    {{ __('Due') }}: {{ $assignment->due_at?->format('M j, Y g:i A') ?? __('No deadline') }}
-                    · {{ $assignment->max_points }} {{ __('points') }}
-                    · {{ __('Allowed submissions') }} {{ $assignment->max_submissions }}
-                    · {{ __('Late policy') }}: {{ ucfirst($assignment->late_policy) }}
-                </p>
-
-                @if($submission)
-                    <p>
-                        {{ ucfirst($submission->status) }} · v{{ $submission->version }}
-                        @if($submission->is_late) · {{ __('Late') }} @endif
-                        @if($submission->file_manager_id)
-                            <a class="ms-2" href="{{ route('student.my_courses.assignments.download', ['enrollment_id' => encodeId($enrollment->id), 'submission_id' => $submission->id]) }}">
-                                {{ __('Download your private file') }}
-                            </a>
-                        @endif
-                    </p>
-
-                    @if($submission->grade?->released_at)
-                        <div class="alert alert-success">
-                            {{ __('Grade') }}: {{ $submission->grade->score }}/{{ $submission->grade->max_points }}
-                            @if(is_array($submission->grade->rubric) && count($submission->grade->rubric))
-                                <ul class="mt-2 mb-2">
-                                    @foreach($submission->grade->rubric as $criterion)
-                                        <li>{{ $criterion['criterion'] ?? '' }}: {{ $criterion['score'] ?? 0 }}</li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                            <p>{{ $submission->grade->feedback }}</p>
-                        </div>
-                    @elseif($submission->grade)
-                        <p class="text-muted">{{ __('Feedback is not released yet.') }}</p>
-                    @endif
-                @endif
-
-                @if($assignment->submissions->whereIn('status', ['submitted', 'late', 'graded'])->count() < $assignment->max_submissions)
-                    <form method="POST" enctype="multipart/form-data" action="{{ route('student.my_courses.assignments.submit', ['enrollment_id' => encodeId($enrollment->id), 'assignment_id' => $assignment->id]) }}" class="border-top pt-3">
-                        @csrf
-                        <div class="mb-2">
-                            <label class="form-label">{{ __('Written response') }}</label>
-                            <textarea name="text_response" rows="4" maxlength="50000" class="form-control">{{ $submission?->status === 'draft' ? $submission->text_response : '' }}</textarea>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">{{ __('Private file (PDF, DOCX, TXT, PNG, JPG; max 20 MB)') }}</label>
-                            <input type="file" name="file" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" class="form-control">
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button name="submission_action" value="draft" class="btn btn-outline-primary">{{ __('Save draft') }}</button>
-                            <button name="submission_action" value="submit" class="btn btn-primary">{{ __('Submit for grading') }}</button>
-                        </div>
-                    </form>
-                @endif
-            </article>
-        @empty
-            <p>{{ __('No assignments have been published for this course yet.') }}</p>
-        @endforelse
-    </div>
-@endsection
+@section('content')<div class="p-sm-30 p-15"><h1 class="fs-24 fw-700">{{ __('Assignments') }}</h1>
+@forelse($assignments as $assignment)@php($submission=$assignment->submissions->first())<article class="p-3 mb-3 bg-white border rounded"><h2 class="h5">{{ $assignment->title }}</h2><p>{{ $assignment->instructions }}</p><p class="small text-muted">{{ __('Due') }}: {{ $assignment->due_at?->format('M j, Y g:i A') ?? __('No deadline') }} · {{ $assignment->max_points }} {{ __('points') }} · {{ __('Allowed submissions') }} {{ $assignment->max_submissions }} · {{ __('Late policy') }}: {{ ucfirst($assignment->late_policy) }}</p>
+@if($submission)<p>{{ ucfirst($submission->status) }} · v{{ $submission->version }} @if($submission->is_late) · {{ __('Late') }}@endif @if($submission->file_manager_id)<a class="ms-2" href="{{ route('student.my_courses.assignments.download',['enrollment_id'=>encodeId($enrollment->id),'submission_id'=>$submission->id]) }}">{{ __('Download your private file') }}</a>@endif</p>@if($submission->grade?->released_at)<div class="alert alert-success">{{ __('Grade') }}: {{ $submission->grade->score }}/{{ $submission->grade->max_points }}@if(is_array($submission->grade->rubric) && count($submission->grade->rubric))<ul class="mt-2 mb-2">@foreach($submission->grade->rubric as $criterion)<li>{{ $criterion['criterion'] ?? '' }}: {{ $criterion['score'] ?? 0 }}</li>@endforeach</ul>@endif<p>{{ $submission->grade->feedback }}</p></div>@elseif($submission->grade)<p class="text-muted">{{ __('Feedback is not released yet.') }}</p>@endif@endif
+@if($assignment->submissions->whereIn('status',['submitted','late','graded'])->count() < $assignment->max_submissions)<form method="POST" enctype="multipart/form-data" action="{{ route('student.my_courses.assignments.submit',['enrollment_id'=>encodeId($enrollment->id),'assignment_id'=>$assignment->id]) }}" class="border-top pt-3">@csrf<div class="mb-2"><label class="form-label">{{ __('Written response') }}</label><textarea name="text_response" rows="4" maxlength="50000" class="form-control">{{ $submission?->status==='draft' ? $submission->text_response : '' }}</textarea></div><div class="mb-2"><label class="form-label">{{ __('Private file (PDF, DOCX, TXT, PNG, JPG; max 20 MB)') }}</label><input type="file" name="file" accept=".pdf,.docx,.txt,.png,.jpg,.jpeg" class="form-control"></div><div class="d-flex gap-2"><button name="submission_action" value="draft" class="btn btn-outline-primary">{{ __('Save draft') }}</button><button name="submission_action" value="submit" class="btn btn-primary">{{ __('Submit for grading') }}</button></div></form>@endif
+</article>@empty<p>{{ __('No assignments have been published for this course yet.') }}</p>@endforelse</div>@endsection

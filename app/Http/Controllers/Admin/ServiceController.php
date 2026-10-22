@@ -18,16 +18,24 @@ class ServiceController extends Controller
 
     public function index(Request $request)
     {
+        $request->validate([
+            'status' => ['nullable', \Illuminate\Validation\Rule::in([STATUS_ACTIVE, STATUS_DEACTIVATE])],
+            'price_type' => ['nullable', \Illuminate\Validation\Rule::in(['free', 'paid'])],
+            'search_key' => ['nullable', 'string', 'max:120'],
+        ]);
         $query = Service::query();
 
         if($request->has('search_key')){
-            $query->where('title','like','%'.$request->search_key.'%')
-                   ->orWhere('price','like','%'.$request->search_key.'%');
+            $query->where(fn ($q) => $q->where('title','like','%'.$request->search_key.'%')
+                   ->orWhere('price','like','%'.$request->search_key.'%'));
         }
+        if ($request->filled('status')) $query->where('status', $request->input('status'));
+        if ($request->input('price_type') === 'free') $query->where('price', '<=', 0);
+        if ($request->input('price_type') === 'paid') $query->where('price', '>', 0);
         if(auth()->user()->role != USER_ROLE_STUDENT){
-            $data['service'] = $query->orderBy('id', 'DESC')->paginate(12);
+            $data['service'] = $query->orderBy('id', 'DESC')->paginate(12)->withQueryString();
         }else{
-            $data['service'] = $query->orderBy('id', 'DESC')->where('status',STATUS_ACTIVE)->paginate(12);
+            $data['service'] = $query->orderBy('id', 'DESC')->where('status',STATUS_ACTIVE)->paginate(12)->withQueryString();
         }
 
         if ($request->ajax()) {
@@ -35,6 +43,13 @@ class ServiceController extends Controller
         }
         $data['pageTitle'] = __("Manage Service");
         $data['activeService'] = 'active';
+        $data['criteriaFields'] = [
+            ['name' => 'search_key', 'label' => __('Search services'), 'type' => 'search'],
+            ['name' => 'price_type', 'label' => __('Price'), 'options' => ['free' => __('Free'), 'paid' => __('Paid')]],
+        ];
+        if ((int) auth()->user()->role !== USER_ROLE_STUDENT) {
+            $data['criteriaFields'][] = ['name' => 'status', 'label' => __('Status'), 'options' => [STATUS_ACTIVE => __('Active'), STATUS_DEACTIVATE => __('Inactive')]];
+        }
 
         return view(getPrefix().'.services.index', $data);
     }

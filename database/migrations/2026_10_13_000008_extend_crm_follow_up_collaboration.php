@@ -36,11 +36,7 @@ return new class extends Migration {
         Schema::dropIfExists('crm_follow_up_comments');
         if (Schema::hasColumn('notifications','dedupe_key')) Schema::table('notifications', function (Blueprint $table) { $table->dropUnique(['dedupe_key']); $table->dropColumn('dedupe_key'); });
         Schema::table('crm_follow_ups', function (Blueprint $table) {
-            foreach (['priority','status'] as $column) {
-                if (!Schema::hasColumn('crm_follow_ups', $column)) continue;
-                if (Schema::hasIndex('crm_follow_ups', [$column])) $table->dropIndex([$column]);
-                $table->dropColumn($column);
-            }
+            foreach (['priority','status'] as $column) if (Schema::hasColumn('crm_follow_ups',$column)) $table->dropColumn($column);
         });
     }
 };

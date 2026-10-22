@@ -10,6 +10,7 @@ use App\Models\CrmLeadNote;
 use App\Models\StudyAbroadRegistration;
 use App\Models\CrmFollowUpComment;
 use App\Services\CrmTaskNotificationOutbox;
+use App\Support\ListCriteria;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -33,6 +34,11 @@ class LeadController extends Controller
 
     public function index(Request $request)
     {
+        $request->validate([
+            'assigned_to' => ['nullable', 'integer'],
+            'branch' => ['nullable', Rule::in(array_keys(ListCriteria::branchOptions()))],
+            'period' => ['nullable', Rule::in(array_keys(ListCriteria::periods()))],
+        ]);
         $query = $this->visibleLeads()->with('owner');
         if ($request->filled('q')) {
             $term = trim($request->string('q')->toString());
@@ -45,6 +51,17 @@ class LeadController extends Controller
         }
         if ($request->filled('status') && in_array($request->status, CrmLead::STATUSES, true)) $query->where('status', $request->status);
         if ($request->filled('source')) $query->where('source', $request->string('source')->toString());
+        if ($request->filled('assigned_to')) $query->where('assigned_to', $request->integer('assigned_to'));
+        if ($request->filled('branch')) {
+            if ($request->input('branch') === '__unassigned__') {
+                $query->whereDoesntHave('studyRegistrations', fn ($q) => $q->whereNotNull('branch')->where('branch', '!=', ''))
+                    ->where(fn ($q) => $q->whereNull('preferences->branch')->orWhere('preferences->branch', ''));
+            } else {
+                $query->where(fn ($q) => $q->whereHas('studyRegistrations', fn ($registrations) => $registrations->where('branch', $request->input('branch')))
+                    ->orWhere('preferences->branch', $request->input('branch')));
+            }
+        }
+        ListCriteria::applyPeriod($query, 'created_at', $request->input('period'));
 
         $leads = $query->latest()->paginate(20)->withQueryString();
         $counts = $this->visibleLeads()->select('status', DB::raw('COUNT(*) as total'))->groupBy('status')->pluck('total', 'status');
@@ -95,6 +112,7 @@ class LeadController extends Controller
     {
         abort_unless($this->visibleLeads()->whereKey($lead->id)->exists(), 404);
         abort_unless((int) $registration->lead_id === (int) $lead->id, 404);
+        abort_unless(filled($registration->signature_path), 404);
         abort_unless(Storage::disk('local')->exists($registration->signature_path), 404);
 
         return Storage::disk('local')->download($registration->signature_path, 'applicant-signature.png');
@@ -256,6 +274,14 @@ class LeadController extends Controller
         });
 
         return back()->with('success', __('Lead updated successfully.'));
+    }
+
+    public function destroy(CrmLead $lead)
+    {
+        abort_unless($this->visibleLeads()->whereKey($lead->id)->exists(), 404);
+        $lead->delete();
+
+        return redirect()->route($this->routePrefix() . '.index')->with('success', __('Lead moved to deleted records.'));
     }
 
     public function addNote(Request $request, CrmLead $lead)

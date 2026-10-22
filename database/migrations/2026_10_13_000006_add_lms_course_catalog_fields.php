@@ -23,7 +23,6 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table('courses', function (Blueprint $table) {
-            if (Schema::hasColumn('courses', 'publication_state') && Schema::hasIndex('courses', ['publication_state'])) $table->dropIndex(['publication_state']);
             foreach (['publication_state','difficulty','language','prerequisites','estimated_minutes','capacity'] as $column) if (Schema::hasColumn('courses', $column)) $table->dropColumn($column);
         });
     }

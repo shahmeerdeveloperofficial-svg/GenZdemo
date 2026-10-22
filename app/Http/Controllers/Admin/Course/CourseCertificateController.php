@@ -7,6 +7,7 @@ use App\Models\Course;
 use App\Models\CourseEnrollment;
 use App\Models\LmsCertificate;
 use App\Services\LmsCertificateService;
+use App\Support\ListCriteria;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Schema;
@@ -20,14 +21,27 @@ class CourseCertificateController extends Controller
         return $query->firstOrFail();
     }
 
-    public function index($courseId, LmsCertificateService $service)
+    public function index(Request $request, $courseId, LmsCertificateService $service)
     {
         abort_unless(Schema::hasTable('lms_certificates'),503,'Apply the LMS certificate migration before managing certificates.');
         $course=$this->course($courseId);
-        $enrollments=CourseEnrollment::where('course_id',$course->id)->where('status',STATUS_ACTIVE)->with(['user','certificate'])->latest('id')->paginate(25);
+        $request->validate([
+            'certificate_status' => ['nullable', \Illuminate\Validation\Rule::in(['issued', 'revoked', 'not_issued'])],
+            'branch' => ['nullable', \Illuminate\Validation\Rule::in(array_keys(ListCriteria::branchOptions()))],
+        ]);
+        $query = CourseEnrollment::where('course_id', $course->id)->where('status', STATUS_ACTIVE)->with(['user', 'certificate']);
+        if ($request->input('certificate_status') === 'issued') $query->whereHas('certificate', fn ($q) => $q->whereNull('revoked_at'));
+        if ($request->input('certificate_status') === 'revoked') $query->whereHas('certificate', fn ($q) => $q->whereNotNull('revoked_at'));
+        if ($request->input('certificate_status') === 'not_issued') $query->whereDoesntHave('certificate');
+        if ($request->filled('branch')) $query->whereHas('user', fn ($q) => ListCriteria::applyBranch($q, 'users.branch', $request->input('branch')));
+        $enrollments = $query->latest('id')->paginate(25)->withQueryString();
+        $criteriaFields = [
+            ['name' => 'branch', 'label' => __('Branch'), 'options' => ListCriteria::branchOptions()],
+            ['name' => 'certificate_status', 'label' => __('Certificate status'), 'options' => ['issued' => __('Issued'), 'revoked' => __('Revoked'), 'not_issued' => __('Not issued')]],
+        ];
         $eligibility=[];
         foreach ($enrollments as $enrollment) $eligibility[$enrollment->id]=$service->eligibility($enrollment);
-        return view('admin.courses.certificates.index',compact('course','enrollments','eligibility'));
+        return view('admin.courses.certificates.index',compact('course','enrollments','eligibility','criteriaFields'));
     }
 
     public function issue($courseId,$enrollmentId,LmsCertificateService $service)

@@ -3,18 +3,18 @@
 
     let debounceTimer;
 
-    $(document).on('keyup', "#search-key", function () {
+    $(document).on('keyup', "#search-key, #criteria-search_key", function () {
         clearTimeout(debounceTimer);
 
         debounceTimer = setTimeout(function () {
-            let url = updateUrlWithSearchKey($('#my-service-route').val(), $('#search-key').val());
+            let url = updateUrlWithSearchKey($('#my-service-route').val(), $('#criteria-search_key, #search-key').first().val());
             searchCourses(url);
         }, 300);
     });
 
     $(document).on('click', '.zPaginatation-list a', function (e) {
         e.preventDefault();
-        let url = updateUrlWithSearchKey($(this).attr('href'), $('#search-key').val());
+        let url = updateUrlWithSearchKey($(this).attr('href'), $('#criteria-search_key, #search-key').first().val());
         searchCourses(url);
     });
 
@@ -26,7 +26,7 @@
         if (response.status === 200) {
             $('#service-list-container').html(response.responseText);
 
-            let currentSearchKey = $('#search-key').val();
+            let currentSearchKey = $('#criteria-search_key, #search-key').first().val();
             $('#service-list-container .pagination a').each(function () {
                 let newUrl = updateUrlWithSearchKey($(this).attr('href'), currentSearchKey);
                 $(this).attr('href', newUrl);
@@ -43,6 +43,10 @@
         } else {
             newUrl.searchParams.delete('search_key');
         }
+        $('form.genz-list-criteria select').each(function () {
+            if (this.value !== '') newUrl.searchParams.set(this.name, this.value);
+            else newUrl.searchParams.delete(this.name);
+        });
         return newUrl.href;
     }
 

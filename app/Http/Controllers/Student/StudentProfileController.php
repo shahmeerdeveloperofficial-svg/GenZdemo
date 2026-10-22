@@ -9,6 +9,7 @@ use App\Models\StudentProfile;
 use App\Models\Subject;
 use App\Models\University;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class StudentProfileController extends Controller
@@ -41,6 +42,7 @@ class StudentProfileController extends Controller
     public function update(Request $request)
     {
         $data = $request->validate([
+            'branch' => ['nullable', Rule::in(config('genz.registration.branches', []))],
             'date_of_birth' => ['nullable', 'date', 'before:today'],
             'gender' => ['nullable', Rule::in(['female', 'male', 'non_binary', 'prefer_not_to_say'])],
             'nationality' => ['nullable', 'string', 'max:120'],
@@ -59,7 +61,13 @@ class StudentProfileController extends Controller
         $data['preferred_country_ids'] = array_values(array_unique($data['preferred_country_ids'] ?? []));
         $data['preferred_university_ids'] = array_values(array_unique($data['preferred_university_ids'] ?? []));
         $data['preferred_subject_ids'] = array_values(array_unique($data['preferred_subject_ids'] ?? []));
-        StudentProfile::updateOrCreate(['user_id' => auth()->id()], $data);
+        DB::transaction(function () use ($request, $data) {
+            if ($request->has('branch')) {
+                $request->user()->update(['branch' => $data['branch'] ?? null]);
+            }
+            unset($data['branch']);
+            StudentProfile::updateOrCreate(['user_id' => auth()->id()], $data);
+        });
         return back()->with('success', __('Your study profile was saved.'));
     }
 }

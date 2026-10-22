@@ -26,7 +26,7 @@ class StudentController extends Controller
         if ($request->ajax()) {
             $students = User::orderBy('users.id', 'desc')
                 ->where('role', USER_ROLE_STUDENT)
-                ->select('users.id', 'first_name', 'last_name', 'email', 'image', 'gender', 'mobile', 'status');
+                ->select('users.id', 'first_name', 'last_name', 'email', 'image', 'gender', 'mobile', 'status', 'branch');
             return datatables($students)
                 ->editColumn('name', function ($data) {
                     return $data->first_name . ' ' . $data->last_name;
@@ -103,6 +103,7 @@ class StudentController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'mobile' => ['required', 'string', 'min:6', 'max:30'],
             'password' => ['required', 'string', 'min:8', 'max:255'],
+            'branch' => ['nullable', Rule::in(config('genz.registration.branches', []))],
             'status' => ['required', Rule::in([STATUS_ACTIVE, STATUS_DEACTIVATE])],
         ]);
 
@@ -113,6 +114,7 @@ class StudentController extends Controller
                 $user->last_name = $validated['last_name'];
                 $user->email = $validated['email'];
                 $user->mobile = $validated['mobile'];
+                $user->branch = $validated['branch'] ?? null;
                 $user->status = $validated['status'];
                 $user->password = Hash::make($validated['password']);
                 $user->role = USER_ROLE_STUDENT;
@@ -164,6 +166,7 @@ class StudentController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($student->id)],
             'mobile' => ['required', 'string', 'min:6', 'max:30'],
             'password' => ['nullable', 'string', 'min:8', 'max:255'],
+            'branch' => ['nullable', Rule::in(config('genz.registration.branches', []))],
             'status' => ['required', Rule::in([STATUS_ACTIVE, STATUS_DEACTIVATE, STATUS_SUSPENDED])],
         ]);
 
@@ -173,6 +176,7 @@ class StudentController extends Controller
                 $student->last_name = $validated['last_name'];
                 $student->email = $validated['email'];
                 $student->mobile = $validated['mobile'];
+                if (array_key_exists('branch', $validated)) $student->branch = $validated['branch'];
                 $student->status = $validated['status'];
 
                 if (!empty($validated['password'])) {

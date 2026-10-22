@@ -86,11 +86,9 @@ return new class extends Migration
             foreach (['eligibility_conditions', 'source_url', 'last_verified_at'] as $column) if (Schema::hasColumn('scholarships', $column)) $table->dropColumn($column);
         });
         Schema::table('universities', function (Blueprint $table) {
-            if (Schema::hasColumn('universities', 'city') && Schema::hasIndex('universities', ['city'])) $table->dropIndex(['city']);
             foreach (['city', 'website_url', 'tuition_currency', 'source_url', 'last_verified_at'] as $column) if (Schema::hasColumn('universities', $column)) $table->dropColumn($column);
         });
         Schema::table('countries', function (Blueprint $table) {
-            if (Schema::hasColumn('countries', 'country_code') && Schema::hasIndex('countries', ['country_code'])) $table->dropIndex(['country_code']);
             foreach (['country_code', 'currency_code', 'source_url', 'last_verified_at'] as $column) if (Schema::hasColumn('countries', $column)) $table->dropColumn($column);
         });
     }

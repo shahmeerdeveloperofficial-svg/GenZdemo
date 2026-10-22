@@ -26,6 +26,50 @@
 
     if (!body.classList.contains('genz-admin-shell')) return;
 
+    // Show a branded skeleton only when an actual page navigation takes long
+    // enough to notice. The short delay avoids flashing it on fast loads.
+    var pageLoadingNode = document.getElementById('genz-page-loading');
+    var hasPageLoading = !!pageLoadingNode;
+    var loadingTimer = null;
+    function clearPageLoading() {
+        window.clearTimeout(loadingTimer);
+        loadingTimer = null;
+        root.classList.remove('genz-page-is-loading');
+        body.removeAttribute('aria-busy');
+        if (pageLoadingNode) pageLoadingNode.setAttribute('aria-hidden', 'true');
+    }
+    function schedulePageLoading(event) {
+        window.clearTimeout(loadingTimer);
+        loadingTimer = window.setTimeout(function () {
+            if (event.defaultPrevented) return;
+            root.classList.add('genz-page-is-loading');
+            body.setAttribute('aria-busy', 'true');
+            if (pageLoadingNode) pageLoadingNode.setAttribute('aria-hidden', 'false');
+        }, 100);
+    }
+
+    document.addEventListener('click', function (event) {
+        if (!hasPageLoading) return;
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        var link = event.target.closest('a[href]');
+        if (!link || link.target && link.target !== '_self' || link.hasAttribute('download') || link.hasAttribute('data-no-loading')) return;
+        if (link.matches('[data-bs-toggle], [data-toggle], [href^="#"], [href^="javascript:"]')) return;
+        var destination;
+        try { destination = new URL(link.href, window.location.href); } catch (error) { return; }
+        if (destination.origin !== window.location.origin || (destination.pathname === window.location.pathname && destination.search === window.location.search && destination.hash)) return;
+        schedulePageLoading(event);
+    }, true);
+
+    document.addEventListener('submit', function (event) {
+        if (!hasPageLoading) return;
+        var form = event.target;
+        if (!form || form.matches('[data-no-loading], [data-ajax], [target="_blank"]')) return;
+        schedulePageLoading(event);
+    }, true);
+
+    window.addEventListener('pageshow', clearPageLoading);
+    window.addEventListener('pagehide', function () { window.clearTimeout(loadingTimer); });
+
     // Server-side tables are sortable; generated controls and presentation-only
     // columns must never be sent to the database as ORDER BY fields.
     if (window.jQuery && window.jQuery.fn.dataTable) {

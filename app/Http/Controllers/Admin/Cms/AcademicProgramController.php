@@ -22,15 +22,31 @@ class AcademicProgramController extends Controller
     public function index(Request $request)
     {
         $academicProgramsActive = 'active';
+        $criteriaFields = [];
         if (!Schema::hasTable('academic_programs')) {
             $programs = new LengthAwarePaginator([], 0, 20, LengthAwarePaginator::resolveCurrentPage(), ['path' => $request->url(), 'query' => $request->query()]);
-            return view('admin.cms.academic-programs.index', compact('programs', 'academicProgramsActive'));
+            return view('admin.cms.academic-programs.index', compact('programs', 'academicProgramsActive', 'criteriaFields'));
         }
+        $request->validate([
+            'status' => ['nullable', Rule::in(AcademicProgram::STATUSES)],
+            'country_id' => ['nullable', 'integer'], 'university_id' => ['nullable', 'integer'],
+            'study_level_id' => ['nullable', 'integer'], 'q' => ['nullable', 'string', 'max:120'],
+        ]);
         $programs = AcademicProgram::with(['university:id,name', 'country:id,name', 'studyLevel:id,name'])
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))
+            ->when($request->filled('country_id'), fn ($q) => $q->where('country_id', $request->integer('country_id')))
+            ->when($request->filled('university_id'), fn ($q) => $q->where('university_id', $request->integer('university_id')))
+            ->when($request->filled('study_level_id'), fn ($q) => $q->where('study_level_id', $request->integer('study_level_id')))
             ->when($request->filled('q'), fn ($q) => $q->where('title', 'like', '%'.trim($request->input('q')).'%'))
             ->latest()->paginate(20)->withQueryString();
-        return view('admin.cms.academic-programs.index', compact('programs', 'academicProgramsActive'));
+        $criteriaFields = [
+            ['name' => 'q', 'label' => __('Search programs'), 'type' => 'search'],
+            ['name' => 'status', 'label' => __('Publication status'), 'options' => collect(AcademicProgram::STATUSES)->mapWithKeys(fn ($v) => [$v => __(ucfirst($v))])->all()],
+            ['name' => 'country_id', 'label' => __('Country'), 'options' => Country::whereIn('id', AcademicProgram::select('country_id'))->orderBy('name')->pluck('name', 'id')->all()],
+            ['name' => 'university_id', 'label' => __('University'), 'options' => University::whereIn('id', AcademicProgram::select('university_id'))->orderBy('name')->pluck('name', 'id')->all()],
+            ['name' => 'study_level_id', 'label' => __('Study level'), 'options' => StudyLevel::whereIn('id', AcademicProgram::select('study_level_id'))->orderBy('name')->pluck('name', 'id')->all()],
+        ];
+        return view('admin.cms.academic-programs.index', compact('programs', 'academicProgramsActive', 'criteriaFields'));
     }
 
     public function importForm()

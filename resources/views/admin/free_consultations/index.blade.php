@@ -7,10 +7,10 @@
         <h4 class="fs-18 fw-700 lh-24 text-title-text">{{$pageTitle}}</h4>
         <div class="d-flex align-items-center g-10">
             <button type="button" class="flipBtn sf-flipBtn-primary" data-bs-toggle="modal" data-bs-target="#add-lead-modal">
-                <span>{{__('Add Lead')}}</span>
+                <span>{{__('Add Consultation Request')}}</span>
             </button>
             <button type="button" class="flipBtn sf-flipBtn-secondary" data-bs-toggle="modal" data-bs-target="#import-leads-modal">
-                <span>{{__('Import Leads')}}</span>
+                <span>{{__('Import Consultation Requests')}}</span>
             </button>
         </div>
     </div>
@@ -54,7 +54,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content border-0 bd-ra-4 p-sm-25 p-15">
                 <div class="bd-b-one bd-c-stroke pb-20 mb-20 d-flex align-items-center flex-wrap justify-content-between g-10">
-                    <h2 class="fs-18 fw-600 lh-22 text-title-text">{{ __('Add Lead') }}</h2>
+                    <h2 class="fs-18 fw-600 lh-22 text-title-text">{{ __('Add Consultation Request') }}</h2>
                     <div class="mClose">
                         <button type="button" class="bd-one bd-c-stroke rounded-circle w-25 h-25 bg-transparent text-para-text" data-bs-dismiss="modal" aria-label="Close">
                             <i class="fa-solid fa-times"></i>
@@ -78,7 +78,7 @@
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content border-0 bd-ra-4 p-sm-25 p-15">
                 <div class="bd-b-one bd-c-stroke pb-20 mb-20 d-flex align-items-center flex-wrap justify-content-between g-10">
-                    <h2 class="fs-18 fw-600 lh-22 text-title-text">{{ __('Import Leads') }}</h2>
+                    <h2 class="fs-18 fw-600 lh-22 text-title-text">{{ __('Import Consultation Requests') }}</h2>
                     <div class="mClose">
                         <button type="button" class="bd-one bd-c-stroke rounded-circle w-25 h-25 bg-transparent text-para-text" data-bs-dismiss="modal" aria-label="Close">
                             <i class="fa-solid fa-times"></i>

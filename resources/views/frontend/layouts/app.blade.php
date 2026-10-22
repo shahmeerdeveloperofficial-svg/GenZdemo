@@ -14,8 +14,6 @@
     </div>
 @endif
 
-<body>
-
 @include('frontend.layouts.nav')
 
 @yield('content')

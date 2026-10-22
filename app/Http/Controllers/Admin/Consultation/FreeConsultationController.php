@@ -26,7 +26,7 @@ class FreeConsultationController extends Controller
 
     public function index(Request $request)
     {
-        $data['pageTitle'] = __('Leads');
+        $data['pageTitle'] = __('Consultation Requests');
         $data['activeFreeConsultation'] = 'active';
 
         if ($request->ajax()) {
@@ -58,9 +58,16 @@ class FreeConsultationController extends Controller
                 })
                 ->addColumn('action', function ($data) {
                     return '<div class="d-flex align-items-center g-10 justify-content-end">
-                            <button onclick="getEditModal(\'' . route('admin.free_consultations.view', encodeId($data->id)) . '\', \'#view-modal\')" class="align-items-center bd-c-stroke bd-one bg-transparent d-flex h-25 justify-content-center rounded-circle w-25"  title="'.__('View').'">
-                                 ' . view('partials.icons.view')->render() . '
+                            <button onclick="getEditModal(\'' . route('admin.free_consultations.view', encodeId($data->id)) . '\', \'#view-modal\')" class="genz-row-action genz-row-action--edit" title="'.__('Edit').'" aria-label="'.__('Edit').'">
+                                 ' . view('partials.icons.edit')->render() . '
                             </button>
+                            <form method="POST" action="'.route('admin.free_consultations.delete', encodeId($data->id)).'" onsubmit="return confirm(\''.e(__('Delete this consultation request?')).'\')">
+                                <input type="hidden" name="_token" value="'.e(csrf_token()).'">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit" class="genz-row-action genz-row-action--delete" title="'.__('Delete').'" aria-label="'.__('Delete').'">
+                                    ' . view('partials.icons.delete')->render() . '
+                                </button>
+                            </form>
                         </div>';
                 })
                 ->rawColumns(['title', 'status', 'action'])
@@ -113,6 +120,14 @@ class FreeConsultationController extends Controller
         return $this->success([], __(UPDATED_SUCCESSFULLY));
     }
 
+    public function destroy($id)
+    {
+        $consultation = FreeConsultation::findOrFail(decodeId($id));
+        $consultation->delete();
+
+        return redirect()->route('admin.free_consultations.index')->with('success', __('Consultation request moved to deleted records.'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -147,7 +162,7 @@ class FreeConsultationController extends Controller
             return $this->success([], __(CREATED_SUCCESSFULLY));
         } catch (Exception $e) {
             DB::rollBack();
-            return $this->error([], getErrorMessage($e, __('Failed to create lead')));
+            return $this->error([], getErrorMessage($e, __('Failed to create consultation request')));
         }
     }
 
@@ -489,10 +504,10 @@ class FreeConsultationController extends Controller
             DB::commit();
             Session::forget($request->session_key);
             
-            return $this->success([], __('Successfully imported :count leads', ['count' => $savedCount]));
+            return $this->success([], __('Successfully imported :count consultation requests', ['count' => $savedCount]));
         } catch (Exception $e) {
             DB::rollBack();
-            return $this->error([], getErrorMessage($e, __('Failed to save leads')));
+            return $this->error([], getErrorMessage($e, __('Failed to save consultation requests')));
         }
     }
 }

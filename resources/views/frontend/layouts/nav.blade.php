@@ -1,8 +1,8 @@
 <!-- Header -->
-<div class="ld-header-section">
+<div class="ld-header-section genz-public-nav">
     <div class="container">
         <div class="ld-header-wrap">
-            <div class="row align-items-center">
+            <div class="row align-items-center genz-public-nav-shell">
                 <div class="col-lg-2 col-6">
                     <x-genz.logo :href="route('frontend')" class="ld-header-logo" />
                 </div>
@@ -19,10 +19,13 @@
                                     class="d-lg-none w-30 h-30 p-0 rounded-circle bg-white border-0 position-absolute top-10 right-10"
                                     data-bs-dismiss="offcanvas" aria-label="Close"><i class="fa-solid fa-times"></i>
                             </button>
-                            <ul class="navbar-nav menu-navbar-nav justify-content-center flex-wrap cg-25 rg-10 w-100">
+                            <ul class="navbar-nav menu-navbar-nav genz-public-nav-links justify-content-center flex-wrap cg-25 rg-10 w-100">
+                                <li class="nav-item"><a class="nav-link fs-16 fw-400 lh-28 text-para-text p-0" href="{{ route('frontend') }}">{{ __('Home') }}</a></li>
                                 <li class="nav-item">
                                     <a class="nav-link fs-16 fw-400 lh-28 text-para-text p-0 {{ @$activeAboutUsMenu }}" href="{{ route('about-us.details') }}">{{__('About Us')}}</a>
                                 </li>
+                                <li class="nav-item"><a class="nav-link fs-16 fw-400 lh-28 text-para-text p-0" href="{{ route('academic-programs.list') }}">{{ __('Programs') }}</a></li>
+                                <li class="nav-item"><a class="nav-link fs-16 fw-400 lh-28 text-para-text p-0" href="{{ route('consultations.list') }}">{{ __('Consultations') }}</a></li>
                                 <li class="nav-item dropdown">
                                     <a class="{{@$activeStudyAbroadMenu}} nav-link fs-16 fw-400 lh-28 text-para-text p-0 dropdown-toggle menu-dropdown-toggle"
                                        href="#" role="button" data-bs-toggle="dropdown"

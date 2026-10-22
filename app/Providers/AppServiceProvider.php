@@ -36,6 +36,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        config([
+            'datatables.engines.collection' => \App\DataTables\CollectionDataTable::class,
+            'datatables.engines.eloquent' => \App\DataTables\EloquentDataTable::class,
+            'datatables.engines.query' => \App\DataTables\QueryDataTable::class,
+        ]);
+
         Gate::before(function ($user, $ability) {
             if ((int) $user->role === USER_ROLE_ADMIN) {
                 return true;

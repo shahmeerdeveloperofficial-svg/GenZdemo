@@ -1,0 +1,144 @@
+{
+  "brand": {
+    "seoSource": "backend",
+    "name": "GenZ Consultants",
+    "shortName": "GenZ",
+    "tagline": "Global Education and Career Development",
+    "logo": "/assets/images/genz-logo.png",
+    "favicon": "/assets/images/genz-logo.png",
+    "pageTitle": "GenZ Consultants | Global Education and Career Development",
+    "description": "Explore education pathways, get expert guidance, and begin your student registration with GenZ Consultants."
+  },
+  "navigation": {
+    "announcement": "Admissions are open",
+    "campusLabel": "Our branches",
+    "inquiryLabel": "Book a consultation",
+    "registerLabel": "Student registration",
+    "portalLabel": "Login / Portal",
+    "dashboardLabel": "My dashboard",
+    "menuLabel": "Open navigation",
+    "links": [
+      {"label": "Home", "route": "home"},
+      {"label": "About Us", "route": "about"},
+      {"label": "Programs", "route": "academicPrograms"},
+      {"label": "Universities", "route": "universities"},
+      {"label": "Subjects", "route": "subjects"},
+      {"label": "Scholarships", "route": "scholarships"},
+      {"label": "Courses", "route": "courses"},
+      {"label": "Consultations", "route": "consultations"},
+      {"label": "Events", "route": "events"},
+      {"label": "News", "route": "blogs"},
+      {"label": "Contact", "route": "contact"}
+    ]
+  },
+  "contact": {
+    "email": "",
+    "phone": "",
+    "whatsapp": "",
+    "branches": [],
+    "socialLinks": []
+  },
+  "footer": {
+    "description": "Education guidance, learning opportunities, and student support in one place.",
+    "backgroundImage": "/assets/images/hero-campus.jpg",
+    "linksHeading": "Explore",
+    "supportHeading": "Student support",
+    "contactHeading": "Get in touch",
+    "links": [
+      {"label": "Academic programs", "route": "academicPrograms", "href": ""},
+      {"label": "Universities", "route": "universities"},
+      {"label": "Courses", "route": "courses"},
+      {"label": "Events", "route": "events"},
+      {"label": "News & insights", "route": "blogs"}
+    ],
+    "supportLinks": [
+      {"label": "Student registration", "route": "registration", "href": ""},
+      {"label": "Student login", "route": "login"},
+      {"label": "Consultations", "route": "consultations"},
+      {"label": "Contact us", "route": "contact"}
+    ],
+    "legalLinks": [
+      {"label": "Privacy policy", "route": "privacy", "href": ""},
+      {"label": "Terms & conditions", "route": "terms"},
+      {"label": "Refund policy", "route": "refund"}
+    ],
+    "copyright": "All rights reserved.",
+    "backToTop": "Back to top",
+    "newsletterTitle": "Stay connected with GenZ",
+    "newsletterDescription": "Receive education news and updates.",
+    "newsletterPlaceholder": "Your email address",
+    "newsletterConsent": "I agree to receive email updates.",
+    "newsletterButton": "Subscribe",
+    "newsletterBusy": "Subscribing…",
+    "newsletterSuccess": "Thank you. Your subscription has been saved.",
+    "newsletterEnabled": true
+  },
+  "inquiry": {
+    "title": "Talk to our admissions team",
+    "subtitle": "Consultation & admission inquiry",
+    "description": "Share your details and our team will follow up with you.",
+    "studentLabel": "Student full name",
+    "parentLabel": "Parent / guardian name (optional)",
+    "emailLabel": "Email address",
+    "mobileLabel": "Phone / WhatsApp",
+    "programLabel": "Program / study interest",
+    "branchLabel": "Preferred branch",
+    "messageLabel": "Message / preferred appointment date",
+    "selectLabel": "Please select",
+    "programs": ["Early Years", "Primary School", "Middle School", "Cambridge O Levels", "Cambridge A Levels", "Undergraduate studies", "Postgraduate studies", "Study abroad guidance"],
+    "submitLabel": "Send inquiry",
+    "busyLabel": "Sending…",
+    "successTitle": "Inquiry received",
+    "successMessage": "Your inquiry has been saved. Our team will contact you to discuss the next steps.",
+    "closeLabel": "Close",
+    "returnLabel": "Return to website",
+    "registrationPrompt": "Ready to submit your student registration?",
+    "registrationLabel": "Open registration form",
+    "eventLabel": "Regarding"
+  },
+  "portal": {
+    "title": "Your GenZ portal",
+    "description": "Sign in using your existing account to access your dashboard.",
+    "studentLabel": "Student portal",
+    "teamLabel": "Team & CRM",
+    "studentDescription": "Access your courses, study profile, documents, consultations and applications.",
+    "teamDescription": "Use your authorized staff account to manage admissions, consultations and student support.",
+    "loginLabel": "Continue to login",
+    "registerLabel": "New student registration",
+    "createAccountLabel": "Create student account",
+    "forgotLabel": "Forgot password?",
+    "dashboardLabel": "Open my dashboard",
+    "authenticatedLabel": "Signed in as",
+    "closeLabel": "Close portal"
+  },
+  "floatingActions": {
+    "enabled": true,
+    "inquiryLabel": "Ask GenZ",
+    "whatsappLabel": "Chat on WhatsApp",
+    "backToTopLabel": "Back to top"
+  },
+  "catalog": {
+    "showServices": true,
+    "showCountries": true,
+    "servicesBadge": "Support for your next step",
+    "servicesTitle": "Explore our services",
+    "servicesDescription": "Discover guidance and support available through GenZ.",
+    "consultationLabel": "Find an adviser",
+    "detailsLabel": "Explore service",
+    "countriesTitle": "Find your study destination",
+    "countriesDescription": "Explore available destinations and their education pathways."
+  },
+  "sections": {
+    "catalog": {"enabled": true, "order": 25},
+    "callToAction": {"enabled": true, "order": 150}
+  },
+  "callToAction": {
+    "badge": "Start your next chapter",
+    "title": "Ready to begin your education journey?",
+    "description": "Register as a student or speak with our team about the right pathway for you.",
+    "registerLabel": "Student registration",
+    "inquiryLabel": "Talk to an adviser",
+    "prospectusLabel": "Download prospectus",
+    "prospectusUrl": ""
+  }
+}

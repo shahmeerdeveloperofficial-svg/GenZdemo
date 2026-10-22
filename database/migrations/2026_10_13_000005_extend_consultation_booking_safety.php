@@ -42,11 +42,7 @@ return new class extends Migration {
         Schema::dropIfExists('consultation_blackout_dates');
         Schema::dropIfExists('consultation_booking_events');
         Schema::table('appointments', function (Blueprint $table) {
-            foreach (['consultation_timezone','hold_expires_at','cancellation_reason','rescheduled_from_id'] as $column) {
-                if (!Schema::hasColumn('appointments', $column)) continue;
-                if (in_array($column, ['hold_expires_at', 'rescheduled_from_id'], true) && Schema::hasIndex('appointments', [$column])) $table->dropIndex([$column]);
-                $table->dropColumn($column);
-            }
+            foreach (['consultation_timezone','hold_expires_at','cancellation_reason','rescheduled_from_id'] as $column) if (Schema::hasColumn('appointments', $column)) $table->dropColumn($column);
         });
         Schema::table('users', function (Blueprint $table) {
             if (Schema::hasColumn('users', 'consultation_timezone')) $table->dropColumn('consultation_timezone');

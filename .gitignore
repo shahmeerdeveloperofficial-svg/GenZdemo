@@ -16,3 +16,9 @@
 /*.sql.gz
 /*.zip
 /app/demo.sql
+
+# Local data exports and credentials
+*.sql
+*.sqlite
+*.sqlite3
+/public/zaifiles/uploads/

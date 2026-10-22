@@ -11,6 +11,7 @@
     @csrf
     @method('PATCH')
     <div class="row rg-20 mb-20">
+        <div class="col-md-6"><label for="edit-student-branch" class="zForm-label-alt">{{ __('Branch') }}</label><select id="edit-student-branch" name="branch" class="form-select"><option value="">{{ __('Not assigned') }}</option>@foreach(config('genz.registration.branches', []) as $branch)<option value="{{ $branch }}" @selected($user->branch === $branch)>{{ $branch }}</option>@endforeach</select></div>
         <div class="col-md-6">
             <label for="edit_student_first_name" class="zForm-label-alt">{{ __('First Name') }} <span class="text-danger">*</span></label>
             <input type="text" name="first_name" id="edit_student_first_name" value="{{ $user->first_name }}"

@@ -28,6 +28,7 @@
                 );
                 $contentOpen = request()->routeIs(
                     'admin.cms-settings.section-settings',
+                    'admin.cms-settings.public-site.*',
                     'admin.cms-settings.about-us.*',
                     'admin.cms-settings.blogs.*',
                     'admin.seo.*',
@@ -288,6 +289,7 @@
                         </a>
                         <div id="adminNavWebsite" class="collapse {{ $contentOpen ? 'show' : '' }}" data-bs-parent="#sidebarMenu">
                             <ul class="zSidebar-submenu">
+                                <li><a class="{{ request()->routeIs('admin.cms-settings.public-site.*') ? 'active' : '' }}" href="{{ route('admin.cms-settings.public-site.edit') }}">{{ __('Public Website Editor') }}</a></li>
                                 <li><a class="{{ request()->routeIs('admin.cms-settings.section-settings') ? 'active' : '' }}" href="{{ route('admin.cms-settings.section-settings') }}">{{ __('Landing Page') }}</a></li>
                                 <li><a class="{{ request()->routeIs('admin.cms-settings.about-us.*') ? 'active' : '' }}" href="{{ route('admin.cms-settings.about-us.index') }}">{{ __('About Us') }}</a></li>
                                 <li><a class="{{ request()->routeIs('admin.cms-settings.blogs.*') ? 'active' : '' }}" href="{{ route('admin.cms-settings.blogs.index') }}">{{ __('Blogs & News') }}</a></li>

@@ -127,9 +127,9 @@
         var available = $.fn.dataTable.ext.buttons || {};
         var options = exportOptions(api);
         var definitions = [
-            { extend: 'copyHtml5', text: '<i class="fa-solid fa-copy" aria-hidden="true"></i><span>Copy</span>', className: 'genz-export-copy', titleAttr: 'Copy visible rows', exportOptions: options },
-            { extend: 'excelHtml5', text: '<i class="fa-solid fa-file-excel" aria-hidden="true"></i><span>Excel</span>', className: 'genz-export-excel', titleAttr: 'Export visible rows to Excel', filename: function () { return safeFileName(document.title); }, exportOptions: options },
-            { extend: 'csvHtml5', text: '<i class="fa-solid fa-file-csv" aria-hidden="true"></i><span>CSV</span>', className: 'genz-export-csv', titleAttr: 'Export visible rows to CSV', filename: function () { return safeFileName(document.title); }, exportOptions: options }
+            { extend: 'copyHtml5', text: '<i class="fa-solid fa-copy" aria-hidden="true"></i><span class="visually-hidden">Copy</span>', className: 'genz-export-copy', titleAttr: 'Copy visible rows', exportOptions: options },
+            { extend: 'excelHtml5', text: '<i class="fa-solid fa-file-excel" aria-hidden="true"></i><span class="visually-hidden">Excel</span>', className: 'genz-export-excel', titleAttr: 'Export visible rows to Excel', filename: function () { return safeFileName(document.title); }, exportOptions: options },
+            { extend: 'csvHtml5', text: '<i class="fa-solid fa-file-csv" aria-hidden="true"></i><span class="visually-hidden">CSV</span>', className: 'genz-export-csv', titleAttr: 'Export visible rows to CSV', filename: function () { return safeFileName(document.title); }, exportOptions: options }
         ];
 
         definitions = definitions.filter(function (definition) {
@@ -139,7 +139,7 @@
         if (available.pdfHtml5 && window.pdfMake && typeof window.pdfMake.createPdf === 'function') {
             definitions.push({
                 extend: 'pdfHtml5',
-                text: '<i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>PDF</span>',
+                text: '<i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span class="visually-hidden">PDF</span>',
                 className: 'genz-export-pdf',
                 titleAttr: 'Export visible rows to PDF',
                 filename: function () { return safeFileName(document.title); },
@@ -151,7 +151,7 @@
             // Keep PDF available where pdfMake is not bundled. The same
             // filtered list opens in this tab's print dialog, with Save as PDF.
             definitions.push({
-                text: '<i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span>PDF</span>',
+                text: '<i class="fa-solid fa-file-pdf" aria-hidden="true"></i><span class="visually-hidden">PDF</span>',
                 className: 'genz-export-pdf',
                 titleAttr: 'Save this list as PDF from the browser print dialog',
                 action: function (event, tableApi) { printTable(tableApi); }
@@ -159,13 +159,13 @@
         }
 
         definitions.push({
-            text: '<i class="fa-solid fa-print" aria-hidden="true"></i><span>Print</span>',
+            text: '<i class="fa-solid fa-print" aria-hidden="true"></i><span class="visually-hidden">Print</span>',
             className: 'genz-export-print',
             titleAttr: 'Print visible rows',
             action: function (event, tableApi) { printTable(tableApi); }
         });
         definitions.push({
-            text: '<i class="fa-solid fa-table-columns" aria-hidden="true"></i><span>Columns</span>',
+            text: '<i class="fa-solid fa-table-columns" aria-hidden="true"></i><span class="visually-hidden">Columns</span>',
             className: 'genz-export-columns',
             titleAttr: 'Choose visible columns',
             action: function (event, tableApi, node) { toggleColumnMenu(tableApi, node); }

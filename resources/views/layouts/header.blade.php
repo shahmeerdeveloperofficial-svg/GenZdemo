@@ -54,14 +54,19 @@
     <link rel="stylesheet" href="{{asset('assets/css/plugins.css')}}"/>
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.css')}}"/>
     <link rel="stylesheet" href="{{asset('assets/css/dataTables.responsive.min.css')}}"/>
-    <link rel="stylesheet" href="{{asset('assets/css/summernote/summernote-lite.min.css')}}"/>
+    @if (request()->is('admin/cms/*', 'admin/cms-setting/*', 'admin/service/*', 'admin/subject*', 'admin/events*', 'admin/consultations*', 'admin/courses/programs*', 'admin/setting/email-edit*', 'consultant/consultant-profile'))
+        <link rel="stylesheet" href="{{asset('assets/css/summernote/summernote-lite.min.css')}}"/>
+    @endif
     <link rel="stylesheet" href="{{asset('assets/scss/style.css')}}?v={{env('VERSION', 1)}}"/>
     <link rel="stylesheet" href="{{ asset('genz/css/theme.css') }}?v=5"/>
     @include('layouts.dynamic-color')
     @if (request()->is('admin', 'admin/*', 'consultant', 'consultant/*', 'student', 'student/*', 'affiliate', 'affiliate/*', 'instructor', 'instructor/*', 'finance', 'finance/*', 'content', 'content/*', 'login', 'register', 'password/*'))
-        <link rel="stylesheet" href="{{ asset('genz/css/backend.css') }}?v=17"/>
+        <link rel="stylesheet" href="{{ asset('genz/css/backend.css') }}?v={{ filemtime(public_path('genz/css/backend.css')) }}"/>
     @endif
     @stack('style')
+    @if (!request()->is('admin*', 'student*', 'consultant*', 'affiliate*', 'finance*', 'instructor*', 'content*', 'login', 'register', 'password/*'))
+        <link rel="stylesheet" href="{{ asset('genz/css/public-navigation.css') }}?v=1"/>
+    @endif
     @if(getOption('google_analytics_status', 0))
         <!-- Google tag (gtag.js) -->
         <script async

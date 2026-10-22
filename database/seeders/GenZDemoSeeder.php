@@ -7,31 +7,28 @@ use App\Models\CourseEnrollment;
 use App\Models\Appointment;
 use App\Models\CrmLead;
 use App\Models\CrmFollowUp;
-use App\Models\StudyAbroadRegistration;
+use App\Models\CourseLiveSession;
 use App\Models\User;
 use App\Services\ConsultationBookingService;
 use App\Services\LmsEnrollmentService;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Crypt;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class GenZDemoSeeder extends Seeder
 {
-    private array $demoCredentials = [];
-
     public function run(): void
     {
-        if (!(app()->environment('local') || config('genz.demo_seed_enabled'))) {
-            $this->command?->error('Demo seeding requires an explicit non-production environment or GENZ_DEMO_SEEDING opt-in.');
+        if (app()->environment('production') || !(app()->environment('local') || config('genz.demo_seed_enabled'))) {
+            $this->command?->error('Demo seeding is disabled outside an explicitly enabled non-production environment.');
             return;
         }
-        if (DB::connection()->getDatabaseName() !== config('genz.demo_database')) {
-            $this->command?->error('Demo seeding is restricted to the isolated configured demo database. No records were changed.');
+        if (!in_array(DB::connection()->getDatabaseName(), ['genz_crm_lms_demo', 'demo'], true)) {
+            $this->command?->error('Demo seeding is restricted to the isolated genz_crm_lms_demo or demo database. No records were changed.');
             return;
         }
         $this->seedDemoBootstrap();
@@ -81,39 +78,7 @@ class GenZDemoSeeder extends Seeder
 
         if(Schema::hasTable('users') && Schema::hasTable('courses') && Schema::hasTable('programs')) $this->seedLearningScenarios();
         $this->seedDashboardWorkflowScenarios();
-        $this->seedExpandedWorkspaceDemos();
-        $this->persistDemoCredentials();
-    }
-
-    private function demoUser(string $email, array $attributes): User
-    {
-        $password = Str::random(48);
-        $user = User::firstOrCreate(['email' => $email], $attributes + ['password' => Hash::make($password)]);
-
-        if ($user->wasRecentlyCreated) {
-            $this->demoCredentials[$email] = $password;
-        }
-
-        return $user;
-    }
-
-    private function persistDemoCredentials(): void
-    {
-        if (!$this->demoCredentials || app()->environment('testing')) {
-            return;
-        }
-
-        $path = storage_path('app/private/genz-demo-credentials.json');
-        File::ensureDirectoryExists(dirname($path), 0700, true);
-        $existing = File::exists($path) ? json_decode(File::get($path), true) : [];
-        $accounts = is_array($existing['accounts'] ?? null) ? $existing['accounts'] : [];
-        File::put($path, json_encode([
-            'warning' => 'One-time synthetic demo credentials. Change them before handoff and keep this file private.',
-            'accounts' => array_merge($accounts, $this->demoCredentials),
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
-        @chmod($path, 0600);
-        @chmod(dirname($path), 0700);
-        $this->command?->info('One-time demo credentials were saved outside the public web root to storage/app/private/genz-demo-credentials.json.');
+        $this->seedRemainingDemoModules();
     }
 
     private function seedDemoPublicContent(): void
@@ -188,7 +153,7 @@ class GenZDemoSeeder extends Seeder
 
     private function seedDemoBootstrap(): void
     {
-        if (Schema::hasTable('settings')) foreach ([
+        if(Schema::hasTable('settings')) foreach ([
             'build_version'=>(string)config('app.build_version'),'current_version'=>(string)config('app.current_version'),
             'app_name'=>'GenZ Consultants','app_email'=>config('genz.contact.email'),'app_contact_number'=>config('genz.contact.phone'),
             'app_location'=>config('genz.contact.address'),'app_timezone'=>'Asia/Karachi','app_footer_text'=>config('genz.tagline'),
@@ -196,41 +161,32 @@ class GenZDemoSeeder extends Seeder
             'service_status'=>'0','about_us_status'=>'0','how_we_work_status'=>'0','country_status'=>'1','top_university_status'=>'1',
             'upcoming_event_status'=>'0','why_choose_us_status'=>'0','blog_article_status'=>'0','testimonial_status'=>'0','faq_status'=>'0','cta_footer_status'=>'0',
             'cookie_status'=>'0','app_debug'=>'0','google_login_status'=>'0','facebook_login_status'=>'0','google_analytics_status'=>'0',
-        ] as $key => $value) {
-            if (!DB::table('settings')->where('option_key', $key)->exists()) {
-                DB::table('settings')->insert(['option_key' => $key, 'option_value' => $value, 'created_at' => now(), 'updated_at' => now()]);
-            }
-        }
-        if (Schema::hasTable('currencies')) foreach ([['USD','$','before',0],['PKR','Rs','before',1]] as [$code,$symbol,$placement,$current]) {
-            if (!DB::table('currencies')->where('currency_code', $code)->exists()) {
-                DB::table('currencies')->insert(['currency_code' => $code, 'symbol' => $symbol, 'currency_placement' => $placement, 'current_currency' => $current, 'created_at' => now(), 'updated_at' => now()]);
-            }
-        }
-        if (Schema::hasTable('languages') && !DB::table('languages')->where('iso_code', 'en')->exists()) {
-            DB::table('languages')->insert(['iso_code' => 'en', 'language' => 'English', 'rtl' => 0, 'status' => 1, 'default' => 1, 'created_at' => now(), 'updated_at' => now()]);
-        }
+        ] as $key=>$value) DB::table('settings')->updateOrInsert(['option_key'=>$key],['option_value'=>$value,'updated_at'=>now(),'created_at'=>now()]);
+        if(Schema::hasTable('currencies')) foreach ([['USD','$','before',0],['PKR','Rs','before',1]] as [$code,$symbol,$placement,$current]) DB::table('currencies')->updateOrInsert(['currency_code'=>$code],['symbol'=>$symbol,'currency_placement'=>$placement,'current_currency'=>$current,'updated_at'=>now(),'created_at'=>now()]);
+        if(Schema::hasTable('languages')) DB::table('languages')->updateOrInsert(['iso_code'=>'en'],['language'=>'English','rtl'=>0,'status'=>1,'default'=>1,'updated_at'=>now(),'created_at'=>now()]);
         if (Schema::hasTable('users')) {
-            $this->demoUser('demo.admin@genzconsultants.example', ['first_name' => 'GenZ', 'last_name' => 'Demo Admin', 'role' => USER_ROLE_ADMIN, 'status' => STATUS_ACTIVE]);
+            User::updateOrCreate(['email' => 'demo.admin@genzconsultants.example'], ['first_name' => 'GenZ', 'last_name' => 'Demo Admin', 'password' => Hash::make('GenZLocal!2026'), 'role' => USER_ROLE_ADMIN, 'status' => STATUS_ACTIVE]);
             foreach ([
                 ['Demo', 'Counselor', 'demo.counselor@genzconsultants.example', USER_ROLE_CONSULTANT],
                 ['Demo', 'Student Advisor', 'demo.advisor@genzconsultants.example', USER_ROLE_STAFF],
                 ['Demo', 'Affiliate', 'demo.affiliate@genzconsultants.example', USER_ROLE_AFFILIATE],
-                ['Demo', 'Finance', 'demo.finance@genzconsultants.example', USER_ROLE_FINANCE],
-                ['Demo', 'Content Editor', 'demo.editor@genzconsultants.example', USER_ROLE_CMS_EDITOR],
+                ['Demo', 'Finance', 'demo.finance@genzconsultants.example', config('genz.roles.finance', USER_ROLE_FINANCE)],
+                ['Demo', 'Content Editor', 'demo.editor@genzconsultants.example', config('genz.roles.cms_editor', USER_ROLE_CMS_EDITOR)],
             ] as [$first, $last, $email, $role]) {
-                $this->demoUser($email, [
-                    'first_name' => $first, 'last_name' => $last,
+                User::updateOrCreate(['email' => $email], [
+                    'first_name' => $first, 'last_name' => $last, 'password' => Hash::make('GenZLocal!2026'),
                     'role' => $role, 'status' => STATUS_ACTIVE,
-                    ...($role === USER_ROLE_CONSULTANT ? ['fee' => 0] : []),
                 ]);
             }
+            User::where('email', 'demo.counselor@genzconsultants.example')->update(['fee' => 0]);
+            if (Schema::hasColumn('users', 'consultation_timezone')) User::where('email', 'demo.counselor@genzconsultants.example')->update(['consultation_timezone' => 'Asia/Karachi']);
         }
     }
 
     private function seedLearningScenarios(): void
     {
-        $instructor = $this->demoUser('demo.instructor@genzconsultants.example', [
-            'first_name' => 'Demo', 'last_name' => 'Instructor',
+        $instructor = User::updateOrCreate(['email' => 'demo.instructor@genzconsultants.example'], [
+            'first_name' => 'Demo', 'last_name' => 'Instructor', 'password' => Hash::make('GenZLocal!2026'),
             'role' => config('genz.roles.instructor', USER_ROLE_INSTRUCTOR), 'status' => STATUS_ACTIVE,
         ]);
 
@@ -291,8 +247,8 @@ class GenZDemoSeeder extends Seeder
         $courseAssignments = [[0, 1], [0, 2, 4], [1, 3], [2, 5], [0, 4, 6], [3, 5, 7], [1, 6], [2, 5, 7]];
         $learners = [];
         foreach ($learnerScenarios as $index => [$first, $last, $email]) {
-            $student = $this->demoUser($email, [
-                'first_name' => $first, 'last_name' => $last,
+            $student = User::updateOrCreate(['email' => $email], [
+                'first_name' => $first, 'last_name' => $last, 'password' => Hash::make('GenZLocal!2026'),
                 'role' => USER_ROLE_STUDENT, 'status' => STATUS_ACTIVE,
             ]);
             $learners[$email] = $student;
@@ -346,6 +302,13 @@ class GenZDemoSeeder extends Seeder
         $adminId = User::where('email', 'demo.admin@genzconsultants.example')->value('id');
         if (!$consultant || !$adminId) return;
 
+        if (!Schema::hasTable('payments') || !Schema::hasTable('gateways')) return;
+        DB::table('gateways')->updateOrInsert(['slug' => 'cash'], [
+            'title' => 'Cash', 'status' => STATUS_ACTIVE, 'updated_at' => now(), 'created_at' => now(),
+        ]);
+        $cashGatewayId = DB::table('gateways')->where('slug', 'cash')->value('id');
+        if (!$cashGatewayId) return;
+
         foreach ([
             ['demo.learner.amina@genzconsultants.example', '10:00 AM', '10:30 AM', 7],
             ['demo.learner.omar@genzconsultants.example', '11:00 AM', '11:30 AM', 10],
@@ -353,385 +316,66 @@ class GenZDemoSeeder extends Seeder
         ] as [$email, $start, $end, $daysAhead]) {
             if (!isset($learners[$email])) continue;
             $student = $learners[$email];
-            if (Appointment::where('user_id', $student->id)->where('consulter_id', $consultant->id)->where('is_free', 1)->exists()) continue;
+            $appointment = Appointment::where('user_id', $student->id)->where('consulter_id', $consultant->id)->where('is_free', 1)->first();
 
-            DB::table('consultation_slots')->updateOrInsert(['start_time' => $start, 'end_time' => $end], [
-                'status' => STATUS_ACTIVE, 'deleted_at' => null, 'updated_at' => now(), 'created_at' => now(),
-            ]);
-            $slotId = DB::table('consultation_slots')->where('start_time', $start)->where('end_time', $end)->value('id');
-            $pivotExists = DB::table('consultation_slot_user')->where('consultation_slot_id', $slotId)->where('user_id', $consultant->id)->exists();
-            if (!$pivotExists) DB::table('consultation_slot_user')->insert(['consultation_slot_id' => $slotId, 'user_id' => $consultant->id]);
+            if (!$appointment) {
+                DB::table('consultation_slots')->updateOrInsert(['start_time' => $start, 'end_time' => $end], [
+                    'status' => STATUS_ACTIVE, 'deleted_at' => null, 'updated_at' => now(), 'created_at' => now(),
+                ]);
+                $slotId = DB::table('consultation_slots')->where('start_time', $start)->where('end_time', $end)->value('id');
+                $pivotExists = DB::table('consultation_slot_user')->where('consultation_slot_id', $slotId)->where('user_id', $consultant->id)->exists();
+                if (!$pivotExists) DB::table('consultation_slot_user')->insert(['consultation_slot_id' => $slotId, 'user_id' => $consultant->id]);
 
-            $appointment = app(ConsultationBookingService::class)->book(
-                (int) $student->id, (int) $consultant->id, (int) $slotId,
-                now('Asia/Karachi')->addDays($daysAhead)->toDateString(), CONSULTATION_TYPE_VIRTUAL,
-                PAYMENT_STATUS_PAID, null, (int) $adminId
-            );
-            $appointment->update(['is_free' => 1]);
-        }
-    }
-
-    private function seedExpandedWorkspaceDemos(): void
-    {
-        $learners = User::whereIn('email', [
-            'demo.learner.amina@genzconsultants.example',
-            'demo.learner.omar@genzconsultants.example',
-            'demo.learner.noor@genzconsultants.example',
-            'demo.learner.hassan@genzconsultants.example',
-        ])->get()->keyBy('email');
-        $admin = User::where('email', 'demo.admin@genzconsultants.example')->first()
-            ?? User::where('role', USER_ROLE_ADMIN)->orderBy('id')->first();
-        $counselor = User::where('email', 'demo.counselor@genzconsultants.example')->first();
-
-        if (!$admin || $learners->isEmpty()) {
-            return;
-        }
-
-        $countryIds = DB::table('countries')->whereIn('slug', ['demo-canada', 'demo-united-kingdom', 'demo-australia'])->pluck('id', 'slug')->all();
-        $universityIds = DB::table('universities')->whereIn('slug', ['demo-north-university', 'demo-thames-institute', 'demo-southern-coast-university'])->pluck('id', 'slug')->all();
-        $programs = DB::table('academic_programs')->whereIn('slug', ['demo-data-science-msc', 'demo-global-business-ba', 'demo-sustainable-engineering-msc'])->get()->keyBy('slug');
-        $documentIds = [];
-
-        foreach ($learners->values() as $index => $student) {
-            $email = $student->email;
-            $preferredCountry = array_values($countryIds)[($index % max(count($countryIds), 1))] ?? null;
-            $preferredUniversity = array_values($universityIds)[($index % max(count($universityIds), 1))] ?? null;
-            DB::table('student_profiles')->updateOrInsert(['user_id' => $student->id], [
-                'date_of_birth' => now()->subYears(20 + $index)->subDays($index * 17)->toDateString(),
-                'gender' => $index % 2 === 0 ? 'female' : 'male',
-                'nationality' => 'Demo nationality',
-                'passport_number' => null,
-                'present_address' => 'Fictional demo address; replace with the student-provided address.',
-                'permanent_address' => null,
-                'preferred_country_ids' => json_encode($preferredCountry ? [$preferredCountry] : []),
-                'preferred_university_ids' => json_encode($preferredUniversity ? [$preferredUniversity] : []),
-                'preferred_subject_ids' => json_encode([]),
-                'target_intake' => 'Demo intake 2027',
-                'updated_at' => now(),
-                'created_at' => now(),
-            ]);
-        }
-
-        foreach ([
-            ['demo.learner.amina@genzconsultants.example', 'academic_transcript', 'pending', null],
-            ['demo.learner.omar@genzconsultants.example', 'passport', 'approved', 'Synthetic sample reviewed for interface demonstration only.'],
-            ['demo.learner.noor@genzconsultants.example', 'language_test', 'rejected', 'Synthetic sample: please upload a clearer copy.'],
-        ] as [$email, $category, $status, $reviewNote]) {
-            $student = $learners->get($email);
-            if (!$student) {
-                continue;
+                $appointment = app(ConsultationBookingService::class)->book(
+                    (int) $student->id, (int) $consultant->id, (int) $slotId,
+                    now('Asia/Karachi')->addDays($daysAhead)->toDateString(), CONSULTATION_TYPE_VIRTUAL,
+                    PAYMENT_STATUS_PAID, null, (int) $adminId
+                );
+                $appointment->update(['is_free' => 1]);
             }
 
-            $path = 'demo/student-documents/' . str_replace(['@', '.'], '-', $email) . '-' . $category . '.enc';
-            $contents = "FICTIONAL GENZ DEMONSTRATION DOCUMENT\nThis file contains no real student or passport information.\n";
-            Storage::disk('private')->put($path, Crypt::encryptString($contents));
-            DB::table('student_documents')->updateOrInsert(['storage_path' => $path], [
+            $transactionId = 'GZ-DEMO-CONSULT-' . $appointment->id;
+            DB::table('payments')->updateOrInsert(['tnxId' => $transactionId], [
+                'paymentable_id' => (string) $appointment->id,
+                'paymentable_type' => Appointment::class,
+                'gateway_id' => $cashGatewayId,
+                'paymentId' => $transactionId,
                 'user_id' => $student->id,
-                'replaces_document_id' => null,
-                'category' => $category,
-                'original_name' => 'fictional-demo-document.txt',
-                'mime_type' => 'text/plain',
-                'size_bytes' => strlen($contents),
-                'status' => $status,
-                'reviewed_by' => $status === 'pending' ? null : $admin->id,
-                'reviewed_at' => $status === 'pending' ? null : now(),
-                'review_note' => $reviewNote,
+                'sub_total' => 0,
+                'tax' => 0,
+                'conversion_rate' => 1,
+                'grand_total' => 0,
+                'grand_total_with_conversation_rate' => 0,
+                'subscription_type' => 1,
+                'payment_status' => PAYMENT_STATUS_PAID,
+                'paid_by' => $student->id,
+                'deleted_at' => null,
                 'updated_at' => now(),
                 'created_at' => now(),
             ]);
-            $documentIds[$email] = DB::table('student_documents')->where('storage_path', $path)->value('id');
-        }
 
-        foreach ($programs as $program) {
-            $label = 'Demo intake ' . now()->addYear()->year;
-            DB::table('program_intakes')->updateOrInsert(
-                ['academic_program_id' => $program->id, 'label' => $label],
-                [
-                    'start_date' => now()->addMonths(4)->startOfMonth()->toDateString(),
-                    'application_deadline' => now()->addMonths(3)->endOfMonth()->toDateString(),
-                    'status' => 'open',
-                    'source_url' => null,
-                    'last_verified_at' => null,
-                    'updated_at' => now(),
+            if (Schema::hasTable('consulter_feedback') && !DB::table('consulter_feedback')->where('appointment_id', $appointment->id)->exists()) {
+                $demoReviews = [
+                    'Demo review: The counselor explained study options clearly and outlined practical next steps.',
+                    'Demo review: The consultation was helpful and answered my questions about the application timeline.',
+                    'Demo review: I received useful guidance about choosing a suitable program and preparing documents.',
+                ];
+                $reviewIndex = array_search($email, [
+                    'demo.learner.amina@genzconsultants.example',
+                    'demo.learner.omar@genzconsultants.example',
+                    'demo.learner.noor@genzconsultants.example',
+                ], true);
+                DB::table('consulter_feedback')->insert([
+                    'consulter_id' => $consultant->id,
+                    'student_id' => $student->id,
+                    'appointment_id' => $appointment->id,
+                    'comment' => $demoReviews[$reviewIndex === false ? 0 : $reviewIndex],
+                    'status' => $reviewIndex === 1 ? STATUS_PENDING : STATUS_ACTIVE,
+                    'deleted_at' => null,
                     'created_at' => now(),
-                ]
-            );
-        }
-
-        if (isset($programs['demo-data-science-msc'])) {
-            $program = $programs['demo-data-science-msc'];
-            foreach ($learners->take(3) as $student) {
-                DB::table('student_saved_options')->updateOrInsert(
-                    ['user_id' => $student->id, 'item_type' => 'academic_program', 'item_id' => $program->id],
-                    ['updated_at' => now(), 'created_at' => now()]
-                );
+                    'updated_at' => now(),
+                ]);
             }
-        }
-
-        foreach ([
-            'GZ-DEMO-APP-001' => 'demo.learner.amina@genzconsultants.example',
-            'GZ-DEMO-APP-002' => 'demo.learner.omar@genzconsultants.example',
-            'GZ-DEMO-APP-003' => 'demo.learner.noor@genzconsultants.example',
-            'GZ-DEMO-APP-004' => 'demo.learner.hassan@genzconsultants.example',
-        ] as $reference => $email) {
-            $application = DB::table('admission_applications')->where('reference_code', $reference)->first();
-            $student = $learners->get($email);
-            if (!$application || !$student) {
-                continue;
-            }
-
-            $intake = DB::table('program_intakes')->where('academic_program_id', $application->academic_program_id)->first();
-            DB::table('admission_applications')->where('id', $application->id)->update([
-                'program_intake_id' => $intake?->id,
-                'counselor_id' => $counselor?->id,
-                'application_deadline' => now()->addMonths(3)->toDateString(),
-                'updated_at' => now(),
-            ]);
-            DB::table('application_status_history')->updateOrInsert(
-                ['admission_application_id' => $application->id, 'to_status' => $application->status, 'reason' => 'Fictional demo lifecycle event.'],
-                ['from_status' => null, 'actor_id' => $admin->id, 'metadata' => json_encode(['demo' => true]), 'updated_at' => now(), 'created_at' => now()]
-            );
-            DB::table('application_notes')->updateOrInsert(
-                ['admission_application_id' => $application->id, 'author_id' => $admin->id, 'body' => 'Fictional demo note: verify all admissions information directly with the institution.'],
-                ['visibility' => 'internal', 'updated_at' => now(), 'created_at' => now()]
-            );
-            DB::table('application_tasks')->updateOrInsert(
-                ['admission_application_id' => $application->id, 'title' => 'Demo: review application checklist'],
-                ['assignee_id' => $counselor?->id, 'created_by' => $admin->id, 'description' => 'Sample workflow task; no real applicant action is required.', 'due_at' => now()->addDays(5), 'completed_at' => null, 'updated_at' => now(), 'created_at' => now()]
-            );
-            if (isset($documentIds[$email])) {
-                DB::table('application_documents')->updateOrInsert(
-                    ['admission_application_id' => $application->id, 'student_document_id' => $documentIds[$email]],
-                    ['linked_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-                );
-            }
-        }
-
-        $lead = DB::table('crm_leads')->where('email', 'demo.lead.1@genzconsultants.example')->first();
-        if ($lead) {
-            DB::table('crm_lead_activities')->updateOrInsert(
-                ['lead_id' => $lead->id, 'type' => 'demo', 'description' => 'Synthetic demo lead activity. No real applicant is involved.'],
-                ['actor_id' => $admin->id, 'from_value' => null, 'to_value' => 'new', 'metadata' => json_encode(['demo' => true]), 'updated_at' => now(), 'created_at' => now()]
-            );
-            DB::table('crm_lead_notes')->updateOrInsert(
-                ['lead_id' => $lead->id, 'author_id' => $admin->id, 'body' => 'Fictional demo note for the CRM notes panel.'],
-                ['is_private' => true, 'updated_at' => now(), 'created_at' => now()]
-            );
-            $followUp = DB::table('crm_follow_ups')->where('lead_id', $lead->id)->first();
-            if ($followUp) {
-                DB::table('crm_follow_up_comments')->updateOrInsert(
-                    ['follow_up_id' => $followUp->id, 'author_id' => $admin->id, 'body' => 'Demo comment: confirm the applicant’s preferred intake.'],
-                    ['updated_at' => now(), 'created_at' => now()]
-                );
-                DB::table('crm_task_notification_outbox')->updateOrInsert(
-                    ['dedupe_key' => 'genz-demo-follow-up-' . $followUp->id],
-                    ['recipient_id' => $counselor?->id ?? $admin->id, 'title' => 'Demo follow-up reminder', 'body' => 'Synthetic reminder record; no external email or message was sent.', 'link' => null, 'attempts' => 1, 'available_at' => now()->subMinute(), 'sent_at' => now()->subMinute(), 'last_error' => null, 'updated_at' => now(), 'created_at' => now()]
-                );
-            }
-        }
-
-        if ($counselor) {
-            DB::table('consultation_blackout_dates')->updateOrInsert(
-                ['consultant_id' => $counselor->id, 'date' => now('Asia/Karachi')->addDays(45)->toDateString()],
-                ['reason' => 'Synthetic demo blackout date; this is not a real staff schedule.', 'created_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-            );
-            $appointment = Appointment::where('consulter_id', $counselor->id)->orderBy('id')->first();
-            if ($appointment) {
-                DB::table('consultation_booking_events')->updateOrInsert(
-                    ['appointment_id' => $appointment->id, 'event_type' => 'demo_created', 'reason' => 'Synthetic demo booking history.'],
-                    ['actor_id' => $admin->id, 'old_values' => null, 'new_values' => json_encode(['demo' => true]), 'updated_at' => now(), 'created_at' => now()]
-                );
-            }
-        }
-
-        $course = Course::where('slug', 'demo-ielts-speaking-listening')->first();
-        $amina = $learners->get('demo.learner.amina@genzconsultants.example');
-        $omar = $learners->get('demo.learner.omar@genzconsultants.example');
-        if ($course && $amina) {
-            $enrollment = DB::table('course_enrollments')->where('course_id', $course->id)->where('user_id', $amina->id)->first();
-            $omarEnrollment = $omar ? DB::table('course_enrollments')->where('course_id', $course->id)->where('user_id', $omar->id)->first() : null;
-            $resource = DB::table('course_resources')->where('course_id', $course->id)->where('title', 'Demo: Course guide')->first();
-            $lessonId = $resource?->course_lesson_id;
-
-            $batchTitle = 'Demo IELTS cohort ' . now()->addYear()->year;
-            DB::table('course_batches')->updateOrInsert(
-                ['course_id' => $course->id, 'title' => $batchTitle],
-                ['starts_at' => now()->subDays(7), 'ends_at' => now()->addWeeks(5), 'timezone' => 'Asia/Karachi', 'capacity' => 20, 'status' => 'active', 'created_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-            );
-            $batchId = DB::table('course_batches')->where('course_id', $course->id)->where('title', $batchTitle)->value('id');
-            foreach ([$enrollment, $omarEnrollment] as $memberEnrollment) {
-                if ($memberEnrollment) {
-                    DB::table('course_batch_memberships')->updateOrInsert(
-                        ['course_enrollment_id' => $memberEnrollment->id],
-                        ['course_batch_id' => $batchId, 'joined_at' => now()->subDays(6), 'updated_at' => now(), 'created_at' => now()]
-                    );
-                }
-            }
-
-            if ($resource && $enrollment) {
-                foreach ([[$enrollment, $amina, now()->subHours(3)], [$omarEnrollment, $omar, null]] as [$progressEnrollment, $student, $completedAt]) {
-                    if (!$progressEnrollment || !$student) {
-                        continue;
-                    }
-                    DB::table('lms_lesson_progress')->updateOrInsert(
-                        ['course_enrollment_id' => $progressEnrollment->id, 'course_resource_id' => $resource->id],
-                        ['user_id' => $student->id, 'last_position_seconds' => $completedAt ? 300 : 90, 'time_spent_seconds' => $completedAt ? 480 : 120, 'completed_at' => $completedAt, 'updated_at' => now(), 'created_at' => now()]
-                    );
-                }
-                DB::table('course_content_revisions')->updateOrInsert(
-                    ['content_type' => 'resource', 'content_id' => $resource->id, 'revision_number' => 1],
-                    ['course_id' => $course->id, 'snapshot' => json_encode(['title' => $resource->title, 'resource' => 'Fictional demo learning content.']), 'edited_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-                );
-            }
-
-            $sessionTitle = 'Demo IELTS live Q&A';
-            DB::table('course_live_sessions')->updateOrInsert(
-                ['course_id' => $course->id, 'title' => $sessionTitle],
-                ['course_batch_id' => $batchId, 'description' => 'Fictional completed session for interface testing. No meeting was held.', 'provider' => 'external', 'meeting_url' => null, 'recording_url' => null, 'starts_at' => now()->subDays(2), 'duration_minutes' => 45, 'timezone' => 'Asia/Karachi', 'status' => 'completed', 'schedule_revision' => 1, 'created_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-            );
-            $sessionId = DB::table('course_live_sessions')->where('course_id', $course->id)->where('title', $sessionTitle)->value('id');
-            foreach ([[$enrollment, $amina, 'attended'], [$omarEnrollment, $omar, 'absent']] as [$attendEnrollment, $student, $attendanceStatus]) {
-                if ($attendEnrollment && $student) {
-                    DB::table('course_live_attendance')->updateOrInsert(
-                        ['course_live_session_id' => $sessionId, 'course_enrollment_id' => $attendEnrollment->id],
-                        ['user_id' => $student->id, 'joined_at' => $attendanceStatus === 'absent' ? null : now()->subDays(2), 'last_seen_at' => now()->subDays(2), 'left_at' => $attendanceStatus === 'absent' ? null : now()->subDays(2)->addMinutes(40), 'attended_seconds' => $attendanceStatus === 'absent' ? 0 : 2400, 'attendance_status' => $attendanceStatus, 'updated_at' => now(), 'created_at' => now()]
-                    );
-                }
-            }
-
-            if ($lessonId && $enrollment) {
-                $bankTitle = 'Demo IELTS question bank';
-                DB::table('lms_question_banks')->updateOrInsert(
-                    ['course_id' => $course->id, 'title' => $bankTitle],
-                    ['created_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-                );
-                $bankId = DB::table('lms_question_banks')->where('course_id', $course->id)->where('title', $bankTitle)->value('id');
-                $quizTitle = 'Demo Listening Checkpoint';
-                DB::table('lms_quizzes')->updateOrInsert(
-                    ['course_id' => $course->id, 'title' => $quizTitle],
-                    ['course_lesson_id' => $lessonId, 'description' => 'Fictional sample quiz; results are for demonstration only.', 'status' => 'published', 'opens_at' => now()->subDays(30), 'closes_at' => null, 'time_limit_seconds' => 900, 'max_attempts' => 3, 'pass_percent' => 60, 'shuffle_questions' => false, 'manual_result_release' => false, 'created_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-                );
-                $quizId = DB::table('lms_quizzes')->where('course_id', $course->id)->where('title', $quizTitle)->value('id');
-                $questionIds = [];
-                foreach ([
-                    ['Demo question: Which skill helps identify the main idea?', ['Listening for keywords', 'Ignoring context', 'Skipping instructions'], 1],
-                    ['Demo question: What should a learner do before an application?', ['Check official requirements', 'Assume every course is identical', 'Send blank documents'], 1],
-                ] as $questionIndex => [$questionText, $options, $correctOption]) {
-                    DB::table('lms_questions')->updateOrInsert(
-                        ['course_id' => $course->id, 'question_text' => $questionText],
-                        ['question_bank_id' => $bankId, 'question_type' => 'single', 'explanation' => 'Fictional sample explanation.', 'points' => 1, 'status' => 'published', 'created_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-                    );
-                    $questionId = DB::table('lms_questions')->where('course_id', $course->id)->where('question_text', $questionText)->value('id');
-                    $questionIds[] = $questionId;
-                    foreach ($options as $optionIndex => $optionText) {
-                        DB::table('lms_question_options')->updateOrInsert(
-                            ['lms_question_id' => $questionId, 'sort_order' => $optionIndex + 1],
-                            ['option_text' => $optionText, 'is_correct' => ($optionIndex + 1) === $correctOption, 'updated_at' => now(), 'created_at' => now()]
-                        );
-                    }
-                    DB::table('lms_quiz_questions')->updateOrInsert(
-                        ['lms_quiz_id' => $quizId, 'lms_question_id' => $questionId],
-                        ['sort_order' => $questionIndex + 1, 'updated_at' => now(), 'created_at' => now()]
-                    );
-                }
-
-                $attemptNumber = 1;
-                DB::table('lms_quiz_attempts')->updateOrInsert(
-                    ['lms_quiz_id' => $quizId, 'course_enrollment_id' => $enrollment->id, 'attempt_number' => $attemptNumber],
-                    ['status' => 'submitted', 'question_order' => json_encode($questionIds), 'started_at' => now()->subDays(2), 'deadline_at' => now()->subDays(2)->addMinutes(15), 'submitted_at' => now()->subDays(2)->addMinutes(8), 'score' => 2, 'total_points' => 2, 'percentage' => 100, 'passed' => true, 'result_released_at' => now()->subDays(2), 'updated_at' => now(), 'created_at' => now()]
-                );
-                $attemptId = DB::table('lms_quiz_attempts')->where('lms_quiz_id', $quizId)->where('course_enrollment_id', $enrollment->id)->where('attempt_number', $attemptNumber)->value('id');
-                foreach ($questionIds as $questionId) {
-                    $correctId = DB::table('lms_question_options')->where('lms_question_id', $questionId)->where('is_correct', true)->value('id');
-                    DB::table('lms_answers')->updateOrInsert(
-                        ['lms_quiz_attempt_id' => $attemptId, 'lms_question_id' => $questionId],
-                        ['selected_option_ids' => json_encode([$correctId]), 'awarded_points' => 1, 'updated_at' => now(), 'created_at' => now()]
-                    );
-                }
-
-                $assignmentTitle = 'Demo: IELTS listening reflection';
-                DB::table('lms_assignments')->updateOrInsert(
-                    ['course_id' => $course->id, 'title' => $assignmentTitle],
-                    ['course_lesson_id' => $lessonId, 'instructions' => 'Write a short fictional reflection on the sample lesson.', 'due_at' => now()->addDays(10), 'max_points' => 100, 'max_submissions' => 2, 'late_policy' => 'accept', 'late_penalty_percent' => 0, 'status' => 'published', 'created_by' => $admin->id, 'updated_at' => now(), 'created_at' => now()]
-                );
-                $assignmentId = DB::table('lms_assignments')->where('course_id', $course->id)->where('title', $assignmentTitle)->value('id');
-                DB::table('lms_assignment_submissions')->updateOrInsert(
-                    ['lms_assignment_id' => $assignmentId, 'course_enrollment_id' => $enrollment->id, 'version' => 1],
-                    ['user_id' => $amina->id, 'status' => 'submitted', 'text_response' => 'Fictional learner response for grading workflow demonstration.', 'file_manager_id' => null, 'is_late' => false, 'submitted_at' => now()->subDays(1), 'updated_at' => now(), 'created_at' => now()]
-                );
-                $submissionId = DB::table('lms_assignment_submissions')->where('lms_assignment_id', $assignmentId)->where('course_enrollment_id', $enrollment->id)->where('version', 1)->value('id');
-                DB::table('lms_grades')->updateOrInsert(
-                    ['lms_assignment_submission_id' => $submissionId],
-                    ['grader_id' => $admin->id, 'raw_score' => 88, 'score' => 88, 'max_points' => 100, 'rubric' => json_encode(['clarity' => 4, 'evidence' => 4]), 'feedback' => 'Synthetic example feedback; not a real academic assessment.', 'released_at' => now(), 'updated_at' => now(), 'created_at' => now()]
-                );
-                $gradeId = DB::table('lms_grades')->where('lms_assignment_submission_id', $submissionId)->value('id');
-                DB::table('lms_grade_history')->updateOrInsert(
-                    ['lms_grade_id' => $gradeId, 'actor_id' => $admin->id],
-                    ['before_values' => null, 'after_values' => json_encode(['score' => 88, 'max_points' => 100, 'demo' => true]), 'updated_at' => now(), 'created_at' => now()]
-                );
-
-                $certificateNumber = 'GZ-DEMO-CERT-001';
-                $existingCertificate = DB::table('lms_certificates')->where('course_enrollment_id', $enrollment->id)->first();
-                DB::table('lms_certificates')->updateOrInsert(
-                    ['course_enrollment_id' => $enrollment->id],
-                    ['course_id' => $course->id, 'user_id' => $amina->id, 'certificate_number' => $certificateNumber, 'verification_token' => $existingCertificate?->verification_token ?? Str::random(64), 'issued_at' => now()->subDays(1), 'revoked_at' => now(), 'issued_by' => $admin->id, 'revoked_by' => $admin->id, 'revocation_reason' => 'Fictional demo record only; not an accredited certificate.', 'updated_at' => now(), 'created_at' => now()]
-                );
-            }
-        }
-
-        if ($amina = $learners->get('demo.learner.amina@genzconsultants.example')) {
-            foreach ([['course_announcement', 'in_app', true], ['admission_update', 'email', false]] as [$eventKey, $channel, $enabled]) {
-                DB::table('notification_preferences')->updateOrInsert(
-                    ['user_id' => $amina->id, 'event_key' => $eventKey, 'channel' => $channel],
-                    ['enabled' => $enabled, 'updated_at' => now(), 'created_at' => now()]
-                );
-            }
-            if (Schema::hasColumn('notifications', 'dedupe_key')) {
-                DB::table('notifications')->updateOrInsert(
-                    ['dedupe_key' => 'genz-demo-course-welcome-' . $amina->id],
-                    ['user_id' => $amina->id, 'title' => 'Demo course update', 'body' => 'Fictional notification for the student portal preview.', 'link' => null, 'view_status' => 0, 'status' => STATUS_ACTIVE, 'updated_at' => now(), 'created_at' => now()]
-                );
-            }
-            DB::table('notification_outbox')->updateOrInsert(
-                ['dedupe_key' => 'genz-demo-delivered-notice-' . $amina->id],
-                ['recipient_id' => $amina->id, 'event_key' => 'course_announcement', 'channel' => 'in_app', 'title' => 'Demo notice delivery history', 'body' => 'Synthetic in-app delivery record; no email or external message was sent.', 'link' => null, 'attempts' => 1, 'available_at' => now()->subMinute(), 'sent_at' => now()->subMinute(), 'last_error' => null, 'updated_at' => now(), 'created_at' => now()]
-            );
-
-            $registrationLead = CrmLead::updateOrCreate(
-                ['email' => 'demo.registration@genzconsultants.example'],
-                ['first_name' => 'Demo', 'last_name' => 'Registration', 'phone' => '+92 300 000 0000', 'status' => 'new', 'source' => 'student_registration', 'source_detail' => 'Synthetic demo registration', 'assigned_to' => $counselor?->id]
-            );
-            $signaturePath = 'study-registration-signatures/genz-demo-placeholder.png';
-            Storage::disk('local')->put($signaturePath, base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII='));
-            StudyAbroadRegistration::updateOrCreate(
-                ['email' => 'demo.registration@genzconsultants.example'],
-                [
-                    'lead_id' => $registrationLead->id,
-                    'full_name' => 'Demo Learner',
-                    'father_name' => 'Demo Parent',
-                    'identity_number' => 'DEMO-IDENTITY-0001',
-                    'date_of_birth' => now()->subYears(21)->toDateString(),
-                    'gender' => 'Female',
-                    'marital_status' => 'Single',
-                    'phone' => '+92 300 000 0000',
-                    'whatsapp' => '+92 300 000 0000',
-                    'residential_address' => 'Fictional demo address; no real applicant details.',
-                    'last_qualification' => 'Demo qualification',
-                    'field_of_study' => 'Demo field',
-                    'institute_name' => 'Fictional Demo Institute',
-                    'passing_year' => now()->year - 1,
-                    'grade' => 'Demo grade',
-                    'destination' => 'UK',
-                    'branch' => 'Lahore',
-                    'program_type' => 'standard',
-                    'paid_amount' => 0,
-                    'paid_currency' => 'PKR',
-                    'signature_path' => $signaturePath,
-                    'signed_at' => now()->toDateString(),
-                    'terms_accepted' => true,
-                    'status' => 'submitted',
-                ]
-            );
         }
     }
 
@@ -817,5 +461,189 @@ class GenZDemoSeeder extends Seeder
                 'updated_at' => now(),
             ]);
         });
+    }
+
+    private function seedRemainingDemoModules(): void
+    {
+        $this->call(PermissionSeeder::class);
+        $this->seedDemoRoles();
+        $this->seedDemoCmsAndSubjects();
+        $this->seedDemoStudentProfileAndDocument();
+        $this->seedDemoLmsAssessments();
+    }
+
+    private function seedDemoRoles(): void
+    {
+        $rolePermissions = [
+            'Demo Counselor' => ['Manage Leads', 'Manage Student Documents', 'Manage Admissions', 'Manage Consultations', 'Manage Free Consultations'],
+            'Demo Operations' => ['Manage Students', 'Manage Service', 'Manage Consultations', 'Manage Free Consultations', 'Manage Leads', 'Manage Admissions', 'Manage Student Documents'],
+            'Demo Instructor' => ['Manage Courses'],
+            'Demo Finance' => ['Manage Transaction'],
+            'Demo CMS Editor' => ['Manage Cms Settings', 'Manage Events'],
+        ];
+
+        foreach ($rolePermissions as $name => $permissions) {
+            $role = Role::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
+            $role->status = STATUS_ACTIVE;
+            $role->save();
+            $role->syncPermissions($permissions);
+        }
+
+        foreach ([
+            'demo.counselor@genzconsultants.example' => 'Demo Counselor',
+            'demo.advisor@genzconsultants.example' => 'Demo Operations',
+            'demo.instructor@genzconsultants.example' => 'Demo Instructor',
+            'demo.finance@genzconsultants.example' => 'Demo Finance',
+            'demo.editor@genzconsultants.example' => 'Demo CMS Editor',
+        ] as $email => $roleName) {
+            $user = User::where('email', $email)->first();
+            if ($user) $user->syncRoles([$roleName]);
+        }
+    }
+
+    private function seedDemoCmsAndSubjects(): void
+    {
+        if (Schema::hasTable('faqs')) foreach ([
+            ['How does a demo consultation work?', 'A sample request is reviewed by the team, then a counselor can arrange a suitable consultation.'],
+            ['What documents might an applicant prepare?', 'The checklist depends on the program. A counselor reviews the applicant’s individual requirements.'],
+            ['Are the programs and awards shown here real offers?', 'No. Records marked Demo are fictional samples for local product evaluation.'],
+        ] as [$question, $answer]) {
+            DB::table('faqs')->updateOrInsert(['question' => $question], [
+                'answer' => $answer, 'status' => STATUS_ACTIVE, 'deleted_at' => null,
+                'updated_at' => now(), 'created_at' => now(),
+            ]);
+        }
+
+        if (Schema::hasTable('contact_us')) foreach ([
+            ['Demo Visitor', 'One', 'demo.enquiry.1@genzconsultants.example', '+92 300 000 0101', 'Fictional website enquiry for presentation use.'],
+            ['Demo Visitor', 'Two', 'demo.enquiry.2@genzconsultants.example', '+92 300 000 0102', 'Sample question about preparing for a study-abroad consultation.'],
+        ] as [$first, $last, $email, $mobile, $message]) {
+            DB::table('contact_us')->updateOrInsert(['email' => $email], [
+                'first_name' => $first, 'last_name' => $last, 'mobile' => $mobile,
+                'message' => $message, 'deleted_at' => null, 'updated_at' => now(), 'created_at' => now(),
+            ]);
+        }
+
+        if (!Schema::hasTable('subjects')) return;
+        $countryId = DB::table('countries')->where('slug', 'demo-canada')->value('id');
+        $universityId = DB::table('universities')->where('slug', 'demo-north-university')->value('id');
+        $categoryId = DB::table('subject_categories')->where('name', 'Digital Skills')->value('id');
+        $levelId = DB::table('study_levels')->where('name', 'Demo Postgraduate')->value('id');
+        foreach ([
+            ['Demo Data Science', 'demo-data-science-subject', 'Fictional sample subject for demonstrating the study-abroad catalogue.'],
+            ['Demo Global Business', 'demo-global-business-subject', 'Fictional sample subject for demonstrating the study-abroad catalogue.'],
+            ['Demo English Preparation', 'demo-english-preparation-subject', 'Fictional sample subject for demonstrating the study-abroad catalogue.'],
+        ] as [$name, $slug, $details]) {
+            DB::table('subjects')->updateOrInsert(['slug' => $slug], [
+                'name' => $name, 'details' => $details, 'university_id' => $universityId,
+                'subject_category_id' => $categoryId, 'country_id' => $countryId, 'study_level_id' => $levelId,
+                'intake_time' => 'Demo Fall Intake', 'duration' => '2 years', 'requirement_program' => 'Demo entry requirement',
+                'requirement_score' => 'See fictional demo program details', 'amount' => null,
+                'status' => STATUS_ACTIVE, 'deleted_at' => null, 'updated_at' => now(), 'created_at' => now(),
+            ]);
+        }
+    }
+
+    private function seedDemoStudentProfileAndDocument(): void
+    {
+        $student = User::where('email', 'demo.learner.amina@genzconsultants.example')->first();
+        if (!$student || !Schema::hasTable('student_profiles') || !Schema::hasTable('student_documents')) return;
+
+        $countryId = DB::table('countries')->where('slug', 'demo-canada')->value('id');
+        $universityId = DB::table('universities')->where('slug', 'demo-north-university')->value('id');
+        $subjectId = DB::table('subjects')->where('slug', 'demo-data-science-subject')->value('id');
+        DB::table('student_profiles')->updateOrInsert(['user_id' => $student->id], [
+            'date_of_birth' => '2002-04-12', 'gender' => 'not_specified', 'nationality' => 'Demo / fictional',
+            'passport_number' => null, 'present_address' => 'Fictional demo address, Lahore',
+            'permanent_address' => 'Fictional demo address, Lahore',
+            'preferred_country_ids' => json_encode(array_values(array_filter([$countryId]))),
+            'preferred_university_ids' => json_encode(array_values(array_filter([$universityId]))),
+            'preferred_subject_ids' => json_encode(array_values(array_filter([$subjectId]))),
+            'target_intake' => 'Demo Fall 2027', 'updated_at' => now(), 'created_at' => now(),
+        ]);
+
+        $path = 'demo/students/amina-khan/sample-transcript.txt';
+        $contents = "FICTIONAL DEMO DOCUMENT\nThis sample transcript is placeholder content for local presentation only.\nNo real academic or personal information is included.\n";
+        Storage::disk('private')->put($path, Crypt::encryptString($contents));
+        DB::table('student_documents')->updateOrInsert(['storage_path' => $path], [
+            'user_id' => $student->id, 'replaces_document_id' => null, 'category' => 'academic_transcript',
+            'original_name' => 'demo-sample-transcript.txt', 'mime_type' => 'text/plain',
+            'size_bytes' => strlen($contents), 'status' => 'pending', 'reviewed_by' => null,
+            'reviewed_at' => null, 'review_note' => null, 'updated_at' => now(), 'created_at' => now(),
+        ]);
+    }
+
+    private function seedDemoLmsAssessments(): void
+    {
+        $course = Course::where('slug', 'demo-ielts-speaking-listening')->first();
+        $instructor = User::where('email', 'demo.instructor@genzconsultants.example')->first();
+        if (!$course || !$instructor) return;
+
+        $lessonId = DB::table('course_lessons')->where('course_id', $course->id)->where('title', 'Demo: Getting started')->value('id');
+        $now = now();
+        $quizId = DB::table('lms_quizzes')->updateOrInsert(['course_id' => $course->id, 'title' => 'Demo: Listening Check'], [
+            'course_lesson_id' => $lessonId, 'description' => 'Fictional practice quiz for local demonstration.',
+            'status' => 'published', 'opens_at' => $now->copy()->subDay(), 'closes_at' => $now->copy()->addDays(90),
+            'time_limit_seconds' => 900, 'max_attempts' => 2, 'pass_percent' => 60, 'shuffle_questions' => true,
+            'manual_result_release' => false, 'created_by' => $instructor->id, 'updated_at' => $now, 'created_at' => $now,
+        ]);
+        $quizId = DB::table('lms_quizzes')->where('course_id', $course->id)->where('title', 'Demo: Listening Check')->value('id');
+
+        $bankId = DB::table('lms_question_banks')->updateOrInsert(['course_id' => $course->id, 'title' => 'Demo: Listening Questions'], [
+            'created_by' => $instructor->id, 'updated_at' => $now, 'created_at' => $now,
+        ]);
+        $bankId = DB::table('lms_question_banks')->where('course_id', $course->id)->where('title', 'Demo: Listening Questions')->value('id');
+        DB::table('lms_questions')->updateOrInsert(['course_id' => $course->id, 'question_text' => 'Which skill helps identify the speaker’s main idea?'], [
+            'question_bank_id' => $bankId, 'question_type' => 'single_choice', 'explanation' => 'Listen for repeated key points and the speaker’s purpose.',
+            'points' => 1, 'status' => 'published', 'created_by' => $instructor->id, 'deleted_at' => null,
+            'updated_at' => $now, 'created_at' => $now,
+        ]);
+        $questionId = DB::table('lms_questions')->where('course_id', $course->id)->where('question_text', 'Which skill helps identify the speaker’s main idea?')->value('id');
+        foreach ([['Listen for repeated key points', true], ['Focus only on the final word', false], ['Ignore changes in tone', false]] as $order => [$text, $correct]) {
+            DB::table('lms_question_options')->updateOrInsert(['lms_question_id' => $questionId, 'option_text' => $text], [
+                'is_correct' => $correct, 'sort_order' => $order + 1, 'updated_at' => $now, 'created_at' => $now,
+            ]);
+        }
+        DB::table('lms_quiz_questions')->updateOrInsert(['lms_quiz_id' => $quizId, 'lms_question_id' => $questionId], [
+            'sort_order' => 1, 'updated_at' => $now, 'created_at' => $now,
+        ]);
+
+        $assignmentId = DB::table('lms_assignments')->updateOrInsert(['course_id' => $course->id, 'title' => 'Demo: Listening Reflection'], [
+            'course_lesson_id' => $lessonId, 'instructions' => 'Write a short reflection on the main idea in a sample listening passage.',
+            'due_at' => $now->copy()->addDays(14), 'max_points' => 100, 'max_submissions' => 2,
+            'late_policy' => 'accept', 'late_penalty_percent' => 0, 'status' => 'published',
+            'created_by' => $instructor->id, 'deleted_at' => null, 'updated_at' => $now, 'created_at' => $now,
+        ]);
+        $assignmentId = DB::table('lms_assignments')->where('course_id', $course->id)->where('title', 'Demo: Listening Reflection')->value('id');
+
+        $learner = User::where('email', 'demo.learner.amina@genzconsultants.example')->first();
+        $enrollment = $learner ? DB::table('course_enrollments')->where('user_id', $learner->id)->where('course_id', $course->id)->first() : null;
+        if ($enrollment) {
+            DB::table('lms_quiz_attempts')->updateOrInsert(['lms_quiz_id' => $quizId, 'course_enrollment_id' => $enrollment->id, 'attempt_number' => 1], [
+                'status' => 'submitted', 'question_order' => json_encode([$questionId]), 'started_at' => $now->copy()->subHours(2),
+                'deadline_at' => null, 'submitted_at' => $now->copy()->subHour(), 'score' => 1, 'total_points' => 1,
+                'percentage' => 100, 'passed' => true, 'result_released_at' => $now->copy()->subHour(),
+                'updated_at' => $now, 'created_at' => $now,
+            ]);
+            $attemptId = DB::table('lms_quiz_attempts')->where('lms_quiz_id', $quizId)->where('course_enrollment_id', $enrollment->id)->where('attempt_number', 1)->value('id');
+            $correctOptionId = DB::table('lms_question_options')->where('lms_question_id', $questionId)->where('is_correct', true)->value('id');
+            DB::table('lms_answers')->updateOrInsert(['lms_quiz_attempt_id' => $attemptId, 'lms_question_id' => $questionId], [
+                'selected_option_ids' => json_encode(array_values(array_filter([$correctOptionId]))), 'awarded_points' => 1,
+                'updated_at' => $now, 'created_at' => $now,
+            ]);
+            DB::table('lms_assignment_submissions')->updateOrInsert(['lms_assignment_id' => $assignmentId, 'course_enrollment_id' => $enrollment->id, 'version' => 1], [
+                'user_id' => $learner->id, 'status' => 'submitted', 'text_response' => 'Demo response: I listened for repeated ideas and summarized the speaker’s purpose.',
+                'file_manager_id' => null, 'is_late' => false, 'submitted_at' => $now->copy()->subHours(3),
+                'updated_at' => $now, 'created_at' => $now,
+            ]);
+        }
+
+        CourseLiveSession::updateOrCreate(['course_id' => $course->id, 'title' => 'Demo: Live Study Skills Q&A'], [
+            'course_batch_id' => null, 'description' => 'Fictional scheduled session. No external meeting provider is connected.',
+            'provider' => 'external', 'meeting_url' => null, 'recording_url' => null,
+            'starts_at' => $now->copy()->addDays(5)->setTime(15, 0), 'duration_minutes' => 45,
+            'timezone' => 'Asia/Karachi', 'status' => 'scheduled', 'schedule_revision' => 1,
+            'created_by' => $instructor->id,
+        ]);
     }
 }

@@ -1,16 +1,16 @@
 @extends('layouts.app')
 @push('title')
-    {{ __('Import Leads Preview') }}
+    {{ __('Import Consultation Requests Preview') }}
 @endpush
 @section('content')
     <div class="px-sm-30 p-15 bd-b-one bd-c-stroke-2 d-flex justify-content-between align-items-center">
-        <h4 class="fs-18 fw-700 lh-24 text-title-text">{{__('Import Leads Preview')}}</h4>
+        <h4 class="fs-18 fw-700 lh-24 text-title-text">{{__('Import Consultation Requests Preview')}}</h4>
     </div>
     <div class="p-sm-30 p-15">
         <div class="p-sm-25 p-15 bd-one bd-c-stroke bd-ra-10 bg-white">
             <div class="mb-20">
                 <div class="alert alert-success">
-                    <p class="mb-0"><strong>{{__('All leads below have valid required fields (First Name, Last Name, Email, Mobile, Study Level) and will be imported. Invalid rows have been automatically excluded.')}}</strong></p>
+                    <p class="mb-0"><strong>{{__('All consultation requests below have valid required fields (First Name, Last Name, Email, Mobile, Study Level) and will be imported. Invalid rows have been automatically excluded.')}}</strong></p>
                 </div>
             </div>
             <form action="{{ route('admin.free_consultations.save_import') }}" method="post" id="save-leads-form">
@@ -82,7 +82,7 @@
                 <div class="bd-c-stroke-2 justify-content-between align-items-center d-flex flex-column flex-sm-row g-15 pt-20 mt-20">
                     <div class="d-flex flex-wrap align-items-center g-15">
                         <div class="d-flex align-items-center g-5">
-                            <span class="fs-14 fw-500 text-para-text">{{__('Total Valid Leads:')}}</span>
+                            <span class="fs-14 fw-500 text-para-text">{{__('Total Valid Requests:')}}</span>
                             <span class="fs-14 fw-600 text-success">{{ $validCount }}</span>
                         </div>
                     </div>
@@ -91,7 +91,7 @@
                             <span>{{__('Cancel')}}</span>
                         </a>
                         <button type="submit" class="flipBtn sf-flipBtn-primary flex-shrink-0">
-                            <span>{{__('Save Leads')}} ({{ $validCount }})</span>
+                            <span>{{__('Save Requests')}} ({{ $validCount }})</span>
                         </button>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                 contentType: false,
                 success: function(response) {
                     if (response.status === true) {
-                        toastr.success(response.message || '{{__("Leads imported successfully")}}');
+                        toastr.success(response.message || '{{__("Consultation requests imported successfully")}}');
                         setTimeout(function() {
                             window.location.href = '{{ route("admin.free_consultations.index") }}';
                         }, 1500);

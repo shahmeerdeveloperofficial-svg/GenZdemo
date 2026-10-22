@@ -41,7 +41,9 @@ Route::get('/local/{ln}', function ($ln) {
     return redirect()->back();
 })->name('local');
 
-Route::get('', [HomeController::class, 'index'])->name('frontend');
+Route::get('', [\App\Http\Controllers\Frontend\PublicSiteController::class, 'index'])->name('frontend');
+Route::post('site/inquiries', [\App\Http\Controllers\Frontend\SiteFormController::class, 'inquiry'])->middleware('throttle:5,1')->name('site.inquiries.store');
+Route::post('site/newsletter', [\App\Http\Controllers\Frontend\SiteFormController::class, 'newsletter'])->middleware('throttle:5,1')->name('site.newsletter.store');
 Route::get('student-registration', [StudyAbroadRegistrationController::class, 'create'])->name('study-abroad-registration.create');
 Route::post('student-registration', [StudyAbroadRegistrationController::class, 'store'])->middleware('throttle:5,1')->name('study-abroad-registration.store');
 Route::get('student-registration/thanks', [StudyAbroadRegistrationController::class, 'thanks'])->name('study-abroad-registration.thanks');

@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\Cms\BlogCategoriesController;
 use App\Http\Controllers\Admin\Cms\BlogController;
 use App\Http\Controllers\Admin\Cms\BlogTagController;
 use App\Http\Controllers\Admin\Cms\CmsController;
+use App\Http\Controllers\Admin\Cms\PublicSiteController;
+use App\Http\Controllers\Admin\Cms\NewsletterSubscriberController;
 use App\Http\Controllers\Admin\Cms\CountryController;
 use App\Http\Controllers\Admin\Cms\FaqController;
 use App\Http\Controllers\Admin\Cms\ScholarshipController;
@@ -351,6 +353,13 @@ Route::group(['prefix' => 'notification', 'as' => 'notification.'], function () 
 
 Route::group(['prefix' => 'cms-setting', 'as' => 'cms-settings.'], function () {
 
+    Route::get('public-site', [PublicSiteController::class, 'edit'])->name('public-site.edit')->middleware('can:Manage Cms Settings');
+    Route::post('public-site', [PublicSiteController::class, 'update'])->name('public-site.update')->middleware('can:Manage Cms Settings');
+    Route::post('public-site/media', [PublicSiteController::class, 'media'])->name('public-site.media')->middleware('can:Manage Cms Settings');
+    Route::get('public-site/subscribers', [NewsletterSubscriberController::class, 'index'])->name('public-site.subscribers')->middleware('can:Manage Cms Settings');
+    Route::patch('public-site/subscribers/{subscriber}', [NewsletterSubscriberController::class, 'update'])->name('public-site.subscribers.update')->middleware('can:Manage Cms Settings');
+    Route::delete('public-site/subscribers/{subscriber}', [NewsletterSubscriberController::class, 'destroy'])->name('public-site.subscribers.destroy')->middleware('can:Manage Cms Settings');
+
     Route::get('section-settings', [CmsController::class, 'sectionSettings'])->name('section-settings')->middleware('can:Manage Cms Settings');
     Route::get('banner-settings', [CmsController::class, 'bannerSetting'])->name('banner-settings')->middleware('can:Manage Cms Settings');
     Route::get('our-service-section', [CmsController::class, 'ourService'])->name('our-service-section')->middleware('can:Manage Cms Settings');
@@ -475,6 +484,7 @@ Route::prefix('crm/leads')->name('crm.leads.')->middleware('can:Manage Leads')->
     Route::get('/{lead}/registrations/{registration}/signature', [LeadController::class, 'registrationSignature'])->name('registrations.signature');
     Route::get('/{lead}', [LeadController::class, 'show'])->name('show');
     Route::put('/{lead}', [LeadController::class, 'update'])->name('update');
+    Route::delete('/{lead}', [LeadController::class, 'destroy'])->name('destroy');
     Route::post('/{lead}/notes', [LeadController::class, 'addNote'])->name('notes.store');
     Route::post('/{lead}/follow-ups', [LeadController::class, 'addFollowUp'])->name('follow_ups.store');
     Route::post('/follow-ups/{followUp}/complete', [LeadController::class, 'completeFollowUp'])->name('follow_ups.complete');
@@ -493,6 +503,7 @@ Route::group(['prefix' => 'free-consultations', 'as' => 'free_consultations.'], 
     Route::post('store', [FreeConsultationController::class, 'store'])->name('store')->middleware('can:Manage Free Consultations');
     Route::get('view/{id}', [FreeConsultationController::class, 'view'])->name('view')->middleware('can:Manage Free Consultations');
     Route::post('change-status/{id}', [FreeConsultationController::class, 'changeStatus'])->name('change_status')->middleware('can:Manage Free Consultations');
+    Route::delete('delete/{id}', [FreeConsultationController::class, 'destroy'])->name('delete')->middleware('can:Manage Free Consultations');
     Route::get('download-demo', [FreeConsultationController::class, 'downloadDemo'])->name('download_demo')->middleware('can:Manage Free Consultations');
     Route::get('download-study-levels', [FreeConsultationController::class, 'downloadStudyLevels'])->name('download_study_levels')->middleware('can:Manage Free Consultations');
     Route::get('download-countries', [FreeConsultationController::class, 'downloadCountries'])->name('download_countries')->middleware('can:Manage Free Consultations');

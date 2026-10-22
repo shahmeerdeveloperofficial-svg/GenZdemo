@@ -38,6 +38,7 @@ Route::prefix('crm/leads')->name('crm.leads.')->middleware('can:Manage Leads')->
     Route::get('/{lead}/registrations/{registration}/signature', [LeadController::class, 'registrationSignature'])->name('registrations.signature');
     Route::get('/{lead}', [LeadController::class, 'show'])->name('show');
     Route::put('/{lead}', [LeadController::class, 'update'])->name('update');
+    Route::delete('/{lead}', [LeadController::class, 'destroy'])->name('destroy');
     Route::post('/{lead}/notes', [LeadController::class, 'addNote'])->name('notes.store');
     Route::post('/{lead}/follow-ups', [LeadController::class, 'addFollowUp'])->name('follow_ups.store');
     Route::post('/follow-ups/{followUp}/complete', [LeadController::class, 'completeFollowUp'])->name('follow_ups.complete');

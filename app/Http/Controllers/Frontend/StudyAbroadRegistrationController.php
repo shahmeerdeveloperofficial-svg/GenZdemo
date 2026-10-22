@@ -7,7 +7,6 @@ use App\Models\StudyAbroadRegistration;
 use App\Services\LeadCaptureService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class StudyAbroadRegistrationController extends Controller
@@ -51,13 +50,10 @@ class StudyAbroadRegistrationController extends Controller
             'program_type' => ['required', Rule::in(array_keys($schedules))],
             'paid_amount' => ['required', 'numeric', 'min:0', 'max:9999999999'],
             'paid_currency' => ['required', Rule::in(array_keys(config('genz.registration.currencies', [])))],
-            'signed_at' => ['required', 'date', 'before_or_equal:today'],
-            'signature' => ['required', 'string', 'max:450000', 'regex:/^data:image\/png;base64,[A-Za-z0-9+\/=]+$/'],
             'terms_accepted' => ['accepted'],
             'website' => ['nullable', 'max:0'],
         ], [
             'terms_accepted.accepted' => 'Please accept the declaration and terms to submit your registration.',
-            'signature.regex' => 'Please add your signature in the signature box.',
         ]);
 
         // Ensure the destination actually belongs to the chosen program category.
@@ -65,14 +61,6 @@ class StudyAbroadRegistrationController extends Controller
         if (!in_array($data['destination'], $validDestinations, true)) {
             return back()->withErrors(['destination' => 'Choose a destination available for this program type.'])->withInput();
         }
-
-        $signatureBytes = base64_decode(substr($data['signature'], strlen('data:image/png;base64,')), true);
-        if (!$signatureBytes || strlen($signatureBytes) > 300000 || substr($signatureBytes, 0, 8) !== "\x89PNG\r\n\x1a\n") {
-            return back()->withErrors(['signature' => 'The signature image is invalid. Please sign again.'])->withInput();
-        }
-
-        $signaturePath = 'study-registration-signatures/' . bin2hex(random_bytes(20)) . '.png';
-        Storage::disk('local')->put($signaturePath, $signatureBytes);
 
         try {
             $lead = $leadCapture->capture([
@@ -85,17 +73,17 @@ class StudyAbroadRegistrationController extends Controller
                 'program_type' => $data['program_type'],
             ]);
 
-            DB::transaction(function () use ($data, $lead, $signaturePath) {
-                unset($data['signature'], $data['website']);
+            DB::transaction(function () use ($data, $lead) {
+                unset($data['website']);
                 StudyAbroadRegistration::create(array_merge($data, [
                     'lead_id' => $lead->id,
-                    'signature_path' => $signaturePath,
+                    'signature_path' => null,
+                    'signed_at' => null,
                     'terms_accepted' => true,
                     'status' => 'submitted',
                 ]));
             });
         } catch (\Throwable $exception) {
-            Storage::disk('local')->delete($signaturePath);
             report($exception);
             return back()->withInput()->with('error', 'We could not save your registration just now. Please try again.');
         }

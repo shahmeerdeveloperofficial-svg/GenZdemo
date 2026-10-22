@@ -42,7 +42,6 @@ return new class extends Migration {
         foreach (['course_lessons' => ['sort_order','publication_state','lesson_type'], 'course_lectures' => ['sort_order','publication_state','is_preview'], 'course_resources' => ['sort_order','publication_state','is_preview','completion_required']] as $tableName => $columns) {
             if (!Schema::hasTable($tableName)) continue;
             Schema::table($tableName, function (Blueprint $table) use ($tableName, $columns) {
-                if (Schema::hasColumn($tableName, 'publication_state') && Schema::hasIndex($tableName, ['publication_state'])) $table->dropIndex(['publication_state']);
                 foreach ($columns as $column) if (Schema::hasColumn($tableName, $column)) $table->dropColumn($column);
             });
         }

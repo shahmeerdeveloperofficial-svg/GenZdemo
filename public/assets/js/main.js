@@ -265,6 +265,7 @@
                 });
             },
             Editor: function () {
+                if (!$.fn.summernote || !$(".summernoteOne").length) return;
                 $(".summernoteOne").summernote({
                     placeholder: "Write description...",
                     tabsize: 2,
@@ -279,6 +280,7 @@
                 });
             },
             Z_Chart: function () {
+                if (!window.ApexCharts || !document.querySelector("#revenueOverviewChart")) return;
                 var options = {
                     chart: {
                         height: 350,

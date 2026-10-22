@@ -1,0 +1,845 @@
+{
+  "sections": {
+    "hero": {
+      "enabled": true,
+      "order": 10,
+      "copy": {
+        "0": "0",
+        "overview": "Overview",
+        "intro": "Intro",
+        "welcomeTo": "Welcome to ",
+        "genz": "GenZ",
+        "usa": "USA",
+        "ivyLeagueTopUnis": "Ivy League & Top Unis",
+        "uk": "UK",
+        "cambridgeRussellGroup": "Cambridge & Russell Group",
+        "malaysia": "MALAYSIA",
+        "asiaPacificEducationHub": "Asia-Pacific Education Hub",
+        "turkey": "TURKEY",
+        "eurasianCampusesAwards": "Eurasian Campuses & Awards",
+        "stage0": "Stage",
+        "inquireFor": "Inquire for ",
+        "cambridgeContinuum": "Cambridge Continuum",
+        "bookCampusTour": "Book Campus Tour",
+        "discoverStages": "Discover Stages",
+        "fallbackAlt": "GenZ"
+      },
+      "media": {
+        "cream_top_cloud_webp": "/assets/images/cream-top-cloud.webp",
+        "cream_bottom_cloud_webp": "/assets/images/cream-bottom-cloud.webp",
+        "fallbackImage": "/assets/images/genz-logo.png"
+      },
+      "stages": [
+        {
+          "id": "early-years",
+          "stageNumber": "01",
+          "name": "Early Years Foundation",
+          "subtitle": "Discovery & Play-Based Inception",
+          "ageRange": "Ages 2.5 – 5 Years",
+          "description": "An inquiry-led exploratory sanctuary where early learners discover wonder, bilingual vocabulary, emotional intelligence, and cognitive curiosity through sensory experiences and purposeful play.",
+          "pillars": [
+            "Bilingual Language Immersion (English & Native)",
+            "Montessori & Reggio Emilia Hybrid Approach",
+            "Sensory & Nature Exploration Gardens",
+            "Foundational Phonics, Motor Skills & Numeracy"
+          ],
+          "accreditationBadge": "Cambridge Early Years Accredited",
+          "accreditationDetail": "Nurturing joyful, independent, and empathetic thinkers from their earliest steps.",
+          "image": "/assets/images/early-years.jpg"
+        },
+        {
+          "id": "primary-continuum",
+          "stageNumber": "02",
+          "name": "Primary Continuum",
+          "subtitle": "Project-Based Learning & Inquiry",
+          "ageRange": "Grades 1 – 5 · Ages 5 – 10 Years",
+          "description": "Inspired by world-leading inquiry frameworks and CSI approaches, our primary school fosters conceptual understanding. Scholars connect mathematics, environmental sciences, languages, and the creative arts through authentic real-world challenges.",
+          "pillars": [
+            "Project-Based Learning (PBL) Framework",
+            "Singapore Mathematical Logic & Problem-Solving",
+            "Junior Coding & Visual Robotics Integration",
+            "Global Perspectives & Cultural Competence"
+          ],
+          "accreditationBadge": "Cambridge Primary & Global Standards",
+          "accreditationDetail": "Cultivating critical inquiry and scientific reasoning through interactive discovery.",
+          "image": "/assets/images/primary-years.jpg"
+        },
+        {
+          "id": "middle-years",
+          "stageNumber": "03",
+          "name": "Middle Years Academy",
+          "subtitle": "Critical Inquiry & STEM Innovation",
+          "ageRange": "Grades 6 – 8 · Ages 11 – 13 Years",
+          "description": "Bridging foundational literacy with interdisciplinary rigour. Learners conduct rigorous laboratory experiments, master computational thinking, participate in Model United Nations, and lead community service initiatives.",
+          "pillars": [
+            "Advanced STEM, 3D Prototyping & AI Literacy",
+            "Model United Nations & Rhetorical Debating",
+            "Integrated Experimental Sciences (Bio, Chem, Phys)",
+            "Ethical Leadership & Digital Citizenship"
+          ],
+          "accreditationBadge": "Cambridge Lower Secondary Center",
+          "accreditationDetail": "Empowering adolescent scholars with analytical acumen and self-directed agency.",
+          "image": "/assets/images/middle-years.jpg"
+        },
+        {
+          "id": "senior-cambridge",
+          "stageNumber": "04",
+          "name": "Senior Cambridge & IGCSE",
+          "subtitle": "Academic Rigour & International Credentials",
+          "ageRange": "Grades 9 – 12 · Ages 14 – 18 Years",
+          "description": "Widely recognized as the gold standard of secondary education, our senior programmes offer deep subject mastery, university-level research colloquiums, and personalized portfolio development under certified international faculty.",
+          "pillars": [
+            "Cambridge IGCSE, O Levels & A Levels Tracks",
+            "Independent Research Colloquiums & EPQ",
+            "Pre-University Career Mentorship & Aptitude",
+            "Dual Honors & Accelerated Subject Pathways"
+          ],
+          "accreditationBadge": "Cambridge International Fellow School",
+          "accreditationDetail": "Consistently producing Regional & World distinction winners across Cambridge exams.",
+          "image": "/assets/images/senior-cambridge.jpg"
+        },
+        {
+          "id": "flight-path",
+          "stageNumber": "05",
+          "name": "Beyond GenZ: Global Flight Path",
+          "subtitle": "University Launch & Career Flight",
+          "ageRange": "Post-Secondary & Higher Education Pathways",
+          "description": "Embodying the soaring airplane motif of our brand, our in-house Global University Advisory guides scholars directly to elite institutions worldwide with strategic SAT/IELTS preparation and full-tuition scholarship packaging.",
+          "pillars": [
+            "Ivy League & Russell Group Admissions Strategy",
+            "Comprehensive SAT / ACT / IELTS In-House Training",
+            "Merit Scholarship & Financial Aid Strategy",
+            "Global Alumni Mentorship Network in 14 Nations"
+          ],
+          "accreditationBadge": "Global University Admissions Guarantee",
+          "accreditationDetail": "Over $12M in global merit scholarships and fellowships secured by graduating cohorts.",
+          "image": "/assets/images/beyond-pathway.jpg"
+        }
+      ],
+      "links": {},
+      "animationEnabled": true
+    },
+    "stats": {
+      "enabled": true,
+      "order": 20,
+      "copy": {
+        "keyEducationalMetrics": "Key Educational Metrics"
+      },
+      "media": {},
+      "items": [
+        {
+          "id": "ratio",
+          "number": 8,
+          "isRatio": true,
+          "label": "Student-Teacher Ratio",
+          "description": "Guarantees individualized mentorship and responsive care for every scholar."
+        },
+        {
+          "id": "faculty",
+          "number": 100,
+          "suffix": "%",
+          "label": "Certified International Faculty",
+          "description": "Cambridge-trained educators bringing world-class pedagogy into every classroom."
+        },
+        {
+          "id": "destinations",
+          "number": 42,
+          "suffix": "+",
+          "label": "Global University Destinations",
+          "description": "Scholars placed across the United States, United Kingdom, Canada, and Europe."
+        },
+        {
+          "id": "scholarships",
+          "number": 12,
+          "prefix": "$",
+          "suffix": "M+",
+          "label": "Scholarships Awarded",
+          "description": "Total merit and fellowship awards earned by GenZ cohorts over the last 5 years."
+        }
+      ],
+      "links": {}
+    },
+    "platform": {
+      "enabled": true,
+      "order": 30,
+      "copy": {
+        "badge": "Learning & Admissions",
+        "heading": "Your learning journey, connected",
+        "description": "Access your courses, documents and admissions support through the GenZ portal.",
+        "tabLabel": "Portal features",
+        "accessNote": "Your account determines which portal and records you can access.",
+        "registrationAction": "Start student registration"
+      },
+      "media": {},
+      "tabs": [
+        {
+          "id": "student",
+          "label": "Student Portal",
+          "tag": "Study profile & learning",
+          "heading": "Keep your studies in one place",
+          "description": "Sign in to see the learning resources, services and application information available to your account.",
+          "action": "Open student portal",
+          "features": [
+            {
+              "title": "Courses & learning resources",
+              "description": "Open your enrolled courses, learning materials, assignments and quizzes."
+            },
+            {
+              "title": "Study profile & documents",
+              "description": "Maintain your study preferences and submit documents for review."
+            },
+            {
+              "title": "Appointments & services",
+              "description": "Track your booked consultations, service orders and invoices."
+            }
+          ]
+        },
+        {
+          "id": "admissions",
+          "label": "Admissions CRM",
+          "tag": "Enquiries & applications",
+          "heading": "Support each applicant from enquiry to admission",
+          "description": "Authorized staff manage incoming enquiries, application progress and document reviews in the existing GenZ workspace.",
+          "action": "Sign in to admissions",
+          "features": [
+            {
+              "title": "Enquiry pipeline",
+              "description": "Review website enquiries, assign owners and manage lead stages."
+            },
+            {
+              "title": "Application management",
+              "description": "Track university applications and admissions updates."
+            },
+            {
+              "title": "Document review",
+              "description": "Review student submissions and provide approval or revision feedback."
+            }
+          ]
+        },
+        {
+          "id": "learning-team",
+          "label": "Learning Team",
+          "tag": "Teaching & progress",
+          "heading": "Manage learning with your assigned team",
+          "description": "Instructors and authorized staff use their assigned portal to organize teaching and review learner work.",
+          "action": "Sign in to your workspace",
+          "features": [
+            {
+              "title": "Learning content",
+              "description": "Manage course resources and live sessions where your role permits."
+            },
+            {
+              "title": "Assignments & quizzes",
+              "description": "Review submissions and manage course assessments."
+            },
+            {
+              "title": "Learning records",
+              "description": "Follow enrolments, progress and certificates available to your account."
+            }
+          ]
+        }
+      ]
+    },
+    "welcome": {
+      "enabled": true,
+      "order": 40,
+      "copy": {
+        "aboutGenzInternational": "About GenZ International",
+        "aWorldClassSchoolGroundedIn": "A World-Class School Grounded in Intellectual Curiosity & Purpose",
+        "label": "|",
+        "genzInternationalSchoolWasEstablishedTo": "GenZ International School was established to redefine secondary and foundational schooling — blending British Cambridge academic prestige with forward-thinking problem solving.",
+        "ourCampusCommunityBringsTogetherInquisitive": "Our campus community brings together inquisitive minds, distinguished international educators, and a structured continuum from Early Years to A-Levels. We believe that true academic rigor is not about rote retention, but about the courage to question, collaborate, and create solutions that transcend borders.",
+        "readOurEducationalPhilosophy": "Read our Educational Philosophy"
+      },
+      "media": {},
+      "links": {
+        "philosophy": "#philosophy"
+      },
+      "cards": [
+        {
+          "icon": "BookOpenCheck",
+          "number": "4",
+          "title": "Articulated Programmes",
+          "description": "Early Years, Primary, Middle, and Senior Cambridge seamlessly mapped for uninterrupted academic growth."
+        },
+        {
+          "icon": "Globe2",
+          "number": "1,500+",
+          "title": "Top 100 University Alumni",
+          "description": "Scholars studying at Stanford, Oxford, Toronto, UCL, McGill, NUS, and University of Melbourne."
+        },
+        {
+          "icon": "ShieldCheck",
+          "number": "18+",
+          "title": "Nationalities Represented",
+          "description": "A genuinely cosmopolitan student body cultivating mutual respect, cultural fluency, and global perspective."
+        },
+        {
+          "icon": "Target",
+          "number": "100%",
+          "title": "Advisory Guidance",
+          "description": "Full-time college counseling ensuring every scholar receives tailored guidance and scholarship advocacy."
+        }
+      ]
+    },
+    "ceo": {
+      "enabled": true,
+      "order": 50,
+      "copy": {
+        "executiveLeadershipSpotlight": "Executive Leadership Spotlight",
+        "keynoteMessageFromChiefExecutiveOfficer": "Keynote Message from Chief Executive Officer",
+        "genZConsultantPrivateLimited": "Gen Z Consultant (Private Limited)",
+        "theCoreLeadershipPhilosophy": "The Core Leadership Philosophy",
+        "converting": "\"Converting",
+        "humanPotential": "Human Potential",
+        "into": "into",
+        "humanCapital": "Human Capital",
+        "label": ".\"",
+        "muhammadNawaz": "Muhammad Nawaz",
+        "isALeadershipAndHumanDevelopment": "is a leadership and human development professional with over",
+        "15YearsOfExperience": "15 years of experience",
+        "inPersonalDevelopmentLeadershipTrainingHuman": " in personal development, leadership training, human performance, and youth development in Pakistan. As CEO of Gen Z Consultant (Private Limited), he brings a powerful combination of leadership expertise, practical coaching experience, and a deep commitment to empowering the next generation.",
+        "atGenZConsultantMuhammadNawaz": "\"At Gen Z Consultant, Muhammad Nawaz is committed to bridging the gap between education, personal development, and career success. His vision is to empower young people with the mindset, capabilities, confidence, and leadership skills required to navigate an increasingly competitive global environment and build purposeful, successful futures.\"",
+        "hisMission": "His Mission:",
+        "toDevelopCapableConfidentAndPurpose": "\"To develop capable, confident, and purpose-driven individuals who can lead themselves, advance their careers, and create a positive impact on society.\"",
+        "areasOfExpertise": "Areas of Expertise",
+        "mscInWasteManagementAndEnvironmental": "MSc in Waste Management and Environmental Sciences — United Kingdom",
+        "mscInGeographyUniversityOfThe": "MSc in Geography — University of the Punjab, Pakistan",
+        "connectWithCeoMentorshipOffice": "Connect with CEO & Mentorship Office",
+        "readFullBiographyDossier": "Read Full Biography Dossier",
+        "muhammadNawazCeoGenZConsultant": "Muhammad Nawaz - CEO Gen Z Consultant",
+        "label2": "🇵🇰",
+        "pakistanHq": "Pakistan HQ",
+        "chiefExecutiveOfficer": "Chief Executive Officer",
+        "executiveLeadership": "Executive Leadership",
+        "chiefExecutiveOfficerCeo": "Chief Executive Officer (CEO)",
+        "humanDevelopmentLeadershipConsultant": "Human Development & Leadership Consultant",
+        "15YrsAuthority": "15+ Yrs Authority",
+        "50000LeadersTrained": "50,000+ Leaders Trained",
+        "impactRecord": "Impact Record",
+        "50000IndividualsTrained": "50,000+ Individuals Trained",
+        "1500LifeMasteryRetreats": "1,500+ Life Mastery Retreats",
+        "1000YouthCampScholars": "1,000+ Youth Camp Scholars",
+        "requestExecutiveConsultation": "Request Executive Consultation",
+        "executiveDossier": "Executive Dossier",
+        "convertingHumanPotentialIntoHumanCapital": "Converting Human Potential into Human Capital",
+        "muhammadNawazIsALeadershipAnd": "Muhammad Nawaz is a leadership and human development professional with over 15 years of experience in personal development, leadership training, human performance, and youth development in Pakistan. As CEO of Gen Z Consultant (Private Limited), he brings a powerful combination of leadership expertise, practical coaching experience, and a deep commitment to empowering the next generation.",
+        "throughoutHisCareerHeHasTrained": "Throughout his career, he has trained more than 50,000 individuals through personal development, leadership, and human development initiatives. He has facilitated immersive, three-day Life Mastery retreats for over 1,500 participants, led summer camps and youth retreats for more than 1,000 young people, and delivered hundreds of one-to-one coaching and leadership coaching sessions.",
+        "hisWorkFocusesOnHelpingIndividuals": "His work focuses on helping individuals discover their potential, strengthen their character, build self-confidence, develop leadership capabilities, and translate personal growth into meaningful professional and life outcomes.",
+        "atGenZConsultantMuhammadNawaz2": "At Gen Z Consultant, Muhammad Nawaz is committed to bridging the gap between education, personal development, and career success. His vision is to empower young people with the mindset, capabilities, confidence, and leadership skills required to navigate an increasingly competitive global environment and build purposeful, successful futures.",
+        "academicQualifications": "Academic Qualifications",
+        "label3": "🎓 ",
+        "mscInWasteManagementAndEnvironmental2": "MSc in Waste Management and Environmental Sciences",
+        "unitedKingdom": " — United Kingdom",
+        "mscInGeography": "MSc in Geography",
+        "universityOfThePunjabPakistan": " — University of the Punjab, Pakistan"
+      },
+      "media": {
+        "muhammad_nawaz_jpg": "/assets/images/team/muhammad-nawaz.jpg"
+      },
+      "expertise": [
+        "Leadership Development",
+        "Personal & Human Development",
+        "Executive & Leadership Coaching",
+        "Youth Empowerment",
+        "Life Mastery & Personal Transformation",
+        "Performance Development"
+      ],
+      "metrics": [
+        {
+          "value": "50,000+",
+          "label": "Individuals Trained",
+          "sub": "Personal & Leadership Initiatives",
+          "icon": "Users"
+        },
+        {
+          "value": "15+",
+          "label": "Years Experience",
+          "sub": "Human Performance & Youth Leadership",
+          "icon": "Trophy"
+        },
+        {
+          "value": "1,500+",
+          "label": "Life Mastery Scholars",
+          "sub": "Immersive 3-Day Retreats",
+          "icon": "Compass"
+        },
+        {
+          "value": "1,000+",
+          "label": "Youth Leaders Camp",
+          "sub": "Empowered for Global Futures",
+          "icon": "Target"
+        }
+      ],
+      "links": {}
+    },
+    "leadership": {
+      "enabled": true,
+      "order": 60,
+      "copy": {
+        "internationalDirectorateAdvisoryBoard": "International Directorate & Advisory Board",
+        "executiveLeadershipDirectorateMessages": "Executive Leadership & Directorate Messages",
+        "label": "|",
+        "europeanDoctoralFellowsErasmusMundusScholars": "European doctoral fellows, Erasmus Mundus scholars, and British enterprise leaders providing personal mentorship into the world's most prestigious institutions.",
+        "directMentorshipScholarshipAdvisory": "Direct Mentorship & Scholarship Advisory",
+        "consultWithOurDirectorateForErasmus": "Consult with our Directorate for Erasmus Mundus & UK Visas",
+        "personalizedUniversityApplicationsScandinavianScholarshipGuidance": "Personalized university applications, Scandinavian scholarship guidance, and British enterprise mentorship.",
+        "bookDirectorateAdvisory": "Book Directorate Advisory",
+        "gen": "GEN",
+        "z": "Z",
+        "international": "International",
+        "at": "At ",
+        "genZInternational": "Gen Z International",
+        "weDonTJustTeachCurriculum": ", we don’t just teach curriculum — we architect prestigious scholarships, global careers, and international leadership.",
+        "label2": " ·",
+        "label3": "\"",
+        "label4": ":",
+        "viewFullCredentialsAcademicDossier": "View Full Credentials & Academic Dossier",
+        "advisoryOffice": "Advisory Office",
+        "requestDirectorateAdvisory": "Request Directorate Advisory",
+        "directorDossier": "Director Dossier",
+        "academicDegreesInternationalFellowships": "Academic Degrees & International Fellowships",
+        "commercialVenturesEnterpriseLeadership": "Commercial Ventures & Enterprise Leadership",
+        "role": "Role: ",
+        "executiveMentorshipTrackRecord": "Executive Mentorship & Track Record",
+        "specializationAreas": "Specialization Areas",
+        "websiteLabel": "GenZ",
+        "achievements": "Achievements"
+      },
+      "media": {},
+      "people": [
+        {
+          "id": "dr-zahid-bajwa",
+          "name": "Dr. Zahid Mahmood Bajwa",
+          "title": "Director",
+          "roleBadge": "Global Academic Directorate & Scholarship Chair",
+          "nationality": "Denmark",
+          "countryCode": "DK",
+          "countryFlagEmoji": "🇩🇰",
+          "image": "/assets/images/team/zahid-bajwa.jpg",
+          "featuredBadge": "PhD Aarhus · Erasmus Mundus · UAF Gold Medalist",
+          "quote": "Empowering ambitious scholars with world-class mentorship to secure prestigious global fellowships and doctoral opportunities across Scandinavia and Europe.",
+          "qualifications": [
+            {
+              "degree": "PhD",
+              "field": "Doctoral Research",
+              "institution": "Aarhus University",
+              "country": "Denmark",
+              "highlight": true
+            },
+            {
+              "degree": "M.Sc",
+              "field": "Erasmus Mundus Joint Master",
+              "institution": "Bangor University (United Kingdom) & University of Göttingen (Germany)",
+              "country": "UK / Germany",
+              "highlight": true
+            },
+            {
+              "degree": "B.Sc (Hons)",
+              "field": "Academic Gold Medalist",
+              "institution": "University of Agriculture Faisalabad (UAF)",
+              "country": "Pakistan",
+              "highlight": true
+            }
+          ],
+          "experience": [
+            "15+ years of distinguished international consultancy facilitating prestigious global educational scholarships and European research fellowships.",
+            "Specialist mentor for Erasmus Mundus Joint Master Degrees (EMJMD), Marie SkÅ‚odowska-Curie actions, and Danish government research grants.",
+            "Guiding students into top-ranking European universities with 100% full-tuition waivers and living stipends.",
+            "Architect of academic articulation protocols ensuring GenZ scholars meet the highest international university matriculation standards."
+          ],
+          "specializations": [
+            "Erasmus Mundus Scholarships",
+            "Nordic Higher Education Admissions",
+            "PhD & Research Grant Proposals",
+            "Curriculum Rigour & Academic Articulation"
+          ],
+          "achievements": [
+            "Awarded Academic Gold Medal at UAF for highest honors",
+            "Dual Erasmus Mundus Joint Master Fellowship recipient",
+            "500+ scholars placed into elite European scholarship programs"
+          ]
+        },
+        {
+          "id": "muzaffar-hussain",
+          "name": "Muzaffar Hussain",
+          "title": "Director",
+          "roleBadge": "European Directorate & Enterprise Development",
+          "nationality": "Denmark",
+          "countryCode": "DK",
+          "countryFlagEmoji": "🇩🇰",
+          "image": "/assets/images/team/muzaffar-hussain.jpg",
+          "featuredBadge": "Erasmus Mundus Master · Study Abroad Mentor Since 2009",
+          "quote": "Combining premier European education credentials with scaled business ventures to open boundless career and residency pathways for our scholars.",
+          "qualifications": [
+            {
+              "degree": "M.Sc",
+              "field": "Erasmus Mundus Joint Master",
+              "institution": "University of Copenhagen (Denmark) & Swedish University of Agricultural Sciences (SLU Sweden)",
+              "country": "Denmark / Sweden",
+              "highlight": true
+            }
+          ],
+          "experience": [
+            "Europe Study Abroad Mentor since 2009, successfully advising over a decade of scholars across Denmark, Sweden, Germany, and the EU.",
+            "International business development strategist and mentor for global franchise expansions including Burger King European territory operations.",
+            "Prominent Danish entrepreneur and Founder of Döner King in Denmark (www.donerking.dk), managing scaled multi-location retail operations.",
+            "Expert strategist on post-study European work permits, Permanent Residency (PR), and European corporate career launches."
+          ],
+          "specializations": [
+            "Europe Study Abroad Mentorship (Denmark & Nordics)",
+            "Multinational Business Franchise Strategy",
+            "European Post-Study Work & Settlement Routes",
+            "Cross-Border Entrepreneurship & Incubators"
+          ],
+          "ventures": [
+            {
+              "name": "Döner King Denmark",
+              "url": "https://www.donerking.dk",
+              "role": "Founder & Managing Director",
+              "description": "Pioneering fast-casual dining enterprise operating across Denmark with recognized culinary excellence."
+            },
+            {
+              "name": "Burger King Europe Expansion",
+              "role": "Business Development Mentor",
+              "description": "Strategic operations, logistics, and store expansion consultancy across premier European retail markets."
+            }
+          ],
+          "achievements": [
+            "15+ Years active mentorship in European higher education admissions",
+            "Founded and scaled high-growth commercial retail brand in Denmark"
+          ]
+        },
+        {
+          "id": "suhaib-cheema",
+          "name": "Suhaib Arshad Cheema",
+          "title": "Director",
+          "roleBadge": "UK Directorate & Enterprise Advisory",
+          "nationality": "United Kingdom",
+          "countryCode": "GB",
+          "countryFlagEmoji": "🇬🇧",
+          "image": "/assets/images/team/suhaib-cheema.jpg",
+          "featuredBadge": "M.Sc London Met · British Enterprise Leader · 15+ Yrs UK Visas",
+          "quote": "Navigating the British education ecosystem and enterprise landscape with institutional precision, unlocking lifelong careers in the United Kingdom.",
+          "qualifications": [
+            {
+              "degree": "M.Sc",
+              "field": "Food Science & Enterprise",
+              "institution": "London Metropolitan University",
+              "country": "United Kingdom",
+              "highlight": true
+            }
+          ],
+          "experience": [
+            "15+ years of authoritative expertise in UK immigration legislation, Skilled Worker permits, Innovator Founder visas, and Indefinite Leave to Remain (ILR).",
+            "Established and heads Horizon Food (www.Horizon-foods.co.uk), an extensive nationwide distribution logistics network spanning Great Britain.",
+            "High-level British enterprise consultant mentoring international graduates from top UK universities into British commercial ventures.",
+            "Strategic advisor on UK university applications, UCAS protocols, Russell Group admissions, and high-value graduate sponsor licenses."
+          ],
+          "specializations": [
+            "UK Skilled Worker & Sponsor License Advisory",
+            "Innovator Founder Visas & British Settlement",
+            "Nationwide Supply Chain & Distribution Logistics",
+            "Russell Group Placements & UCAS Strategy"
+          ],
+          "ventures": [
+            {
+              "name": "Horizon Food UK",
+              "url": "https://www.horizon-foods.co.uk",
+              "role": "Founder & Managing Director",
+              "description": "Major UK food distribution and supply chain operator serving commercial enterprises nationwide across Britain."
+            }
+          ],
+          "achievements": [
+            "15+ Years British Immigration & Enterprise Advisory Mastery",
+            "Built multi-million pound nationwide distribution network across the UK"
+          ]
+        }
+      ],
+      "links": {}
+    },
+    "philosophy": {
+      "enabled": true,
+      "order": 70,
+      "copy": {
+        "ourEducationalEthos": "Our Educational Ethos",
+        "fourFoundationalPillarsOfTheGenz": "Four Foundational Pillars of the GenZ Learning Journey",
+        "aCohesiveApproachEnsuringAcademicMastery": "A cohesive approach ensuring academic mastery, technological capability, ethical conviction, and worldwide mobility."
+      },
+      "media": {},
+      "items": [
+        {
+          "Icon": "Lightbulb",
+          "title": "Intellectual Inquiry Over Memorization",
+          "desc": "We cultivate deep conceptual understanding through inquiry-based models where students hypothesize, analyze, debate, and synthesize evidence."
+        },
+        {
+          "Icon": "Cpu",
+          "title": "Technological & AI Fluency",
+          "desc": "Integrating computational thinking, autonomous robotics, and machine-learning literacy from junior school so scholars become creators of technology, not mere consumers."
+        },
+        {
+          "Icon": "Users",
+          "title": "Empathy & Global Citizenship",
+          "desc": "Fostering emotional intelligence, multilingual communication, and international perspective to nurture compassionate, responsible leaders of tomorrow."
+        },
+        {
+          "Icon": "Shield",
+          "title": "Ethical Leadership & Character",
+          "desc": "Anchored by the ethos of Knowledge, Action, and Resolve. Character development and resilience are given equal priority to examination laurels."
+        }
+      ],
+      "links": {}
+    },
+    "benefits": {
+      "enabled": true,
+      "order": 80,
+      "copy": {
+        "theGenzAdvantage": "The GenZ Advantage",
+        "whatSetsGenzInternationalApart": "What Sets GenZ International Apart",
+        "label": "|",
+        "purposeBuiltPedagogyAndStrategicGlobal": "Purpose-built pedagogy and strategic global preparation designed to unleash each scholar’s highest potential."
+      },
+      "media": {},
+      "items": [
+        {
+          "Icon": "BookOpen",
+          "title": "Complete Cambridge & Global Continuum",
+          "desc": "Seamless progression from early years through IGCSE and A Levels, eliminating academic disruption and setting an unbroken trajectory towards university readiness."
+        },
+        {
+          "Icon": "Cpu",
+          "title": "Future-Ready STEM & AI Innovation Hub",
+          "desc": "Coding, autonomous robotics, digital fabrication, and ethical AI labs integrated from Grade 3, preparing scholars to build and lead in a technology-first era."
+        },
+        {
+          "Icon": "Plane",
+          "title": "The Global Flight Path Advisory",
+          "desc": "Dedicated in-house counseling wing offering SAT/IELTS preparation, masterclass essay workshops, and Ivy League & Russell Group full-scholarship applications."
+        },
+        {
+          "Icon": "LayoutDashboard",
+          "title": "Real-Time Parent & Scholar Digital Gateway",
+          "desc": "A secure 24/7 web portal providing transparent, live tracking of attendance, curriculum milestones, rubric feedback, and individual portfolio showcases."
+        }
+      ],
+      "links": {}
+    },
+    "stories": {
+      "enabled": true,
+      "order": 90,
+      "copy": {
+        "successStories": "( Success Stories )",
+        "fromGenzToTheWorld": "From GenZ to the World",
+        "label": "|",
+        "ourScholarsContinueToExcelAt": "Our scholars continue to excel at globally recognized institutions, securing over $12M in full fellowships and honors worldwide.",
+        "label3": "\"",
+        "emptyMessage": "Student stories will appear here when published."
+      },
+      "media": {},
+      "items": [
+        {
+          "id": "alizeh",
+          "studentName": "Alizeh Tariq",
+          "batch": "Cambridge A-Level Distinction '24",
+          "university": "Stanford University",
+          "country": "United States",
+          "program": "B.S. Artificial Intelligence & Cognitive Science",
+          "scholarshipTier": "100% Full Fellowship ($320k)",
+          "avatar": "/assets/images/student-1.jpg",
+          "quote": "The robotics maker space and personal counseling at GenZ gave me the analytical confidence to compete and win on the global stage."
+        },
+        {
+          "id": "rayan",
+          "studentName": "Rayan Malik",
+          "batch": "Cambridge Scholar '24",
+          "university": "University of Oxford",
+          "country": "United Kingdom",
+          "program": "B.A. Philosophy, Politics & Economics (PPE)",
+          "scholarshipTier": "Rhodes Pathway Scholar",
+          "avatar": "/assets/images/student-2.jpg",
+          "quote": "GenZ's seminar culture and Model UN delegations prepared me impeccably for Oxford's intense tutorial interview dialogues."
+        },
+        {
+          "id": "sarah",
+          "studentName": "Sarah Khan",
+          "batch": "Senior Scholar '25",
+          "university": "University of Toronto",
+          "country": "Canada",
+          "program": "B.Eng. Biomedical & Neural Engineering",
+          "scholarshipTier": "Lester B. Pearson Scholar ($100k)",
+          "avatar": "/assets/images/student-3.jpg",
+          "quote": "The project-based curriculum challenged us to create real medical prototypes instead of simply memorizing textbooks."
+        },
+        {
+          "id": "daniyal",
+          "studentName": "Daniyal Ahmed",
+          "batch": "Cambridge Scholar '25",
+          "university": "Imperial College London",
+          "country": "United Kingdom",
+          "program": "M.Eng. Aeronautical & Aerospace Systems",
+          "scholarshipTier": "President's Excellence Award",
+          "avatar": "/assets/images/student-4.jpg",
+          "quote": "From wind tunnel simulation projects to international physics olympiads, GenZ inspired me to reach for the skies."
+        }
+      ],
+      "source": "backend",
+      "links": {}
+    },
+    "campus": {
+      "enabled": true,
+      "order": 100,
+      "copy": {
+        "lifeAtGenz": "( Life at GenZ )",
+        "lifeBeyondTheClassroom": "Life Beyond the Classroom",
+        "label": "|",
+        "purposeBuiltModernEnvironmentsDesignedTo": "Purpose-built modern environments designed to cultivate resilience, creative expression, athletic stamina, and student leadership.",
+        "genzAnimatedNeonSchoolBell": "GenZ Animated Neon School Bell"
+      },
+      "media": {
+        "cream_top_cloud_webp": "/assets/images/cream-top-cloud.webp",
+        "ring_webp": "/assets/images/ring.webp",
+        "ring_bell_webp": "/assets/images/ring-bell.webp"
+      },
+      "links": {},
+      "stations": [
+        {
+          "image": "/assets/images/lal-card-icon-1.webp",
+          "title": "Campus & Facilities",
+          "category": "Infrastructure",
+          "description": "Modern learning spaces, world-class sports facilities, performing arts venues, and purpose-built environments designed to inspire student growth."
+        },
+        {
+          "image": "/assets/images/lal-card-icon-3.webp",
+          "title": "Sports & Athletics",
+          "category": "Athletics & Stamina",
+          "description": "From swimming and futsal to gymnastics, badminton, and taekwondo, students build resilience, teamwork, and confidence through competitive sports."
+        },
+        {
+          "image": "/assets/images/lal-card-icon-2.webp",
+          "title": "Student Societies & MUN",
+          "category": "Global Citizenship",
+          "description": "Student societies foster collaboration, creativity, communication, and real-world engagement through meaningful debates, delegations, and competitions."
+        },
+        {
+          "image": "/assets/images/lal-card-icon-4.webp",
+          "title": "Co-curricular Activities",
+          "category": "Creativity & Innovation",
+          "description": "Students engage in performing arts, robotics, public speaking, debates, and leadership opportunities beyond the traditional classroom."
+        }
+      ]
+    },
+    "admissions": {
+      "enabled": true,
+      "order": 110,
+      "copy": {
+        "admissionsCrmGateway": "( Admissions & CRM Gateway )",
+        "beginYourGenzJourney": "Begin Your GenZ Journey",
+        "label": "|",
+        "aStructuredAdmissionsJourneyDesignedTo": "A structured admissions journey designed to support every applicant with clarity, warmth, and care.",
+        "941AmAdmissionsCrmPortal": "Admissions CRM Portal",
+        "genzCloudCrmActive": "GenZ Student Services",
+        "aStructuredAdmissionsProcessDesignedTo": "A structured admissions process designed to support every applicant.",
+        "registerNow": "Register Now",
+        "admissionsCrm": "Admissions CRM",
+        "lmsPortal": "LMS Portal",
+        "scholarships": "Scholarships",
+        "handsHoldingIpad": "Hands holding iPad",
+        "consultations": "Consultations"
+      },
+      "media": {
+        "mac_holdings_hands_webp": "/assets/images/mac-holdings-hands.webp"
+      },
+      "links": {},
+      "cards": [
+        {
+          "title": "1. Inquiry",
+          "description": "Connect with our Admissions Team to explore programmes and admissions guidance.",
+          "route": "contact"
+        },
+        {
+          "title": "2. Registration",
+          "description": "Complete the student registration form and share your study preferences.",
+          "route": "registration"
+        },
+        {
+          "title": "3. Documents & Consultation",
+          "description": "Sign in to submit required documents and arrange a consultation.",
+          "route": "login"
+        },
+        {
+          "title": "4. Admissions Updates",
+          "description": "Follow your application progress and the next steps shared by your assigned team.",
+          "route": "login"
+        }
+      ]
+    },
+    "marquee": {
+      "enabled": true,
+      "order": 120,
+      "copy": {
+        "coreValuesMarquee": "Core Values Marquee"
+      },
+      "media": {},
+      "items": [
+        "Curiosity",
+        "Inquiry",
+        "Global Citizenship",
+        "Innovation",
+        "Academic Rigour",
+        "Integrity",
+        "Leadership",
+        "Excellence",
+        "Exploration",
+        "Resilience"
+      ],
+      "links": {}
+    },
+    "news": {
+      "enabled": true,
+      "order": 130,
+      "copy": {
+        "colloquiumsCampusNews": "Colloquiums & Campus News",
+        "upcomingEventsAcademicMilestones": "Upcoming Events & Academic Milestones",
+        "reserveColloquiumSeat": "View all events",
+        "rsvp": "Read more",
+        "emptyMessage": "News and events will appear here when published."
+      },
+      "media": {},
+      "items": [
+        {
+          "id": "summit-2026",
+          "title": "Annual Global Education & Ivy League Summit 2026",
+          "date": "October 28, 2026",
+          "location": "Main Auditorium, Islamabad Campus",
+          "category": "Global Colloquium",
+          "excerpt": "Admissions directors from 35+ top world universities assemble at GenZ for exclusive portfolio reviews, masterclasses, and direct scholarship assessments.",
+          "image": "/assets/images/event-1.jpg",
+          "url": ""
+        },
+        {
+          "id": "stem-championship",
+          "title": "National Youth STEM & Autonomous Robotics Championship",
+          "date": "November 14, 2026",
+          "location": "Innovation Quad, Lahore Campus",
+          "category": "STEM & Innovation",
+          "excerpt": "Middle and Senior Cambridge scholars showcase autonomous drone prototypes, renewable energy solutions, and applied machine-learning solutions.",
+          "image": "/assets/images/event-2.jpg",
+          "url": ""
+        },
+        {
+          "id": "genz-mun",
+          "title": "GenZMUN VII: Empowering Future Multilateral Diplomats",
+          "date": "December 05, 2026",
+          "location": "Diplomatic Center, Islamabad Campus",
+          "category": "Leadership & Diplomacy",
+          "excerpt": "Over 400 student delegates deliberate on global sustainable development goals, digital human rights, and peaceful multilateral treaties.",
+          "image": "/assets/images/event-3.jpg",
+          "url": ""
+        }
+      ],
+      "source": "backend",
+      "links": {}
+    }
+  }
+}

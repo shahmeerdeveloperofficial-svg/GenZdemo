@@ -8,6 +8,9 @@ use App\Models\ApplicationNote;
 use App\Models\ApplicationTask;
 use App\Models\User;
 use App\Services\AdmissionsWorkflow;
+use App\Support\ListCriteria;
+use App\Models\University;
+use App\Models\AcademicProgram;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\Rule;
@@ -24,10 +27,35 @@ class AdmissionApplicationController extends Controller
     public function index(Request $request)
     {
         abort_unless(Schema::hasTable('admission_applications'), 503, 'Admissions migration is not installed on this environment.');
-        $applications = $this->visibleApplications()->with(['student:id,first_name,last_name,email', 'university:id,name', 'program:id,title'])->when($request->filled('status'), fn ($q) => $q->where('status', $request->input('status')))->latest()->paginate(25)->withQueryString();
+        $request->validate([
+            'status' => ['nullable', Rule::in(AdmissionApplication::STATUSES)],
+            'visa_status' => ['nullable', Rule::in(AdmissionApplication::VISA_STATUSES)],
+            'branch' => ['nullable', Rule::in(array_keys(ListCriteria::branchOptions()))],
+            'university_id' => ['nullable', 'integer'], 'academic_program_id' => ['nullable', 'integer'],
+            'counselor_id' => ['nullable', 'integer'],
+            'period' => ['nullable', Rule::in(array_keys(ListCriteria::periods()))],
+        ]);
+        $query = $this->visibleApplications()->with(['student:id,first_name,last_name,email,branch', 'university:id,name', 'program:id,title']);
+        foreach (['status', 'visa_status', 'university_id', 'academic_program_id', 'counselor_id'] as $field) {
+            if ($request->filled($field)) $query->where($field, $request->input($field));
+        }
+        if ($request->filled('branch')) {
+            $query->whereHas('student', fn ($q) => ListCriteria::applyBranch($q, 'users.branch', $request->input('branch')));
+        }
+        ListCriteria::applyPeriod($query, 'created_at', $request->input('period'));
+        $applications = $query->latest()->paginate(25)->withQueryString();
+        $criteriaFields = [
+            ['name' => 'branch', 'label' => __('Branch'), 'options' => ListCriteria::branchOptions()],
+            ['name' => 'status', 'label' => __('Stage'), 'options' => collect(AdmissionApplication::STATUSES)->mapWithKeys(fn ($v) => [$v => __(str_replace('_', ' ', ucfirst($v)))])->all()],
+            ['name' => 'visa_status', 'label' => __('Visa status'), 'options' => collect(AdmissionApplication::VISA_STATUSES)->mapWithKeys(fn ($v) => [$v => __(str_replace('_', ' ', ucfirst($v)))])->all()],
+            ['name' => 'university_id', 'label' => __('University'), 'options' => University::whereIn('id', $this->visibleApplications()->select('university_id'))->orderBy('name')->pluck('name', 'id')->all()],
+            ['name' => 'academic_program_id', 'label' => __('Program'), 'options' => AcademicProgram::whereIn('id', $this->visibleApplications()->select('academic_program_id'))->orderBy('title')->pluck('title', 'id')->all()],
+            ['name' => 'counselor_id', 'label' => __('Counselor'), 'options' => User::whereIn('id', $this->visibleApplications()->select('counselor_id'))->orderBy('first_name')->get()->mapWithKeys(fn ($user) => [$user->id => $user->name])->all()],
+            ['name' => 'period', 'label' => __('Created'), 'options' => ListCriteria::periods()],
+        ];
         $routePrefix = (int) auth()->user()->role === USER_ROLE_CONSULTANT ? 'consultant.admissions' : 'admin.admissions';
         $documentRoutePrefix = (int) auth()->user()->role === USER_ROLE_CONSULTANT ? 'consultant.student_documents' : 'admin.student_documents';
-        return view('admin.crm.admissions.index', compact('applications', 'routePrefix'));
+        return view('admin.crm.admissions.index', compact('applications', 'routePrefix', 'criteriaFields'));
     }
 
     public function show(Request $request, AdmissionApplication $application)
@@ -35,6 +63,7 @@ class AdmissionApplicationController extends Controller
         abort_unless($this->visibleApplications()->whereKey($application->id)->exists(), 404);
         $application->load(['student', 'university', 'program', 'intake', 'history.actor', 'documents.document', 'notes.author', 'tasks']);
         $routePrefix = (int) auth()->user()->role === USER_ROLE_CONSULTANT ? 'consultant.admissions' : 'admin.admissions';
+        $documentRoutePrefix = (int) auth()->user()->role === USER_ROLE_CONSULTANT ? 'consultant.student_documents' : 'admin.student_documents';
         $consultants = User::where('role', USER_ROLE_CONSULTANT)->where('status', STATUS_ACTIVE)->orderBy('first_name')->get(['id','first_name','last_name']);
         return view('admin.crm.admissions.show', compact('application', 'routePrefix', 'documentRoutePrefix', 'consultants'));
     }

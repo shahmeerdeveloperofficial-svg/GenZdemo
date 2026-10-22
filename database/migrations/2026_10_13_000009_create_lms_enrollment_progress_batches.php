@@ -44,11 +44,6 @@ return new class extends Migration {
     {
         Schema::dropIfExists('lms_lesson_progress'); Schema::dropIfExists('course_batch_memberships'); Schema::dropIfExists('course_batches');
         Schema::table('course_enrollments', function (Blueprint $table) {
-            $indexes = collect(Schema::getIndexes('course_enrollments'))->pluck('name')->all();
-            foreach (['access_expires_at', 'enrollment_source', 'payment_id'] as $column) {
-                $index = 'course_enrollments_' . $column . '_index';
-                if (in_array($index, $indexes, true)) $table->dropIndex($index);
-            }
             foreach (['access_expires_at','expired_at','revoked_at','revocation_reason','enrollment_source','payment_id'] as $column) if (Schema::hasColumn('course_enrollments',$column)) $table->dropColumn($column);
         });
     }

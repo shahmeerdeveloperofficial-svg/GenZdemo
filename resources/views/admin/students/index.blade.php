@@ -75,6 +75,7 @@
                       data-handler="commonResponseForModal">
                     @csrf
                     <div class="row rg-20 mb-20">
+                        <div class="col-md-6"><label for="new-student-branch" class="zForm-label-alt">{{ __('Branch') }}</label><select id="new-student-branch" name="branch" class="form-select"><option value="">{{ __('Not assigned') }}</option>@foreach(config('genz.registration.branches', []) as $branch)<option value="{{ $branch }}">{{ $branch }}</option>@endforeach</select></div>
                         <div class="col-md-6">
                             <label for="first_name" class="zForm-label-alt">{{ __('First Name') }}
                                 <span class="text-danger">*</span>

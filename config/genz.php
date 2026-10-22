@@ -5,7 +5,6 @@ return [
     'tagline' => 'Global Education and Career Development',
     'public_prices' => false,
     'demo_seed_enabled' => env('GENZ_DEMO_SEEDING', false),
-    'demo_database' => env('GENZ_DEMO_DATABASE', 'genz_crm_lms_demo'),
     'contact' => [
         'is_demo' => true,
         'phone' => '+92 300 000 0000',
