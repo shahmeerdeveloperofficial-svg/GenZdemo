@@ -9,6 +9,9 @@ if (!function_exists('__')) {
                 file_put_contents(resource_path() . "/lang/" . session()->get('local') . ".json", '{}');
             }
             $website = json_decode(file_get_contents(resource_path("/lang/" . session()->get('local') . ".json")), true);
+            if (!is_array($website)) {
+                $website = [];
+            }
 
             $key = preg_replace('/\s+/S', " ", $key);
 

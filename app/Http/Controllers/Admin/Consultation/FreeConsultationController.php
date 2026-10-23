@@ -31,15 +31,23 @@ class FreeConsultationController extends Controller
 
         if ($request->ajax()) {
             if(auth()->user()->role == USER_ROLE_STAFF ){
-                $freeConsultations = FreeConsultation::with('study_level')->where('assign_by', auth()->user()->id)->orderByDesc('id');
+                $freeConsultations = FreeConsultation::with('study_level')->where('assign_by', auth()->user()->id);
             }else{
-                $freeConsultations = FreeConsultation::with('study_level')->orderByDesc('id');
+                $freeConsultations = FreeConsultation::with('study_level');
+            }
+
+            // Keep newest-first as the initial view, but let DataTables sorting take over.
+            if (empty($request->input('order'))) {
+                $freeConsultations->orderByDesc('id');
             }
 
             return datatables($freeConsultations)
                 ->addIndexColumn()
                 ->editColumn('name', function($data){
                         return $data->first_name.' '.$data->last_name;
+                })
+                ->orderColumn('name', function ($query, $direction) {
+                    $query->orderBy('first_name', $direction)->orderBy('last_name', $direction);
                 })
                 ->editColumn('study_level', function($data){
                         return $data->study_level?->name;

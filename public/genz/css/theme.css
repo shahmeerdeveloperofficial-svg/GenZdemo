@@ -91,7 +91,7 @@
 .genz-course-card .genz-text-link, .genz-article-card .genz-text-link { margin-top: auto; }
 .genz-article-card__date { color: var(--genz-muted); font-size: 12px; }
 .genz-contact-demo-note { padding: 10px 14px; border: 1px solid #f6d78d; border-radius: 10px; background: #fff8e6; color: #6f4e00; font-size: 13px; }
-.genz-contact-card { height: 100%; padding: 20px; border: 1px solid var(--genz-border); border-radius: var(--genz-radius); background: #fff; }
+.genz-contact-card { height: auto; padding: 20px; border: 1px solid var(--genz-border); border-radius: var(--genz-radius); background: #fff; }
 .genz-contact-card strong { display: block; margin-bottom: 5px; color: var(--genz-primary); }
 .genz-contact-card a { color: var(--genz-text); overflow-wrap: anywhere; }
 

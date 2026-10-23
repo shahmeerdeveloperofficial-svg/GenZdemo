@@ -137,6 +137,16 @@ body.genz-theme { font-family: "Nunito Sans", Nunito, system-ui, sans-serif; }
 .zMainContent .table-responsive > .table { margin-bottom: 0; }
 .zMainContent .table-responsive > .table thead th { white-space: nowrap; }
 .zMainContent .table-responsive > .table tbody td { color: var(--genz-text); }
+/* Keep the CRM lead detail workspace in two clear columns on desktop. */
+.zMainContent .p-sm-30.p-15 > .row.g-4 { display: grid !important; grid-template-columns: minmax(0, 1.4fr) minmax(320px, 1fr); gap: 24px; margin: 0; }
+.zMainContent .p-sm-30.p-15 > .row.g-4 > .col-lg-7,
+.zMainContent .p-sm-30.p-15 > .row.g-4 > .col-lg-5 { width: auto !important; max-width: none; padding: 0; }
+.zMainContent .p-sm-30.p-15 > .row.g-4 > .col-lg-7 > form:first-of-type .row.g-3 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; }
+.zMainContent .p-sm-30.p-15 > .row.g-4 > .col-lg-7 > form:first-of-type .row.g-3 > * { width: auto; max-width: none; padding: 0; }
+.zMainContent .p-sm-30.p-15 > .row.g-4 > .col-lg-7 > form:first-of-type .row.g-3 > .col-12 { grid-column: 1 / -1; }
+@media (max-width: 991.98px) {
+    .zMainContent .p-sm-30.p-15 > .row.g-4 { grid-template-columns: minmax(0, 1fr); }
+}
 .zMainContent .dataTables_wrapper .dataTables_paginate .paginate_button.current,
 .zMainContent .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover { border-color: var(--genz-primary) !important; background: var(--genz-primary) !important; color: #fff !important; }
 .zMainContent .dataTables_wrapper .dataTables_paginate .paginate_button { border-radius: 7px; color: var(--genz-primary) !important; }

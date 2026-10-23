@@ -58,7 +58,7 @@
         <link rel="stylesheet" href="{{asset('assets/css/summernote/summernote-lite.min.css')}}"/>
     @endif
     <link rel="stylesheet" href="{{asset('assets/scss/style.css')}}?v={{env('VERSION', 1)}}"/>
-    <link rel="stylesheet" href="{{ asset('genz/css/theme.css') }}?v=5"/>
+    <link rel="stylesheet" href="{{ asset('genz/css/theme.css') }}?v={{ filemtime(public_path('genz/css/theme.css')) }}"/>
     @include('layouts.dynamic-color')
     @if (request()->is('admin', 'admin/*', 'consultant', 'consultant/*', 'student', 'student/*', 'affiliate', 'affiliate/*', 'instructor', 'instructor/*', 'finance', 'finance/*', 'content', 'content/*', 'login', 'register', 'password/*'))
         <link rel="stylesheet" href="{{ asset('genz/css/backend.css') }}?v={{ filemtime(public_path('genz/css/backend.css')) }}"/>
