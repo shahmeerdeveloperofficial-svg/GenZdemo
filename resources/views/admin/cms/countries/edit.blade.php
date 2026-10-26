@@ -12,7 +12,7 @@
                     <a href="{{route('admin.cms-settings.countries.index')}}"
                        class="flipBtn sf-flipBtn-secondary flex-shrink-0">{{__('Back')}}</a>
                 </div>
-                <form class="ajax reset" action="{{ route('admin.cms-settings.countries.store') }}" method="post"
+                <form class="ajax reset" action="{{ route('admin.cms-settings.countries.store') }}" method="post" enctype="multipart/form-data"
                       data-handler="commonResponseRedirect"
                       data-redirect-url="{{route('admin.cms-settings.countries.index')}}">
                     @csrf

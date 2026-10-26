@@ -7,6 +7,7 @@
     @php($publicEmail = $contact['is_demo'] ? $contact['email'] : (getOption('app_email') ?: $contact['email']))
     @php($publicPhone = $contact['is_demo'] ? $contact['phone'] : (getOption('app_contact_number') ?: $contact['phone']))
     @php($publicAddress = $contact['is_demo'] ? $contact['address'] : (getOption('app_location') ?: $contact['address']))
+    @php($messageLabel = __('Message'))
     <!-- Breadcrumb -->
     <section class="inner-breadcrumb-section">
         <div class="container">
@@ -65,7 +66,7 @@
                             <input type="email" class="zForm-control genz-field" name="email" autocomplete="email" maxlength="255" required placeholder="{{__('Enter Email Address')}}" id="contactUsEmailAddress">
                         </div>
                         <div class="col-12">
-                            <label class="zForm-label" for="contactUsMessage">{{__('Message')}} <span class="text-danger">*</span></label>
+                            <label class="zForm-label" for="contactUsMessage">{{ is_string($messageLabel) ? $messageLabel : 'Message' }} <span class="text-danger">*</span></label>
                             <textarea class="zForm-control genz-field contactUsMessage bd-ra-10" id="contactUsMessage" name="message" required maxlength="5000" placeholder="{{__('Leave your message')}}"></textarea>
                         </div>
                         <div class="col-12">

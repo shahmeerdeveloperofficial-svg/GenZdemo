@@ -36,10 +36,11 @@ class FileManager extends Model
             }
             $file_name = str_replace(' ', '_', $file_name);
 
-            Storage::disk(config('app.STORAGE_DRIVER'))
+            $disk = config('filesystems.default', 'public');
+            Storage::disk($disk)
                 ->put('uploads/' . $to . '/' . $file_name, file_get_contents($file->getRealPath()));
 
-            if(config('app.STORAGE_DRIVER') == 'public'){
+            if($disk == 'public'){
                 if(!function_exists('symlink')){
                     copyFolder(storage_path('app/public'), public_path()."/storage/");
                 }
@@ -49,7 +50,7 @@ class FileManager extends Model
             $fileManager = (is_null($id)) ? new self() : self::find($id);
             $fileManager = is_null($fileManager) ?  new self() : $fileManager;
             $fileManager->file_type = $file->getMimeType();
-            $fileManager->storage_type = config('filesystems.default');
+            $fileManager->storage_type = $disk;
             $fileManager->original_name = $originalName;
             $fileManager->file_name = $file_name;
             $fileManager->user_id = auth()->id();
@@ -67,8 +68,12 @@ class FileManager extends Model
 
     public function removeFile()
     {
-        if (Storage::disk(config('app.STORAGE_DRIVER'))->exists($this->path)) {
-            Storage::disk(config('app.STORAGE_DRIVER'))->delete($this->path);
+        $disk = $this->storage_type ?: config('filesystems.default', 'public');
+        if ($disk === 'local' && Storage::disk('public')->exists($this->path)) {
+            return Storage::disk('public')->delete($this->path) ? 100 : 200;
+        }
+        if (Storage::disk($disk)->exists($this->path)) {
+            Storage::disk($disk)->delete($this->path);
             return 100;
         }
         return 200;

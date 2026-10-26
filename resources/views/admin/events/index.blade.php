@@ -57,7 +57,7 @@
                         </button>
                     </div>
                 </div>
-                <form class="ajax reset" action="{{ route('admin.events.store') }}" method="post"
+                <form class="ajax reset" action="{{ route('admin.events.store') }}" method="post" enctype="multipart/form-data"
                       data-handler="settingCommonHandler">
                     @csrf
                     <div class="row rg-20 mb-20">

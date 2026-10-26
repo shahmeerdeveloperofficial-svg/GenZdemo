@@ -8,7 +8,7 @@
         </button>
     </div>
 </div>
-<form class="ajax reset" action="{{ route('admin.subjects.store',$subjectData->id) }}" method="post"
+<form class="ajax reset" action="{{ route('admin.subjects.store',$subjectData->id) }}" method="post" enctype="multipart/form-data"
       data-handler="settingCommonHandler">
     @csrf
     <input type="hidden" value="{{ $subjectData->id }}" name="id">

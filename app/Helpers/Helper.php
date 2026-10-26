@@ -515,6 +515,10 @@ if (!function_exists('getFileUrl')) {
         $file = FileManager::select('path', 'storage_type')->find($id);
 
         if (!is_null($file)) {
+            // Older uploads were saved to the public disk but incorrectly tagged "local".
+            if ($file->storage_type === 'local' && Storage::disk('public')->exists($file->path)) {
+                return asset('storage/' . $file->path);
+            }
             if (Storage::disk($file->storage_type)->exists($file->path)) {
 
                 if ($file->storage_type == 'public') {

@@ -49,7 +49,7 @@
                         </button>
                     </div>
                 </div>
-                <form class="ajax reset" action="{{ route('admin.cms-settings.testimonials.store') }}" method="post"
+                <form class="ajax reset" action="{{ route('admin.cms-settings.testimonials.store') }}" method="post" enctype="multipart/form-data"
                       data-handler="commonResponseForModal">
                     @csrf
                     <div class="row rg-20">

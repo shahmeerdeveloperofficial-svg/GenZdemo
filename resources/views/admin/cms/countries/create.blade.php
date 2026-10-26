@@ -11,7 +11,7 @@
                     <h4 class="fs-18 fw-700 lh-24 text-title-text">{{$pageTitle}}</h4>
                     <a href="{{route('admin.cms-settings.countries.index')}}" class="flipBtn sf-flipBtn-secondary flex-shrink-0">{{__('Back')}}</a>
                 </div>
-                <form class="ajax reset" action="{{ route('admin.cms-settings.countries.store') }}" method="post"
+                <form class="ajax reset" action="{{ route('admin.cms-settings.countries.store') }}" method="post" enctype="multipart/form-data"
                       data-handler="commonResponseRedirect" data-redirect-url="{{route('admin.cms-settings.countries.index')}}">
                     @csrf
                     <div class="p-sm-25 mb-20 p-15 bd-one bd-c-stroke bd-ra-10 bg-white">

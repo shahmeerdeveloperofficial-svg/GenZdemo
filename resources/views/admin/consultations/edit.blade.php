@@ -8,7 +8,7 @@
         </button>
     </div>
 </div>
-<form class="ajax reset" action="{{ route('admin.consultations.store') }}" method="post"
+<form class="ajax reset" action="{{ route('admin.consultations.store') }}" method="post" enctype="multipart/form-data"
       data-handler="commonResponseForModal">
     @csrf
     <input type="hidden" name="id" value="{{$consulter->id}}">

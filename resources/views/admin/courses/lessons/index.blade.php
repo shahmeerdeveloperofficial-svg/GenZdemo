@@ -506,7 +506,7 @@
                 </div>
                 <form class="ajax reset"
                       action="{{ route('admin.courses.resources.store', ['course_id' => $course->id, 'lesson_id' => 'LESSON_ID', 'lecture_id' => 'LECTURE_ID']) }}"
-                      method="post"
+                      method="post" enctype="multipart/form-data"
                       data-handler="commonResponseRedirect"
                       data-redirect-url="{{route('admin.courses.lessons.index', encodeId($course->id))}}">
                     @csrf

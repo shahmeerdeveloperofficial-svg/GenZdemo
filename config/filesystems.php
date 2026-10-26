@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('STORAGE_DRIVER', 'local'),
+    'default' => env('STORAGE_DRIVER', env('APP_STORAGE_DRIVER', 'public')),
 
     /*
     |--------------------------------------------------------------------------

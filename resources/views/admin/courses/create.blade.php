@@ -10,7 +10,7 @@
     </div>
     <div class="p-sm-30 p-15">
         <div class="row rg-20">
-            <form class="ajax reset" action="{{ route('admin.courses.store') }}" method="post"
+            <form class="ajax reset" action="{{ route('admin.courses.store') }}" method="post" enctype="multipart/form-data"
                   data-handler="commonResponseRedirect"
                   data-redirect-url="{{route('admin.courses.index')}}">
                 @csrf

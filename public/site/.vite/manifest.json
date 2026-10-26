@@ -19,7 +19,7 @@
     "name": "vendor-three"
   },
   "index.html": {
-    "file": "assets/index-HPIKf5P6.js",
+    "file": "assets/index-BPMzIiyG.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -40,7 +40,7 @@
     "src": "src/assets/models/airplane.glb"
   },
   "src/components/ThreeCanvas.tsx": {
-    "file": "assets/ThreeCanvas-CPCZOmZY.js",
+    "file": "assets/ThreeCanvas-Bhp1MEJO.js",
     "name": "ThreeCanvas",
     "src": "src/components/ThreeCanvas.tsx",
     "isDynamicEntry": true,

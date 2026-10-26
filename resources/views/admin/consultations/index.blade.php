@@ -56,7 +56,7 @@
                         </button>
                     </div>
                 </div>
-                <form class="ajax reset" action="{{ route('admin.consultations.store') }}" method="post"
+                <form class="ajax reset" action="{{ route('admin.consultations.store') }}" method="post" enctype="multipart/form-data"
                       data-handler="commonResponseForModal">
                     @csrf
                     <div class="row rg-20 mb-20">

@@ -8,7 +8,7 @@
         </button>
     </div>
 </div>
-<form class="ajax reset" action="{{ route('admin.cms-settings.blogs.store', $blogData->id) }}" method="post"
+<form class="ajax reset" action="{{ route('admin.cms-settings.blogs.store', $blogData->id) }}" method="post" enctype="multipart/form-data"
       data-handler="settingCommonHandler">
     @csrf
     <input type="hidden" value="{{$blogData->id}}" name="id">

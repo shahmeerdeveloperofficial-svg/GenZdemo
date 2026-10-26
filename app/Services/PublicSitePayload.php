@@ -105,6 +105,8 @@ class PublicSitePayload
         foreach (['public', 'aws', 'Wasabi', 'vultr', 'do', 's3', 'wasabi'] as $disk) {
             if (config("filesystems.disks.$disk")) $this->mediaDisks[strtolower($disk)] = $disk;
         }
+        // Legacy website uploads were stored in public storage but tagged as "local".
+        $this->mediaDisks['local'] = 'public';
         $this->media = FileManager::whereIn('id', $fileIds)->get()
             ->filter(fn ($file) => isset($this->mediaDisks[strtolower((string) $file->storage_type)]))
             ->keyBy('id')->all();
