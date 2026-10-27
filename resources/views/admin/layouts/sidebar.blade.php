@@ -12,12 +12,12 @@
             </div>
 
             @php
-                $consultationsOpen = request()->routeIs('admin.consultations.*', 'admin.free_consultations.*')
-                    || (request()->routeIs('admin.orders.index') && request()->query('orderType') === 'consultation');
+                $consultationsOpen = request()->routeIs('admin.consultations.*')
+                    || (request()->routeIs('admin.orders.index') && request()->route('orderType') === 'consultation');
                 $eventsOpen = request()->routeIs('admin.events.*')
-                    || (request()->routeIs('admin.orders.index') && request()->query('orderType') === 'event');
+                    || (request()->routeIs('admin.orders.index') && request()->route('orderType') === 'event');
                 $coursesOpen = request()->routeIs('admin.courses.*')
-                    || (request()->routeIs('admin.orders.index') && request()->query('orderType') === 'course');
+                    || (request()->routeIs('admin.orders.index') && request()->route('orderType') === 'course');
                 $catalogOpen = request()->routeIs(
                     'admin.study_levels.*',
                     'admin.cms-settings.countries.*',
@@ -88,7 +88,7 @@
                                     <li><a class="{{ request()->routeIs('admin.consultations.meeting_platforms.*') ? 'active' : '' }}" href="{{ route('admin.consultations.meeting_platforms.index') }}">{{ __('Meeting platforms') }}</a></li>
                                     <li><a class="{{ request()->routeIs('admin.consultations.index') ? 'active' : '' }}" href="{{ route('admin.consultations.index') }}">{{ __('Consultants') }}</a></li>
                                     <li><a class="{{ request()->routeIs('admin.consultations.appointments.*') ? 'active' : '' }}" href="{{ route('admin.consultations.appointments.index') }}">{{ __('Appointments') }}</a></li>
-                                    <li><a class="{{ request()->routeIs('admin.orders.index') && request()->query('orderType') === 'consultation' ? 'active' : '' }}" href="{{ route('admin.orders.index', ['orderType' => 'consultation']) }}">{{ __('Consultation orders') }}</a></li>
+                                    <li><a class="{{ request()->routeIs('admin.orders.index') && request()->route('orderType') === 'consultation' ? 'active' : '' }}" href="{{ route('admin.orders.index', ['orderType' => 'consultation']) }}">{{ __('Consultation orders') }}</a></li>
                                     <li><a class="{{ request()->routeIs('admin.consultations.review.*') ? 'active' : '' }}" href="{{ route('admin.consultations.review.list') }}">{{ __('Reviews') }}</a></li>
                                 </ul>
                             </div>
@@ -165,7 +165,7 @@
                             <ul class="zSidebar-submenu">
                                 <li><a class="{{ request()->routeIs('admin.courses.programs.*') ? 'active' : '' }}" href="{{ route('admin.courses.programs.index') }}">{{ __('Course Tracks') }}</a></li>
                                 <li><a class="{{ request()->routeIs('admin.courses.index', 'admin.courses.create', 'admin.courses.edit') ? 'active' : '' }}" href="{{ route('admin.courses.index') }}">{{ __('Courses') }}</a></li>
-                                <li><a class="{{ request()->routeIs('admin.orders.index') && request()->query('orderType') === 'course' ? 'active' : '' }}" href="{{ route('admin.orders.index', ['orderType' => 'course']) }}">{{ __('Course Orders') }}</a></li>
+                                <li><a class="{{ request()->routeIs('admin.orders.index') && request()->route('orderType') === 'course' ? 'active' : '' }}" href="{{ route('admin.orders.index', ['orderType' => 'course']) }}">{{ __('Course Orders') }}</a></li>
                             </ul>
                         </div>
                     </li>
@@ -204,7 +204,7 @@
                             <div id="adminNavEvents" class="collapse {{ $eventsOpen ? 'show' : '' }}" data-bs-parent="#sidebarMenu">
                                 <ul class="zSidebar-submenu">
                                     <li><a class="{{ request()->routeIs('admin.events.index', 'admin.events.create', 'admin.events.edit') ? 'active' : '' }}" href="{{ route('admin.events.index') }}">{{ __('Manage Events') }}</a></li>
-                                    <li><a class="{{ request()->routeIs('admin.orders.index') && request()->query('orderType') === 'event' ? 'active' : '' }}" href="{{ route('admin.orders.index', ['orderType' => 'event']) }}">{{ __('Event Orders') }}</a></li>
+                                    <li><a class="{{ request()->routeIs('admin.orders.index') && request()->route('orderType') === 'event' ? 'active' : '' }}" href="{{ route('admin.orders.index', ['orderType' => 'event']) }}">{{ __('Event Orders') }}</a></li>
                                 </ul>
                             </div>
                         </li>

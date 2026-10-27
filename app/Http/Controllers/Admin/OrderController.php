@@ -26,10 +26,18 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         // Retrieve the orderType from the request
-        $orderType = $request->query('orderType');
+        $orderType = $request->route('orderType') ?? $request->query('orderType');
         $permission = $this->permissionForOrderType($orderType);
         abort_if($permission === null, 404, 'Order type not found');
         abort_unless($request->user()->can($permission), 403);
+
+        // Keep old bookmarked ?orderType=... links working, but send them to
+        // the shorter canonical path, such as /admin/orders/course.
+        if (!$request->ajax() && !$request->route('orderType') && $request->filled('orderType')) {
+            $query = $request->query();
+            unset($query['orderType']);
+            return redirect()->route('admin.orders.index', ['orderType' => $orderType] + $query);
+        }
 
         // Check if request is AJAX
         if ($request->ajax()) {

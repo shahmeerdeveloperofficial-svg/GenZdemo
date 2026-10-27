@@ -31,6 +31,30 @@ class StudentController extends Controller
                 ->editColumn('name', function ($data) {
                     return $data->first_name . ' ' . $data->last_name;
                 })
+                ->filterColumn('name', function ($query, $keyword) {
+                    $terms = preg_split('/\s+/', trim($keyword), -1, PREG_SPLIT_NO_EMPTY);
+
+                    $query->where(function ($nameQuery) use ($keyword, $terms) {
+                        $nameQuery->where('users.first_name', 'like', '%' . $keyword . '%')
+                            ->orWhere('users.last_name', 'like', '%' . $keyword . '%');
+
+                        if (count($terms) > 1) {
+                            $nameQuery->orWhere(function ($fullNameQuery) use ($terms) {
+                                foreach ($terms as $index => $term) {
+                                    $fullNameQuery->where(
+                                        $index === 0 ? 'users.first_name' : 'users.last_name',
+                                        'like',
+                                        '%' . $term . '%'
+                                    );
+                                }
+                            });
+                        }
+                    });
+                })
+                ->orderColumn('name', function ($query, $order) {
+                    $query->orderBy('users.first_name', $order)
+                        ->orderBy('users.last_name', $order);
+                })
                 ->editColumn('status', function ($data) {
                     if ((int) $data->status === (int) STATUS_SUSPENDED) {
                         return "<span class='zBadge zBadge-suspended'>" . e(__('Suspended')) . "</span>";

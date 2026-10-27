@@ -24,6 +24,14 @@ class CourseLessonController extends Controller
     public function index($course_id)
     {
         $data['course'] = $this->course(decodeId($course_id))->load(['lessons.lectures.resources', 'enrolls.user']);
+        $data['courseBenefits'] = collect($data['course']->course_benefits ?? [])
+            ->map(fn ($benefit) => is_string($benefit)
+                ? ['name' => __('Benefit'), 'value' => $benefit]
+                : $benefit)
+            ->filter(fn ($benefit) => is_array($benefit)
+                && isset($benefit['name'])
+                && array_key_exists('value', $benefit))
+            ->values();
         $data['batches'] = Schema::hasTable('course_batches') ? $data['course']->batches()->get() : collect();
         $data['liveSessions'] = Schema::hasTable('course_live_sessions') ? \App\Models\CourseLiveSession::where('course_id',$data['course']->id)->with(['batch','attendance.enrollment.user'])->orderByDesc('starts_at')->limit(50)->get() : collect();
         $data['pageTitle'] = __('Course Curriculum');

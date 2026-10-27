@@ -439,7 +439,9 @@ Route::group(['prefix' => 'subject', 'as' => 'subjects.'], function () {
     Route::post('delete/{id}', [SubjectController::class, 'delete'])->name('delete')->middleware('can:Manage Cms Settings');
 });
 
-Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('orders/{orderType?}', [OrderController::class, 'index'])
+    ->whereIn('orderType', ['event', 'course', 'consultation', 'service-invoice'])
+    ->name('orders.index');
 Route::get('order-status-modal/{id}', [OrderController::class, 'statusModal'])->name('orders.status_change_modal');
 Route::post('order-status-change/{id}', [OrderController::class, 'statusChange'])->name('orders.status_change');
 Route::get('transactions', [TransactionController::class, 'index'])->name('transactions')->middleware('can:Manage Transaction');

@@ -115,6 +115,43 @@ class StudentManagementTest extends TestCase
         $this->assertStringNotContainsString('Change Status', $row['action']);
     }
 
+    public function test_student_list_searches_full_name_and_sorts_name_without_a_name_database_column(): void
+    {
+        $amina = User::create([
+            'first_name' => 'Amina',
+            'last_name' => 'Khan',
+            'email' => 'student-amina-' . Str::uuid() . '@example.test',
+            'mobile' => '+923009876543',
+            'password' => Hash::make('DemoPass!2026'),
+            'role' => USER_ROLE_STUDENT,
+            'status' => STATUS_ACTIVE,
+            'google_auth_status' => 0,
+        ]);
+
+        $columns = [
+            ['data' => 'image', 'name' => 'image', 'searchable' => 'false', 'orderable' => 'true'],
+            ['data' => 'name', 'name' => 'name', 'searchable' => 'true', 'orderable' => 'true'],
+            ['data' => 'email', 'name' => 'email', 'searchable' => 'true', 'orderable' => 'true'],
+            ['data' => 'mobile', 'name' => 'mobile', 'searchable' => 'true', 'orderable' => 'true'],
+            ['data' => 'status', 'name' => 'status', 'searchable' => 'false', 'orderable' => 'true'],
+            ['data' => 'action', 'name' => 'action', 'searchable' => 'false', 'orderable' => 'false'],
+        ];
+
+        $admin = $this->admin();
+        $this->actingAs($admin)
+            ->getJson(route('admin.students.index', [
+                'draw' => 1,
+                'start' => 0,
+                'length' => 10,
+                'search' => ['value' => 'Amina Khan', 'regex' => 'false'],
+                'columns' => $columns,
+                'order' => [['column' => 1, 'dir' => 'asc']],
+            ]), ['X-Requested-With' => 'XMLHttpRequest'])
+            ->assertOk()
+            ->assertJsonPath('recordsFiltered', 1)
+            ->assertJsonPath('data.0.email', $amina->email);
+    }
+
     private function admin(): User
     {
         return User::factory()->make([

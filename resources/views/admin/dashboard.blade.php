@@ -100,8 +100,8 @@
                 ['key' => 'totalUniversity', 'label' => __('Published universities'), 'permission' => 'Manage Cms Settings', 'route' => 'admin.cms-settings.universities.index'],
                 ['key' => 'totalEvent', 'label' => __('Active events'), 'permission' => 'Manage Events', 'route' => 'admin.events.index'],
                 ['key' => 'totalService', 'label' => __('Active services'), 'permission' => 'Manage Service', 'route' => 'admin.services.index'],
-                ['key' => 'totalStaff', 'label' => __('Active staff'), 'permission' => 'Manage Staffs', 'route' => null],
-                ['key' => 'totalAffiliate', 'label' => __('Active affiliates'), 'permission' => 'Manage Affiliates', 'route' => null],
+                ['key' => 'totalStaff', 'label' => __('Active staff'), 'permission' => 'Manage Staffs', 'route' => 'admin.staffs.index'],
+                ['key' => 'totalAffiliate', 'label' => __('Active affiliates'), 'permission' => 'Manage Affiliates', 'route' => 'admin.affiliates.index'],
                 ['key' => 'pendingInvoices', 'label' => __('Unpaid service invoices'), 'permission' => 'Manage Service', 'route' => 'admin.service_orders'],
             ];
         @endphp

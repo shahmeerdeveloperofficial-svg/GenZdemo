@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StaffRequest extends FormRequest
 {
@@ -28,7 +29,13 @@ class StaffRequest extends FormRequest
             'last_name' => ['required', 'max:120'],
             'email' => ['required', 'email', 'unique:users,email,' . $this->id],
             'mobile' => ['required', 'min:6'],
-            'roles' => ['required'],
+            'roles' => ['required', 'array', 'min:1'],
+            'roles.*' => [
+                'string',
+                Rule::exists('roles', 'name')
+                    ->where('guard_name', 'web')
+                    ->where('status', STATUS_ACTIVE),
+            ],
         ];
 
         // Check if this is an update request by checking if $this->id is present

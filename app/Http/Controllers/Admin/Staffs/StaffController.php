@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use Str;
 
 class StaffController extends Controller
@@ -58,7 +59,8 @@ class StaffController extends Controller
         $data['pageTitle'] = __('Staff');
         $data['showManageStaff'] = 'show';
         $data['activeStaff'] = 'active';
-        $data['roles'] = Role::where('status', STATUS_ACTIVE)->get();
+        $data['roles'] = Role::where('guard_name', 'web')->where('status', STATUS_ACTIVE)->orderBy('name')->get();
+        $data['permissions'] = Permission::where('guard_name', 'web')->orderBy('name')->get();
         return view('admin.staffs.index', $data);
     }
 

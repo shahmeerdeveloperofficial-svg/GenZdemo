@@ -80,7 +80,7 @@
         },
         dom: '<>tr<"tableBottom"<"row align-items-center"<"col-sm-6"<"tableInfo"i>><"col-sm-6"<"tablePagi"p>>>><"clear">',
         columns: [
-            {"data": "image", "name": "image", responsivePriority: 1},
+            {"data": "image", "name": "image", searchable: false, responsivePriority: 1},
             {"data": "name", "name": "name", responsivePriority: 2},
             {"data": "email", "name": "email"},
             {"data": "mobile", "name": "mobile"},

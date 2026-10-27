@@ -117,6 +117,7 @@ class CourseController extends Controller
         $query = Course::where('id', decodeId($id));
         if ((int) auth()->user()->role === USER_ROLE_INSTRUCTOR) $query->where('created_by', auth()->id());
         $data['course'] = $query->firstOrFail();
+        $this->normalizeCourseFormData($data['course']);
         $data['pageTitle'] = __('Update');
         $data['pageTitleParent'] = __('Courses');
         $data['showManageCourse'] = 'show';
@@ -124,6 +125,37 @@ class CourseController extends Controller
         $data['programs'] = Program::where('status', STATUS_ACTIVE)->get();
         $data['prerequisiteCourses'] = Course::where('status', STATUS_ACTIVE)->where('id','!=',$data['course']->id)->when((int) auth()->user()->role === USER_ROLE_INSTRUCTOR, fn ($q) => $q->where('created_by', auth()->id()))->get(['id','title']);
         return view('admin.courses.edit', $data);
+    }
+
+    /**
+     * Older imports sometimes stored JSON fields as JSON-encoded strings (for
+     * example, the JSON value "[]" instead of an array). Normalize only the
+     * in-memory model so the edit form can render without changing the DB.
+     */
+    private function normalizeCourseFormData(Course $course): void
+    {
+        foreach (['description_point', 'course_benefits', 'instructors', 'faqs', 'prerequisites'] as $field) {
+            $value = $course->getAttribute($field);
+
+            // Decode a second JSON layer if a legacy import double-encoded it.
+            for ($attempt = 0; is_string($value) && $attempt < 3; $attempt++) {
+                $decoded = json_decode($value, true);
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    $value = [];
+                    break;
+                }
+                $value = $decoded;
+            }
+
+            $value = is_array($value) ? $value : [];
+
+            // Keep one blank editable row for the repeatable form sections.
+            if ($value === [] && $field !== 'prerequisites') {
+                $value = [[]];
+            }
+
+            $course->setAttribute($field, $value);
+        }
     }
 
     public function store(CourseRequest $request)

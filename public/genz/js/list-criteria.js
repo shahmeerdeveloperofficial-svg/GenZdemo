@@ -1,5 +1,20 @@
 (function ($) {
     'use strict';
+
+    // GET filters do not need to serialize every unused field (e.g. branch=,
+    // status=). Drop blank controls before the browser builds the query URL.
+    document.addEventListener('submit', function (event) {
+        var form = event.target;
+        if (!(form instanceof HTMLFormElement) || form.method.toUpperCase() !== 'GET') return;
+
+        Array.prototype.forEach.call(form.elements, function (field) {
+            if (!field.name || field.disabled || /^(button|submit|reset|image|file)$/i.test(field.type)) return;
+            if (typeof field.value === 'string' && field.value.trim() === '') {
+                field.removeAttribute('name');
+            }
+        });
+    }, true);
+
     if (!$ || !$.fn.dataTable) return;
 
     $(document).on('preXhr.dt', function (event, settings, data) {

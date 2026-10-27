@@ -128,7 +128,7 @@
                                 </div>
                                 <p class="fs-15 fw-500 lh-28 text-para-text">{{showPrice($course->price)}}</p>
                             </li>
-                            @foreach($course->course_benefits as $benefit)
+                            @foreach($courseBenefits as $benefit)
                                 <li class="d-flex justify-content-between align-items-center g-10">
                                     <div class="d-flex align-items-center g-10">
                                         <div class="d-flex">

@@ -82,7 +82,7 @@ class RoleController extends Controller
 
             DB::commit();
             $message = __(CREATED_SUCCESSFULLY);
-            return $this->success([], $message);
+            return $this->success(['role' => ['id' => $role->id, 'name' => $role->name]], $message);
         } catch (Exception $e) {
             DB::rollBack();
             $message = getErrorMessage($e, $e->getMessage());

@@ -109,18 +109,26 @@
                     </div>
                     <div class="d-flex flex-column g-15">
                         <div class="bd-b-one bd-c-stroke-2">
-                            <h5 class="fs-16 fw-700 lh-24 text-title-text">{{__('Roles')}}</h5>
+                            <h5 class="fs-16 fw-700 lh-24 text-title-text">{{ __('Permission roles') }}</h5>
                         </div>
-                        <div class="d-flex flex-wrap g-10">
+                        <div class="d-flex flex-wrap g-10" id="staff-role-options">
                             @foreach($roles as $role)
-                                <div class="">
+                                <div class="staff-role-option">
                                     <div class="zCheck form-switch">
-                                        <input class="form-check-input" type="checkbox" name="roles[]" id="{{$role->id}}" value="{{$role->name}}" role="switch">
-                                        <label class="zForm-label-alt" for="{{$role->id}}">{{$role->name}}</label>
+                                        <input class="form-check-input" type="checkbox" name="roles[]" id="staff-role-{{ $role->id }}" value="{{ $role->name }}" role="switch">
+                                        <label class="zForm-label-alt" for="staff-role-{{ $role->id }}">{{ $role->name }}</label>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
+                        @if($roles->isEmpty())
+                            <p class="small text-muted mb-0" id="staff-no-roles-note">{{ __('No active permission roles yet. Create one below to assign access to this staff account.') }}</p>
+                        @endif
+                        @if((int) auth()->user()->role === USER_ROLE_ADMIN)
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="toggle-staff-role-creator">
+                                <i class="fa-solid fa-plus me-1" aria-hidden="true"></i>{{ __('Add custom role') }}
+                            </button>
+                        @endif
                     </div>
                     <div class="bd-c-stroke-2 justify-content-between align-items-center text-end pt-15">
                         <button type="submit" class="flipBtn sf-flipBtn-primary flex-shrink-0">
@@ -131,6 +139,41 @@
                         </button>
                     </div>
                 </form>
+                @if((int) auth()->user()->role === USER_ROLE_ADMIN)
+                    <section class="d-none mt-3 p-3 border rounded-3 bg-light" id="staff-role-creator" aria-labelledby="staff-role-creator-title">
+                        <h3 class="fs-16 fw-700 mb-1" id="staff-role-creator-title">{{ __('Create a permission role') }}</h3>
+                        <p class="small text-muted mb-3">{{ __('Choose the access this custom role should have. It will be added to the staff form and selected automatically.') }}</p>
+                        <form id="staff-role-creator-form" class="ajax" action="{{ route('admin.staffs.roles.store') }}" method="post" data-handler="staffRoleCreatedHandler">
+                            @csrf
+                            <input type="hidden" name="status" value="{{ STATUS_ACTIVE }}">
+                            <div class="mb-3">
+                                <label class="form-label" for="staff-custom-role-name">{{ __('Role name') }} <span class="text-danger">*</span></label>
+                                <input id="staff-custom-role-name" class="form-control" name="name" maxlength="120" required placeholder="{{ __('e.g. Admissions Coordinator') }}">
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-label fw-semibold">{{ __('Permissions') }}</div>
+                                @if($permissions->isEmpty())
+                                    <p class="small text-danger mb-0">{{ __('No permissions are configured yet. Ask an administrator to run the permission setup before creating roles.') }}</p>
+                                @else
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach($permissions as $permission)
+                                            <label class="d-inline-flex align-items-center gap-2 border rounded-pill px-3 py-2 bg-white small" for="staff-permission-{{ $permission->id }}">
+                                                <input id="staff-permission-{{ $permission->id }}" type="checkbox" name="permissions[]" value="{{ $permission->name }}">
+                                                <span>{{ $permission->name }}</span>
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-light" id="cancel-staff-role-creator">{{ __('Cancel') }}</button>
+                                <button type="submit" class="btn btn-primary" @disabled($permissions->isEmpty())>
+                                    <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>{{ __('Save role') }}
+                                </button>
+                            </div>
+                        </form>
+                    </section>
+                @endif
             </div>
         </div>
     </div>
@@ -148,5 +191,5 @@
     <!-- Edit Modal section end -->
 @endsection
 @push('script')
-    <script src="{{asset('admin/custom/js/staffs.js')}}"></script>
+    <script src="{{asset('admin/custom/js/staffs.js')}}?v=2"></script>
 @endpush

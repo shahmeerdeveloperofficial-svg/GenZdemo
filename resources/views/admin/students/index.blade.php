@@ -140,5 +140,5 @@
     <!-- Edit Modal section end -->
 @endsection
 @push('script')
-    <script src="{{asset('admin/custom/js/students.js')}}?v=2"></script>
+    <script src="{{asset('admin/custom/js/students.js')}}?v=3"></script>
 @endpush

@@ -10,6 +10,27 @@ class PortalDashboardTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_analytics_report_renders_its_summary_and_empty_states(): void
+    {
+        $admin = User::factory()->make([
+            'id' => 1,
+            'role' => USER_ROLE_ADMIN,
+            'status' => USER_STATUS_ACTIVE,
+            'google_auth_status' => 0,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.analytics'))
+            ->assertOk()
+            ->assertSee('analytics-page')
+            ->assertSee('Report summary')
+            ->assertSee('Lead pipeline')
+            ->assertSee('Admissions pipeline')
+            ->assertSee('LMS enrollments by course')
+            ->assertSee('Confirmed payments')
+            ->assertSee('No lead records found for this date range.');
+    }
+
     public function test_admin_dashboard_renders_live_kpis_and_explicit_empty_states(): void
     {
         $admin = User::factory()->make([
@@ -29,6 +50,8 @@ class PortalDashboardTest extends TestCase
             ->assertDontSee('dashboard-quick-access-heading')
             ->assertSee('Live figures are calculated from records')
             ->assertSee('Student directory')
+            ->assertSee(route('admin.staffs.index'))
+            ->assertSee(route('admin.affiliates.index'))
             ->assertSee('Most popular courses')
             ->assertSee('dashboard-enrollment-chart')
             ->assertSee('genz-toast-host')

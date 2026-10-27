@@ -46,7 +46,7 @@
 </script>
 <script src="{{ asset('genz/js/backend-toast.js') }}?v=4"></script>
 <script src="{{ asset('genz/js/backend-shell.js') }}?v=5"></script>
-<script src="{{ asset('genz/js/list-criteria.js') }}?v=1"></script>
+<script src="{{ asset('genz/js/list-criteria.js') }}?v=2"></script>
 <script src="{{ asset('genz/js/download-handler.js') }}?v=3"></script>
 @if (request()->is('admin', 'admin/*', 'consultant', 'consultant/*', 'student', 'student/*', 'affiliate', 'affiliate/*', 'instructor', 'instructor/*', 'finance', 'finance/*', 'content', 'content/*'))
     <script src="{{ asset('genz/js/backend-table-tools.js') }}?v=6"></script>
