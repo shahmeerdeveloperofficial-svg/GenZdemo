@@ -57,6 +57,7 @@ Then add the sample public listings and their images:
 ```bash
 php artisan db:seed --class=PublicCatalogDemoSeeder
 php artisan db:seed --class=DemoStudentPortraitSeeder
+php artisan db:seed --class=DemoStudentDocumentSeeder
 php artisan storage:link
 ```
 
