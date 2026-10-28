@@ -58,6 +58,8 @@ Then add the sample public listings and their images:
 php artisan db:seed --class=PublicCatalogDemoSeeder
 php artisan db:seed --class=DemoStudentPortraitSeeder
 php artisan db:seed --class=DemoStudentDocumentSeeder
+php artisan db:seed --class=DemoConsultationReviewSeeder
+php artisan db:seed --class=DemoAdmissionSeeder
 php artisan storage:link
 ```
 

@@ -22,6 +22,7 @@ In short: dashboard form -> Laravel route/controller -> validation -> database/s
 - **Lead CRM:** prospective students, contact details, pipeline stage, owner, notes, and follow-up tasks.
 - **Consultation Requests:** enquiries submitted from the free-consultation form; staff can review and follow up.
 - **Consultations:** configure availability slots and meeting platforms, manage consultant profiles and appointments, view consultation orders, and review feedback.
+- **Reviews:** view student feedback on consultations; demo reviews are explicitly labeled as fictional and are not real endorsements.
 - **Student Directory:** student accounts and their basic status/profile details.
 - **Student Documents:** private student uploads awaiting review; filter the queue, open a student's document profile, securely download a file, and approve/reject it.
 
@@ -99,10 +100,13 @@ In short: dashboard form -> Laravel route/controller -> validation -> database/s
 
 The `DemoStudentDocumentSeeder` creates clearly watermarked, fictional PDFs for demo student accounts only. They contain no real passport, academic, test, or financial evidence. Documents are stored encrypted on the private disk and appear as pending items in the review queue.
 
+The `DemoAdmissionSeeder` creates sample application rows for those demo learners using the existing published sample programs. It records the initial stage in application history and does not claim that an application was actually sent to, or decided by, a university.
+
 Run it only in the local demo app:
 
 ```bash
 php artisan db:seed --class=DemoStudentDocumentSeeder
+php artisan db:seed --class=DemoAdmissionSeeder
 ```
 
-It is safe to run again; it does not duplicate existing seeded documents. Never use demo documents as official evidence or seed them in production.
+These seeders are safe to run again; they do not duplicate existing demo records. Never use demo documents as official evidence or seed demo records in production.
