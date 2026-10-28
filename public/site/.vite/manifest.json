@@ -3,15 +3,15 @@
     "file": "assets/vendor-gsap-SFc2wnMY.js",
     "name": "vendor-gsap"
   },
-  "_vendor-icons-Dtyz9uAu.js": {
-    "file": "assets/vendor-icons-Dtyz9uAu.js",
+  "_vendor-icons-GUjO3ney.js": {
+    "file": "assets/vendor-icons-GUjO3ney.js",
     "name": "vendor-icons"
   },
-  "_vendor-motion-DxCXeMye.js": {
-    "file": "assets/vendor-motion-DxCXeMye.js",
+  "_vendor-motion-B1kU0d4B.js": {
+    "file": "assets/vendor-motion-B1kU0d4B.js",
     "name": "vendor-motion",
     "imports": [
-      "_vendor-icons-Dtyz9uAu.js"
+      "_vendor-icons-GUjO3ney.js"
     ]
   },
   "_vendor-three-CEq36Mtc.js": {
@@ -19,20 +19,20 @@
     "name": "vendor-three"
   },
   "index.html": {
-    "file": "assets/index-Bk9s-Y08.js",
+    "file": "assets/index-BShtksje.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "imports": [
-      "_vendor-motion-DxCXeMye.js",
-      "_vendor-icons-Dtyz9uAu.js",
+      "_vendor-motion-B1kU0d4B.js",
+      "_vendor-icons-GUjO3ney.js",
       "_vendor-gsap-SFc2wnMY.js"
     ],
     "dynamicImports": [
       "src/components/ThreeCanvas.tsx"
     ],
     "css": [
-      "assets/index-D36gYkvv.css"
+      "assets/index-Bq-veAuQ.css"
     ]
   },
   "src/assets/models/airplane.glb": {
@@ -40,14 +40,14 @@
     "src": "src/assets/models/airplane.glb"
   },
   "src/components/ThreeCanvas.tsx": {
-    "file": "assets/ThreeCanvas-BGrb40Dh.js",
+    "file": "assets/ThreeCanvas-DixSTfzK.js",
     "name": "ThreeCanvas",
     "src": "src/components/ThreeCanvas.tsx",
     "isDynamicEntry": true,
     "imports": [
-      "_vendor-motion-DxCXeMye.js",
+      "_vendor-motion-B1kU0d4B.js",
       "index.html",
-      "_vendor-icons-Dtyz9uAu.js",
+      "_vendor-icons-GUjO3ney.js",
       "_vendor-three-CEq36Mtc.js",
       "_vendor-gsap-SFc2wnMY.js"
     ],
