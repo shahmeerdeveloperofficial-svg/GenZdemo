@@ -194,7 +194,7 @@ class PublicSiteContent
     {
         $path = $this->normalizedPath($path);
         if (str_ends_with($path, '.route')) {
-            return ['', 'home', 'registration', 'login', 'dashboard', 'academicPrograms', 'universities',
+            return ['', 'home', 'registration', 'login', 'dashboard', 'academicPrograms', 'universities', 'subjects',
                 'courses', 'consultations', 'events', 'blogs', 'contact', 'about', 'scholarships',
                 'register', 'forgotPassword', 'privacy', 'terms', 'refund'];
         }
