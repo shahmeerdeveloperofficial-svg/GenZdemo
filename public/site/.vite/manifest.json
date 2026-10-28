@@ -19,7 +19,7 @@
     "name": "vendor-three"
   },
   "index.html": {
-    "file": "assets/index-BPMzIiyG.js",
+    "file": "assets/index-eBVly8JL.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -32,7 +32,7 @@
       "src/components/ThreeCanvas.tsx"
     ],
     "css": [
-      "assets/index-C69npYFg.css"
+      "assets/index-DYPT3Gi5.css"
     ]
   },
   "src/assets/models/airplane.glb": {
@@ -40,7 +40,7 @@
     "src": "src/assets/models/airplane.glb"
   },
   "src/components/ThreeCanvas.tsx": {
-    "file": "assets/ThreeCanvas-Bhp1MEJO.js",
+    "file": "assets/ThreeCanvas-N0s5B8lx.js",
     "name": "ThreeCanvas",
     "src": "src/components/ThreeCanvas.tsx",
     "isDynamicEntry": true,
