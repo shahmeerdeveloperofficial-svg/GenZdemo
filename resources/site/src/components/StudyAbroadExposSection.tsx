@@ -115,13 +115,13 @@ export const StudyAbroadExposSection: React.FC<StudyAbroadExposProps> = ({ onOpe
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Auto-scroll animation: scrolls to left every 3.5 seconds
+  // Auto-scroll animation: waits 6 seconds (5 to 7 seconds) then smoothly slides left
   useEffect(() => {
     if (isPaused) return;
     const interval = setInterval(() => {
       setDirection('left');
       setStartIndex((prev) => (prev + 1) % expos.length);
-    }, 3500);
+    }, 6000);
 
     return () => clearInterval(interval);
   }, [isPaused, expos.length]);
@@ -291,28 +291,6 @@ export const StudyAbroadExposSection: React.FC<StudyAbroadExposProps> = ({ onOpe
                 ))}
               </AnimatePresence>
             </div>
-          </div>
-
-          {/* Carousel Pagination Indicator Dots */}
-          <div className="flex items-center justify-center gap-2 mt-8">
-            {expos.map((expo, idx) => {
-              const isActive = idx === startIndex;
-              return (
-                <button
-                  key={expo.id}
-                  onClick={() => {
-                    setDirection(idx > startIndex ? 'left' : 'right');
-                    setStartIndex(idx);
-                  }}
-                  aria-label={`Go to ${expo.city}`}
-                  className={`h-2.5 rounded-full transition-all duration-300 ${
-                    isActive
-                      ? 'w-8 bg-[#FFB703]'
-                      : 'w-2.5 bg-white/25 hover:bg-white/50'
-                  }`}
-                />
-              );
-            })}
           </div>
         </div>
 

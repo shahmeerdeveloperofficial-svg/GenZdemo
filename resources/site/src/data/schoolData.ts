@@ -3,121 +3,121 @@ import { ContinuumStage, StatItem, SuccessStory, CampusFacility, AdmissionStep, 
 
 export const CONTINUUM_STAGES: ContinuumStage[] = getContent<ContinuumStage[]>("sections.hero.stages", [
   {
-    id: 'early-years',
+    id: 'uk-pathway',
     stageNumber: '01',
-    name: 'Early Years Foundation',
-    subtitle: 'Discovery & Play-Based Inception',
-    ageRange: 'Ages 2.5 – 5 Years',
-    description: 'An inquiry-led exploratory sanctuary where early learners discover wonder, bilingual vocabulary, emotional intelligence, and cognitive curiosity through sensory experiences and purposeful play.',
+    name: 'Study in the United Kingdom',
+    subtitle: 'Russell Group Admissions & 2-Year Post-Study Work Permit',
+    ageRange: 'Undergraduate & Postgraduate · Jan & Sep 2026',
+    description: 'Direct access to 130+ world-renowned UK universities with guaranteed CAS processing. Benefit from £2,000–£10,000 automatic merit scholarships, flexible IELTS waivers, and 2 years post-study work authorization.',
     pillars: [
-      'Bilingual Language Immersion (English & Native)',
-      'Montessori & Reggio Emilia Hybrid Approach',
-      'Sensory & Nature Exploration Gardens',
-      'Foundational Phonics, Motor Skills & Numeracy'
+      '130+ Partner UK Campuses & Russell Group',
+      'IELTS Waiver Options for Matric/Inter/A-Levels',
+      'Up to £10,000 Merit & Vice-Chancellor Awards',
+      '2-Year Graduate Route Work Visa in the UK'
     ],
-    accreditationBadge: 'Cambridge Early Years Accredited',
-    accreditationDetail: 'Nurturing joyful, independent, and empathetic thinkers from their earliest steps.',
-    image: '/assets/images/early-years.jpg'
+    accreditationBadge: 'British Council & UCAS Certified',
+    accreditationDetail: 'Official registered British Council agency with 99.4% Tier-4 student visa issuance rate.',
+    image: '/assets/images/destination-img-1.png'
   },
   {
-    id: 'primary-continuum',
+    id: 'usa-pathway',
     stageNumber: '02',
-    name: 'Primary Continuum',
-    subtitle: 'Project-Based Learning & Inquiry',
-    ageRange: 'Grades 1 – 5 · Ages 5 – 10 Years',
-    description: 'Inspired by world-leading inquiry frameworks and CSI approaches, our primary school fosters conceptual understanding. Scholars connect mathematics, environmental sciences, languages, and the creative arts through authentic real-world challenges.',
+    name: 'Study in the United States',
+    subtitle: 'Tier-1 Campuses, Ivy League & 3-Year STEM OPT Work Rights',
+    ageRange: 'STEM Programs, Business & AI · Fall & Spring',
+    description: 'Explore top-ranked USA universities with official I-20 issuance, in-state tuition fee grants, and professional 1-on-1 F-1 visa embassy interview coaching by former visa scholars.',
     pillars: [
-      'Project-Based Learning (PBL) Framework',
-      'Singapore Mathematical Logic & Problem-Solving',
-      'Junior Coding & Visual Robotics Integration',
-      'Global Perspectives & Cultural Competence'
+      'Up to 100% Merit Scholarships & In-State Waivers',
+      '3-Year STEM OPT Employment Authorization',
+      'Rigorous F-1 Embassy Mock Interview Simulation',
+      'SAT / GRE Waivers & Fast-Track I-20 Approval'
     ],
-    accreditationBadge: 'Cambridge Primary & Global Standards',
-    accreditationDetail: 'Cultivating critical inquiry and scientific reasoning through interactive discovery.',
-    image: '/assets/images/primary-years.jpg'
+    accreditationBadge: 'US Embassy & AIRC Compliant',
+    accreditationDetail: 'Over $12M+ in merit fellowships and tuition grants secured for Pakistani students.',
+    image: '/assets/images/hero-campus.jpg'
   },
   {
-    id: 'middle-years',
+    id: 'aus-canada-pathway',
     stageNumber: '03',
-    name: 'Middle Years Academy',
-    subtitle: 'Critical Inquiry & STEM Innovation',
-    ageRange: 'Grades 6 – 8 · Ages 11 – 13 Years',
-    description: 'Bridging foundational literacy with interdisciplinary rigour. Learners conduct rigorous laboratory experiments, master computational thinking, participate in Model United Nations, and lead community service initiatives.',
+    name: 'Study in Australia & Canada',
+    subtitle: 'Group of Eight & Top Canadian Designated Learning Institutions (DLI)',
+    ageRange: 'Bachelors & Masters · 3–5 Year Post-Study Work',
+    description: 'Launch your international academic career in Australia and Canada. Full GTE/GST compliance verification, high-ranking DLI placements, and straightforward pathways to PR.',
     pillars: [
-      'Advanced STEM, 3D Prototyping & AI Literacy',
-      'Model United Nations & Rhetorical Debating',
-      'Integrated Experimental Sciences (Bio, Chem, Phys)',
-      'Ethical Leadership & Digital Citizenship'
+      'Streamlined Visa Processing & High GTE Approval',
+      'Up to 3–5 Years Post-Study Work Permit (PGWP)',
+      'Part-Time Work Rights (48 Hours Per Fortnight)',
+      'Regional Campus Incentives & Tuition Reductions'
     ],
-    accreditationBadge: 'Cambridge Lower Secondary Center',
-    accreditationDetail: 'Empowering adolescent scholars with analytical acumen and self-directed agency.',
-    image: '/assets/images/middle-years.jpg'
+    accreditationBadge: 'ICEF & QEAC Certified Agency',
+    accreditationDetail: 'Direct institutional partnerships with Group of Eight and leading Canadian universities.',
+    image: '/assets/images/destination-img-2.png'
   },
   {
-    id: 'senior-cambridge',
+    id: 'europe-germany-pathway',
     stageNumber: '04',
-    name: 'Senior Cambridge & IGCSE',
-    subtitle: 'Academic Rigour & International Credentials',
-    ageRange: 'Grades 9 – 12 · Ages 14 – 18 Years',
-    description: 'Widely recognized as the gold standard of secondary education, our senior programmes offer deep subject mastery, university-level research colloquiums, and personalized portfolio development under certified international faculty.',
+    name: 'Study in Germany & Europe',
+    subtitle: 'Zero/Low Tuition Universities & 27 Schengen Countries Travel',
+    ageRange: 'Engineering, Tech & Business · 100% English Taught',
+    description: 'Pursue tuition-free or ultra-low-cost degrees in Germany, Ireland, Hungary, and Sweden. Comprehensive APS certificate assistance, German blocked account guidance, and European work rights.',
     pillars: [
-      'Cambridge IGCSE, O Levels & A Levels Tracks',
-      'Independent Research Colloquiums & EPQ',
-      'Pre-University Career Mentorship & Aptitude',
-      'Dual Honors & Accelerated Subject Pathways'
+      '100% Tuition Fee Exemption in German Public Unis',
+      'Fully English-Taught Bachelor’s & Master’s Degrees',
+      'Freedom of Travel Across 27 Schengen Countries',
+      '18-Month Post-Study Job Seeking Visa in Germany'
     ],
-    accreditationBadge: 'Cambridge International Fellow School',
-    accreditationDetail: 'Consistently producing Regional & World distinction winners across Cambridge exams.',
-    image: '/assets/images/senior-cambridge.jpg'
+    accreditationBadge: 'DAAD & European Higher Education Hub',
+    accreditationDetail: 'Complete end-to-end blocked account and APS documentation assistance.',
+    image: '/assets/images/campus-building.jpg'
   },
   {
-    id: 'flight-path',
+    id: 'visa-ielts-advisory',
     stageNumber: '05',
-    name: 'Beyond GenZ: Global Flight Path',
-    subtitle: 'University Launch & Career Flight',
-    ageRange: 'Post-Secondary & Higher Education Pathways',
-    description: 'Embodying the soaring airplane motif of our brand, our in-house Global University Advisory guides scholars directly to elite institutions worldwide with strategic SAT/IELTS preparation and full-tuition scholarship packaging.',
+    name: 'Fast-Track Visa Filing & Test Prep',
+    subtitle: '100% Legal Document Curation & Certified IELTS / PTE Coaching',
+    ageRange: 'End-to-End Handholding · Profile Assessment to Flight',
+    description: 'Our elite team of immigration advocates and certified British Council examiners handles your SOP writing, financial sponsor audits, mock interviews, and pre-departure settlement.',
     pillars: [
-      'Ivy League & Russell Group Admissions Strategy',
-      'Comprehensive SAT / ACT / IELTS In-House Training',
-      'Merit Scholarship & Financial Aid Strategy',
-      'Global Alumni Mentorship Network in 14 Nations'
+      'Official British Council Certified IELTS/PTE Trainers',
+      'Impeccable Statement of Purpose (SOP) Curation',
+      'Comprehensive Bank Statement & Financial Auditing',
+      'Airport Reception, Accommodation & Flight Booking'
     ],
-    accreditationBadge: 'Global University Admissions Guarantee',
-    accreditationDetail: 'Over $12M in global merit scholarships and fellowships secured by graduating cohorts.',
-    image: '/assets/images/beyond-pathway.jpg'
+    accreditationBadge: '98.6% Visa Success Ratio',
+    accreditationDetail: 'Trusted by 10,000+ Pakistani scholars placed across 850+ global universities worldwide.',
+    image: '/assets/images/why-choose-us.png'
   }
 ]);
 
 export const KEY_STATS: StatItem[] = getContent<StatItem[]>("sections.stats.items", [
   {
     id: 'ratio',
-    number: 8,
-    isRatio: true,
-    label: 'Student-Teacher Ratio',
-    description: 'Guarantees individualized mentorship and responsive care for every scholar.'
+    number: 98.6,
+    suffix: '%',
+    label: 'Visa Success Ratio',
+    description: 'Flawless document verification and embassy interview clearance rate.'
   },
   {
     id: 'faculty',
-    number: 100,
-    suffix: '%',
-    label: 'Certified International Faculty',
-    description: 'Cambridge-trained educators bringing world-class pedagogy into every classroom.'
+    number: 850,
+    suffix: '+',
+    label: 'Partner Universities',
+    description: 'Direct tie-ups across the UK, USA, Australia, Canada, and Europe.'
   },
   {
     id: 'destinations',
-    number: 42,
+    number: 25,
     suffix: '+',
-    label: 'Global University Destinations',
-    description: 'Scholars placed across the United States, United Kingdom, Canada, and Europe.'
+    label: 'Global Study Destinations',
+    description: 'Placing students across premier international education destinations.'
   },
   {
     id: 'scholarships',
     number: 12,
     prefix: '$',
     suffix: 'M+',
-    label: 'Scholarships Awarded',
-    description: 'Total merit and fellowship awards earned by GenZ cohorts over the last 5 years.'
+    label: 'Scholarships Secured',
+    description: 'Total merit awards and need-based fee discounts won for Pakistani students.'
   }
 ]);
 
@@ -125,75 +125,122 @@ export const SUCCESS_STORIES: SuccessStory[] = getContent('sections.stories.sour
   {
     id: 'alizeh',
     studentName: 'Alizeh Tariq',
-    batch: "Cambridge A-Level Distinction '24",
-    university: 'Stanford University',
-    country: 'United States',
-    program: 'B.S. Artificial Intelligence & Cognitive Science',
-    scholarshipTier: '100% Full Fellowship ($320k)',
+    batch: "Oxford University Cohort '25",
+    university: 'University of Oxford',
+    country: 'United Kingdom',
+    program: 'M.Sc. Advanced Computer Science',
+    scholarshipTier: '100% Full Fellowship (£42k)',
     avatar: '/assets/images/student-1.jpg',
-    quote: 'The robotics maker space and personal counseling at GenZ gave me the analytical confidence to compete and win on the global stage.'
+    quote: 'GenZ guided me through every step of my Oxford application, CAS issuance, and Tier-4 visa filing with total transparency.'
   },
   {
     id: 'rayan',
     studentName: 'Rayan Malik',
-    batch: "Cambridge Scholar '24",
-    university: 'University of Oxford',
-    country: 'United Kingdom',
-    program: 'B.A. Philosophy, Politics & Economics (PPE)',
-    scholarshipTier: 'Rhodes Pathway Scholar',
+    batch: "Monash University '25",
+    university: 'Monash University',
+    country: 'Australia',
+    program: 'Master of Data Science',
+    scholarshipTier: 'Dean’s International Excellence Award',
     avatar: '/assets/images/student-2.jpg',
-    quote: "GenZ's seminar culture and Model UN delegations prepared me impeccably for Oxford's intense tutorial interview dialogues."
+    quote: "From GTE documentation to visa grant in just 14 days, GenZ's Australia desk is unmatched in Pakistan."
   },
   {
     id: 'sarah',
     studentName: 'Sarah Khan',
-    batch: "Senior Scholar '25",
+    batch: "University of Toronto '25",
     university: 'University of Toronto',
     country: 'Canada',
-    program: 'B.Eng. Biomedical & Neural Engineering',
-    scholarshipTier: 'Lester B. Pearson Scholar ($100k)',
+    program: 'B.Sc. Biotechnology',
+    scholarshipTier: 'International Scholar Award ($25,000)',
     avatar: '/assets/images/student-3.jpg',
-    quote: 'The project-based curriculum challenged us to create real medical prototypes instead of simply memorizing textbooks.'
-  },
-  {
-    id: 'daniyal',
-    studentName: 'Daniyal Ahmed',
-    batch: "Cambridge Scholar '25",
-    university: 'Imperial College London',
-    country: 'United Kingdom',
-    program: 'M.Eng. Aeronautical & Aerospace Systems',
-    scholarshipTier: "President's Excellence Award",
-    avatar: '/assets/images/student-4.jpg',
-    quote: 'From wind tunnel simulation projects to international physics olympiads, GenZ inspired me to reach for the skies.'
+    quote: 'They made my dream of studying in Canada possible with zero stress. Their visa filing team is meticulous and honest.'
   }
 ]);
 
-export const NEWS_EVENTS: (NewsEvent & {url?: string})[] = getContent('sections.news.source', 'backend') === 'backend' ? (siteConfig.catalog.newsEvents || []) : getContent<(NewsEvent & {url?:string})[]>("sections.news.items", [
+export const CAMPUS_FACILITIES: CampusFacility[] = getContent<CampusFacility[]>("sections.facilities.items", [
   {
-    id: 'summit-2026',
-    title: 'Annual Global Education & Ivy League Summit 2026',
-    date: 'October 28, 2026',
-    location: 'Main Auditorium, Islamabad Campus',
-    category: 'Global Colloquium',
-    excerpt: 'Admissions directors from 35+ top world universities assemble at GenZ for exclusive portfolio reviews, masterclasses, and direct scholarship assessments.',
-    image: '/assets/images/event-1.jpg'
+    id: 'counseling-suites',
+    title: 'Executive Counseling Suites',
+    category: '1-on-1 Advisory',
+    description: 'Private, technology-enabled consultation rooms designed for personalized academic profiling and parent conferences.',
+    image: '/assets/images/facility-library.jpg',
+    features: ['Direct University Video Feeds', 'Profile Evaluation Tech', 'Private Document Auditing']
   },
   {
-    id: 'stem-championship',
-    title: 'National Youth STEM & Autonomous Robotics Championship',
-    date: 'November 14, 2026',
-    location: 'Innovation Quad, Lahore Campus',
-    category: 'STEM & Innovation',
-    excerpt: 'Middle and Senior Cambridge scholars showcase autonomous drone prototypes, renewable energy solutions, and applied machine-learning solutions.',
-    image: '/assets/images/event-2.jpg'
+    id: 'ielts-lab',
+    title: 'IELTS / PTE Digital Testing Lab',
+    category: 'Language Mastery',
+    description: 'Modern language training facility equipped with authentic Cambridge audio systems and PTE test simulation engines.',
+    image: '/assets/images/facility-science.jpg',
+    features: ['Real-Time Mock Scoring', 'Certified Native Trainers', 'Speaking Practice Pods']
   },
   {
-    id: 'genz-mun',
-    title: 'GenZMUN VII: Empowering Future Multilateral Diplomats',
-    date: 'December 05, 2026',
-    location: 'Diplomatic Center, Islamabad Campus',
-    category: 'Leadership & Diplomacy',
-    excerpt: 'Over 400 student delegates deliberate on global sustainable development goals, digital human rights, and peaceful multilateral treaties.',
-    image: '/assets/images/event-3.jpg'
+    id: 'visa-center',
+    title: 'Diplomatic Visa Processing Center',
+    category: 'Immigration Bureau',
+    description: 'Dedicated document digitization and embassy biometric coordination bureau ensuring 100% compliance with foreign embassies.',
+    image: '/assets/images/facility-stem.jpg',
+    features: ['Biometric Scanning Support', 'Financial Document Vault', 'Interview Mock Stage']
+  }
+]);
+
+export const ADMISSION_STEPS: AdmissionStep[] = getContent<AdmissionStep[]>("sections.admissions.steps", [
+  {
+    step: '01',
+    title: 'Free Profile Assessment',
+    subtitle: 'Academic & Career Roadmapping',
+    description: 'Bring your academic transcripts, transcripts, and passport for an instant eligibility evaluation by certified counselors.',
+    timeEstimate: '30 - 45 Minutes'
+  },
+  {
+    step: '02',
+    title: 'University Shortlisting & Offer',
+    subtitle: 'Course & Fee Matching',
+    description: 'We align your career goals with top global campuses and apply for fast-track conditional offer letters within 48-72 hours.',
+    timeEstimate: '2 - 5 Business Days'
+  },
+  {
+    step: '03',
+    title: 'Scholarship & CAS / I-20 Issuance',
+    subtitle: 'Funding & Confirmation',
+    description: 'Our advisors submit fee scholarship applications and coordinate directly with the university for CAS or I-20 issuance.',
+    timeEstimate: '1 - 2 Weeks'
+  },
+  {
+    step: '04',
+    title: 'Visa Lodgement & Fly Abroad',
+    subtitle: 'Embassy Submission & Pre-Departure',
+    description: 'Flawless visa file curation, financial sponsorship verification, embassy interview drill, and pre-departure briefing.',
+    timeEstimate: '2 - 4 Weeks'
+  }
+]);
+
+export const NEWS_EVENTS: NewsEvent[] = getContent<NewsEvent[]>("sections.news.items", [
+  {
+    id: 'expo-2026',
+    title: 'GenZ Study Abroad Grand Expo 2026',
+    category: 'Flagship Event',
+    date: 'Nov 17 - 26, 2026',
+    excerpt: 'Meet delegates directly from 100+ UK, USA, Australia, and Canadian universities with spot admissions and scholarships.',
+    image: '/assets/images/event-detail-1.png',
+    location: 'Serena Hotels & PC Hotels Nationwide'
+  },
+  {
+    id: 'ielts-masterclass',
+    title: 'British Council IELTS 8.0+ Band Masterclass',
+    category: 'Workshop',
+    date: 'Dec 05, 2026',
+    excerpt: 'Intensive 2-day workshop led by certified British Council examiners covering high-scoring writing and speaking techniques.',
+    image: '/assets/images/course-image-1.png',
+    location: 'GenZ Central Auditorium, Lahore'
+  },
+  {
+    id: 'uk-visa-seminar',
+    title: 'UK Graduate Route & Tier 4 Visa Curation Seminar',
+    category: 'Advisory Session',
+    date: 'Dec 18, 2026',
+    excerpt: 'Step-by-step guidance on CAS compliance, bank statement requirements, and 2-year post-study work authorization.',
+    image: '/assets/images/blog-details-1.png',
+    location: 'Online Webinar & Regional Branches'
   }
 ]);

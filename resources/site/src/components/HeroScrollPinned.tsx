@@ -182,7 +182,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
             >
               <span className={`text-[10px] font-bold uppercase tracking-wider transition-opacity duration-300 opacity-0 group-hover:opacity-100 ${
                 activeStageIdx === i ? 'text-navy' : 'text-slate-400'
-              }`}>{getContent<string>("sections.hero.copy.0", "0")}{i + 1} {st.name.split(' ')[0]}
+              }`}>0{i + 1} ' + (st.id === 'uk-pathway' ? 'UK' : st.id === 'usa-pathway' ? 'USA' : st.id === 'aus-canada-pathway' ? 'AUS/CA' : st.id === 'europe-germany-pathway' ? 'EUROPE' : 'VISA & IELTS') + '
               </span>
               <span className={`h-2 rounded-full transition-all duration-300 ${
                 activeStageIdx === i
@@ -285,7 +285,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 <div className="lg:col-span-7 flex flex-col justify-between">
                   <div>
                     <div className="flex items-center gap-3 mb-2 sm:mb-3">
-                      <span className="px-3 py-0.5 sm:px-3.5 sm:py-1 rounded-full bg-cyan text-white font-display text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm">{getContent<string>("sections.hero.copy.stage0", "Stage")} {currentStage.stageNumber}
+                      <span className="px-3 py-0.5 sm:px-3.5 sm:py-1 rounded-full bg-cyan text-white font-display text-[10px] sm:text-xs font-black uppercase tracking-wider shadow-sm">Destination {currentStage.stageNumber}
                       </span>
                       <span className="text-[11px] sm:text-xs font-bold text-slate-500">
                         {currentStage.ageRange}
@@ -321,12 +321,12 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                       onClick={onOpenModal}
                       className="w-full sm:w-auto px-5 sm:px-7 py-2.5 sm:py-3.5 bg-navy text-white rounded-full font-display font-bold text-[11px] sm:text-xs uppercase tracking-wider hover:bg-navy-dark shadow-md transition-all flex items-center justify-center gap-2 group"
                     >
-                      <span>{getContent<string>("sections.hero.copy.inquireFor", "Inquire for ")}{currentStage.name}</span>
+                      <span>Apply for {currentStage.name}</span>
                       <ArrowRight className="w-4 h-4 text-cyan group-hover:translate-x-1 transition-transform" />
                     </button>
                     <span className="text-xs text-slate-400 font-semibold hidden sm:inline flex items-center gap-1.5">
                       <Sparkles className="w-3.5 h-3.5 text-cyan" />
-                      <span>{getContent<string>("sections.hero.copy.cambridgeContinuum", "Cambridge Continuum")}</span>
+                      <span>GenZ Global Education</span>
                     </span>
                   </div>
                 </div>
@@ -370,7 +370,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 bg-navy text-white rounded-full font-display font-bold text-[10px] sm:text-xs tracking-wide hover:bg-navy-dark shadow-md hover:shadow-cyan-glow transition-all transform hover:-translate-y-0.5 group whitespace-nowrap"
               >
                 <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyan-light" />
-                <span>{getContent<string>("sections.hero.copy.bookCampusTour", "Book Campus Tour")}</span>
+                <span>Book Free Consultation</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-cyan group-hover:scale-150 transition-transform" />
               </button>
 
@@ -379,7 +379,7 @@ export const HeroScrollPinned: React.FC<HeroScrollPinnedProps> = ({ onOpenModal 
                 disabled={!CONTINUUM_STAGES.length}
                 className="inline-flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-4 py-1.5 sm:py-2 bg-white/95 text-navy hover:text-cyan border border-navy/15 rounded-full font-display font-bold text-[10px] sm:text-xs hover:border-cyan transition-all shadow-sm group whitespace-nowrap"
               >
-                <span>{getContent<string>("sections.hero.copy.discoverStages", "Discover Stages")}</span>
+                <span>Explore Destinations</span>
                 <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-cyan group-hover:translate-y-0.5 transition-transform" />
               </button>
             </motion.div>
