@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft,
@@ -9,9 +9,8 @@ import {
   Sparkles,
   ArrowRight,
   MessageCircle,
-  Award,
-  Globe2,
-  Users
+  Pause,
+  Play
 } from 'lucide-react';
 import { getContent, siteAsset, route } from '../content';
 
@@ -96,6 +95,8 @@ export const StudyAbroadExposSection: React.FC<StudyAbroadExposProps> = ({ onOpe
 
   const expos = getContent('sections.expos.items', defaultExpos);
   const [startIndex, setStartIndex] = useState(0);
+  const [direction, setDirection] = useState<'left' | 'right'>('left');
+  const [isPaused, setIsPaused] = useState(false);
   const [itemsPerPage, setItemsPerPage] = useState(3);
 
   // Responsive items count
@@ -114,14 +115,25 @@ export const StudyAbroadExposSection: React.FC<StudyAbroadExposProps> = ({ onOpe
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const maxIndex = Math.max(0, expos.length - itemsPerPage);
+  // Auto-scroll animation: scrolls to left every 3.5 seconds
+  useEffect(() => {
+    if (isPaused) return;
+    const interval = setInterval(() => {
+      setDirection('left');
+      setStartIndex((prev) => (prev + 1) % expos.length);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, [isPaused, expos.length]);
 
   const handlePrev = () => {
-    setStartIndex((prev) => (prev > 0 ? prev - 1 : maxIndex));
+    setDirection('right');
+    setStartIndex((prev) => (prev > 0 ? prev - 1 : expos.length - 1));
   };
 
   const handleNext = () => {
-    setStartIndex((prev) => (prev < maxIndex ? prev + 1 : 0));
+    setDirection('left');
+    setStartIndex((prev) => (prev + 1) % expos.length);
   };
 
   const handleSelectExpo = (title: string) => {
@@ -131,16 +143,23 @@ export const StudyAbroadExposSection: React.FC<StudyAbroadExposProps> = ({ onOpe
     }
   };
 
-  const visibleExpos = expos.slice(startIndex, startIndex + itemsPerPage);
+  // Build visible items with circular wrapping
+  const visibleExpos = [];
+  for (let i = 0; i < itemsPerPage; i++) {
+    const idx = (startIndex + i) % expos.length;
+    visibleExpos.push({ ...expos[idx], slotIndex: i });
+  }
 
   return (
     <section
-      className="py-20 sm:py-24 bg-[#3F2666] relative overflow-hidden text-white"
+      className="py-24 sm:py-32 bg-[#3F2666] relative overflow-hidden text-white scroll-mt-24"
       id="events"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
       {/* Background Ambient Violet & Amber Glows */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/15 rounded-full blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 w-[30rem] h-[30rem] bg-amber-500/10 rounded-full blur-[160px] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[32rem] h-[32rem] bg-purple-500/15 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 w-[34rem] h-[34rem] bg-amber-500/12 rounded-full blur-[160px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Top Header Pill & Heading */}
@@ -154,7 +173,7 @@ export const StudyAbroadExposSection: React.FC<StudyAbroadExposProps> = ({ onOpe
             </button>
           </div>
 
-          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.15] mb-4">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-[1.18] mb-4">
             GenZ Study Abroad Expos{' '}
             <span className="text-[#FFB703]">2026</span>
           </h2>
@@ -184,77 +203,121 @@ export const StudyAbroadExposSection: React.FC<StudyAbroadExposProps> = ({ onOpe
             <ChevronRight className="w-6 h-6 stroke-[2.5] group-hover:translate-x-0.5 transition-transform" />
           </button>
 
-          {/* Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
-            <AnimatePresence mode="popLayout">
-              {visibleExpos.map((expo) => (
-                <motion.div
+          {/* Cards Grid with Leftward Sliding Animation */}
+          <div className="overflow-hidden py-2 px-1">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+              <AnimatePresence mode="popLayout" custom={direction}>
+                {visibleExpos.map((expo) => (
+                  <motion.div
+                    key={`${expo.id}-${expo.slotIndex}`}
+                    custom={direction}
+                    initial={{
+                      opacity: 0,
+                      x: direction === 'left' ? 70 : -70,
+                      scale: 0.95
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      scale: 1,
+                      transition: {
+                        duration: 0.65,
+                        ease: [0.25, 1, 0.5, 1]
+                      }
+                    }}
+                    exit={{
+                      opacity: 0,
+                      x: direction === 'left' ? -70 : 70,
+                      scale: 0.95,
+                      transition: {
+                        duration: 0.5,
+                        ease: [0.25, 1, 0.5, 1]
+                      }
+                    }}
+                    className="flex flex-col justify-between group bg-purple-950/20 p-5 sm:p-6 rounded-3xl border border-white/5 hover:border-amber-400/30 hover:bg-purple-950/40 transition-all duration-300 shadow-xl"
+                  >
+                    {/* Top Graphic Area: Circular Landmark Silhouette Badge */}
+                    <div className="relative flex items-center justify-center mb-6">
+                      <div className="w-full max-w-[280px] h-[190px] flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105">
+                        <img
+                          src={siteAsset(expo.image)}
+                          alt={expo.title}
+                          className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Card Content & Details */}
+                    <div className="flex-1 flex flex-col justify-between">
+                      <div>
+                        {/* Expo Title */}
+                        <h3 className="font-display text-xl sm:text-2xl font-bold text-white mb-3 group-hover:text-[#FFB703] transition-colors leading-snug">
+                          {expo.title}
+                        </h3>
+
+                        {/* Timing & Date */}
+                        <div className="text-purple-200 text-xs sm:text-sm font-medium mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
+                          <span className="flex items-center gap-1.5 text-purple-100">
+                            <Clock className="w-3.5 h-3.5 text-[#FFB703]" />
+                            <span>{expo.time}</span>
+                          </span>
+                          <span className="text-purple-300">•</span>
+                          <span className="flex items-center gap-1.5 text-purple-100">
+                            <Calendar className="w-3.5 h-3.5 text-[#FFB703]" />
+                            <span>Date: {expo.date}</span>
+                          </span>
+                        </div>
+
+                        {/* Location */}
+                        <div className="text-purple-200/90 text-xs sm:text-sm mb-6 flex items-start gap-1.5">
+                          <MapPin className="w-4 h-4 text-[#FFB703] flex-shrink-0 mt-0.5" />
+                          <span>Location: {expo.location}</span>
+                        </div>
+                      </div>
+
+                      {/* Bottom Action Button: More Details */}
+                      <div>
+                        <button
+                          onClick={() => handleSelectExpo(expo.title)}
+                          className="px-7 py-3 rounded-lg sm:rounded-xl bg-[#FFB703] hover:bg-[#FFA500] text-slate-950 font-display font-bold text-xs sm:text-sm shadow-md hover:shadow-amber-500/25 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 group/btn w-fit"
+                        >
+                          <span>More Details</span>
+                          <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Carousel Pagination Indicator Dots */}
+          <div className="flex items-center justify-center gap-2 mt-8">
+            {expos.map((expo, idx) => {
+              const isActive = idx === startIndex;
+              return (
+                <button
                   key={expo.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.35 }}
-                  className="flex flex-col justify-between group"
-                >
-                  {/* Top Graphic Area: Circular Landmark Silhouette Badge */}
-                  <div className="relative flex items-center justify-center mb-6">
-                    <div className="w-full max-w-[280px] h-[190px] flex items-center justify-center overflow-hidden transition-transform duration-500 group-hover:scale-105">
-                      <img
-                        src={siteAsset(expo.image)}
-                        alt={expo.title}
-                        className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)]"
-                        loading="lazy"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Card Content & Details */}
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div>
-                      {/* Expo Title */}
-                      <h3 className="font-display text-xl sm:text-2xl font-bold text-white mb-3 group-hover:text-[#FFB703] transition-colors leading-snug">
-                        {expo.title}
-                      </h3>
-
-                      {/* Timing & Date */}
-                      <div className="text-purple-200 text-xs sm:text-sm font-medium mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
-                        <span className="flex items-center gap-1.5 text-purple-100">
-                          <Clock className="w-3.5 h-3.5 text-[#FFB703]" />
-                          <span>{expo.time}</span>
-                        </span>
-                        <span className="text-purple-300">•</span>
-                        <span className="flex items-center gap-1.5 text-purple-100">
-                          <Calendar className="w-3.5 h-3.5 text-[#FFB703]" />
-                          <span>Date: {expo.date}</span>
-                        </span>
-                      </div>
-
-                      {/* Location */}
-                      <div className="text-purple-200/90 text-xs sm:text-sm mb-6 flex items-start gap-1.5">
-                        <MapPin className="w-4 h-4 text-[#FFB703] flex-shrink-0 mt-0.5" />
-                        <span>Location: {expo.location}</span>
-                      </div>
-                    </div>
-
-                    {/* Bottom Action Button: More Details */}
-                    <div>
-                      <button
-                        onClick={() => handleSelectExpo(expo.title)}
-                        className="px-7 py-3 rounded-lg sm:rounded-xl bg-[#FFB703] hover:bg-[#FFA500] text-slate-950 font-display font-bold text-xs sm:text-sm shadow-md hover:shadow-amber-500/25 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 group/btn w-fit"
-                      >
-                        <span>More Details</span>
-                        <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
+                  onClick={() => {
+                    setDirection(idx > startIndex ? 'left' : 'right');
+                    setStartIndex(idx);
+                  }}
+                  aria-label={`Go to ${expo.city}`}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    isActive
+                      ? 'w-8 bg-[#FFB703]'
+                      : 'w-2.5 bg-white/25 hover:bg-white/50'
+                  }`}
+                />
+              );
+            })}
           </div>
         </div>
 
         {/* Bottom Strip: "Get Free Consultation" (Purple Pill) + "Chat with us" (Red Pill) */}
-        <div className="mt-16 pt-10 border-t border-purple-400/20 flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="mt-14 pt-10 border-t border-purple-400/20 flex flex-col sm:flex-row items-center justify-between gap-6">
           {/* Left: Free entry announcement */}
           <div className="flex items-center gap-3 text-purple-200 text-xs sm:text-sm">
             <div className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
