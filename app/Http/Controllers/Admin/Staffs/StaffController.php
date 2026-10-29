@@ -59,7 +59,12 @@ class StaffController extends Controller
         $data['pageTitle'] = __('Staff');
         $data['showManageStaff'] = 'show';
         $data['activeStaff'] = 'active';
-        $data['roles'] = Role::where('guard_name', 'web')->where('status', STATUS_ACTIVE)->orderBy('name')->get();
+        $systemRoleNames = collect(config('role_permissions.system_roles'))
+            ->map(fn ($definition) => '__system_' . $definition['key'])->all();
+        $data['roles'] = Role::where('guard_name', 'web')
+            ->where('status', STATUS_ACTIVE)
+            ->whereNotIn('name', $systemRoleNames)
+            ->orderBy('name')->get();
         $data['permissions'] = Permission::where('guard_name', 'web')->orderBy('name')->get();
         return view('admin.staffs.index', $data);
     }

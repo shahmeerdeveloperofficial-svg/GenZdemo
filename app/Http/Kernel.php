@@ -3,7 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use App\Http\Middleware\{AdminMiddleware, AffiliateMiddleware, CanAnyPermission, CommonMiddleware, ConsulterMiddleware, Google2FAAuthentication, InstallMiddleware, IsDemo, IsVerifyMiddleware, NativeRoleMiddleware, StudentMiddleware, SuperAdminMiddleware, VersionUpdate};
+use App\Http\Middleware\{AdminMiddleware, AffiliateMiddleware, CanAnyPermission, CommonMiddleware, ConsulterMiddleware, Google2FAAuthentication, InstallMiddleware, IsDemo, IsVerifyMiddleware, ModulePermissionMiddleware, NativeRoleMiddleware, StudentMiddleware, SuperAdminMiddleware, VersionUpdate};
 
 class Kernel extends HttpKernel
 {
@@ -80,5 +80,6 @@ class Kernel extends HttpKernel
         'verify' => IsVerifyMiddleware::class,
         'common' => CommonMiddleware::class,
         'nativeRole' => NativeRoleMiddleware::class,
+        'module.permission' => ModulePermissionMiddleware::class,
     ];
 }

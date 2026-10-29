@@ -40,37 +40,37 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware(['installed', 'web', 'version.update'])
             ->group(base_path('routes/web.php'));
 
-        Route::middleware(['installed', 'web', 'auth', 'admin', 'version.update', 'verify', '2fa'])
+        Route::middleware(['installed', 'web', 'auth', 'admin', 'version.update', 'verify', '2fa', 'module.permission'])
             ->prefix('admin')
             ->as('admin.')
             ->group(base_path('routes/admin.php'));
 
-        Route::middleware(['installed', 'web', 'auth', 'consulter', 'version.update', 'verify', '2fa'])
+        Route::middleware(['installed', 'web', 'auth', 'consulter', 'version.update', 'verify', '2fa', 'module.permission'])
             ->prefix('consultant')
             ->as('consultant.')
             ->group(base_path('routes/consultant.php'));
 
-        Route::middleware(['installed', 'web', 'auth', 'student', 'version.update', 'verify', '2fa'])
+        Route::middleware(['installed', 'web', 'auth', 'student', 'version.update', 'verify', '2fa', 'module.permission'])
             ->prefix('student')
             ->as('student.')
             ->group(base_path('routes/student.php'));
 
-        Route::middleware(['installed', 'web', 'auth', 'affiliate', 'version.update', 'verify', '2fa'])
+        Route::middleware(['installed', 'web', 'auth', 'affiliate', 'version.update', 'verify', '2fa', 'module.permission'])
             ->prefix('affiliate')
             ->as('affiliate.')
             ->group(base_path('routes/affiliate.php'));
 
-        Route::middleware(['installed', 'web', 'auth', 'nativeRole:' . config('genz.roles.instructor'), 'version.update', 'verify', '2fa'])
+        Route::middleware(['installed', 'web', 'auth', 'nativeRole:' . config('genz.roles.instructor'), 'version.update', 'verify', '2fa', 'module.permission'])
             ->prefix('instructor')
             ->as('instructor.')
             ->group(base_path('routes/instructor.php'));
 
-        Route::middleware(['installed', 'web', 'auth', 'nativeRole:' . config('genz.roles.finance'), 'version.update', 'verify', '2fa'])
+        Route::middleware(['installed', 'web', 'auth', 'nativeRole:' . config('genz.roles.finance'), 'version.update', 'verify', '2fa', 'module.permission'])
             ->prefix('finance')
             ->as('finance.')
             ->group(base_path('routes/finance.php'));
 
-        Route::middleware(['installed', 'web', 'auth', 'nativeRole:' . config('genz.roles.cms_editor'), 'version.update', 'verify', '2fa'])
+        Route::middleware(['installed', 'web', 'auth', 'nativeRole:' . config('genz.roles.cms_editor'), 'version.update', 'verify', '2fa', 'module.permission'])
             ->prefix('content')
             ->as('content.')
             ->group(base_path('routes/content.php'));

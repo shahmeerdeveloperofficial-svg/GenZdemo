@@ -209,6 +209,8 @@ Route::group(['prefix' => 'staffs', 'as' => 'staffs.'], function () {
             Route::get('edit/{id}', [RoleController::class, 'edit'])->name('edit');
             Route::patch('update/{id}', [RoleController::class, 'update'])->name('update');
             Route::post('delete/{id}', [RoleController::class, 'delete'])->name('delete');
+            Route::get('system/{key}/permissions', [RoleController::class, 'editSystem'])->name('system.edit');
+            Route::patch('system/{key}/permissions', [RoleController::class, 'updateSystem'])->name('system.update');
         });
     });
 });

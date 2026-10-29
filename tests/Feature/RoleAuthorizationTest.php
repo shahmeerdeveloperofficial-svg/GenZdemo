@@ -60,7 +60,7 @@ class RoleAuthorizationTest extends TestCase
             'guard_name' => 'web',
             'status' => STATUS_ACTIVE,
         ]);
-        $role->syncPermissions(['Manage Courses']);
+        $role->syncPermissions(['Manage Courses', 'reports.view']);
 
         $staff = User::create([
             'first_name' => 'Permission',

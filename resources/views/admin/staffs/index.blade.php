@@ -142,7 +142,7 @@
                 @if((int) auth()->user()->role === USER_ROLE_ADMIN)
                     <section class="d-none mt-3 p-3 border rounded-3 bg-light" id="staff-role-creator" aria-labelledby="staff-role-creator-title">
                         <h3 class="fs-16 fw-700 mb-1" id="staff-role-creator-title">{{ __('Create a permission role') }}</h3>
-                        <p class="small text-muted mb-3">{{ __('Choose the access this custom role should have. It will be added to the staff form and selected automatically.') }}</p>
+                        <p class="small text-muted mb-3">{{ __('Create the role here, then configure module permissions such as Manage Admissions using the View, Add, Edit, and Delete matrix in Roles. It will be added to the staff form and selected automatically.') }}</p>
                         <form id="staff-role-creator-form" class="ajax" action="{{ route('admin.staffs.roles.store') }}" method="post" data-handler="staffRoleCreatedHandler">
                             @csrf
                             <input type="hidden" name="status" value="{{ STATUS_ACTIVE }}">
@@ -150,24 +150,9 @@
                                 <label class="form-label" for="staff-custom-role-name">{{ __('Role name') }} <span class="text-danger">*</span></label>
                                 <input id="staff-custom-role-name" class="form-control" name="name" maxlength="120" required placeholder="{{ __('e.g. Admissions Coordinator') }}">
                             </div>
-                            <div class="mb-3">
-                                <div class="form-label fw-semibold">{{ __('Permissions') }}</div>
-                                @if($permissions->isEmpty())
-                                    <p class="small text-danger mb-0">{{ __('No permissions are configured yet. Ask an administrator to run the permission setup before creating roles.') }}</p>
-                                @else
-                                    <div class="d-flex flex-wrap gap-2">
-                                        @foreach($permissions as $permission)
-                                            <label class="d-inline-flex align-items-center gap-2 border rounded-pill px-3 py-2 bg-white small" for="staff-permission-{{ $permission->id }}">
-                                                <input id="staff-permission-{{ $permission->id }}" type="checkbox" name="permissions[]" value="{{ $permission->name }}">
-                                                <span>{{ $permission->name }}</span>
-                                            </label>
-                                        @endforeach
-                                    </div>
-                                @endif
-                            </div>
                             <div class="d-flex justify-content-end gap-2">
                                 <button type="button" class="btn btn-light" id="cancel-staff-role-creator">{{ __('Cancel') }}</button>
-                                <button type="submit" class="btn btn-primary" @disabled($permissions->isEmpty())>
+                                <button type="submit" class="btn btn-primary">
                                     <span class="spinner-border spinner-border-sm d-none" aria-hidden="true"></span>{{ __('Save role') }}
                                 </button>
                             </div>

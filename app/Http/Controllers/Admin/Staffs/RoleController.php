@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Services\RolePermissionService;
 
 class RoleController extends Controller
 {
@@ -22,7 +22,7 @@ class RoleController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $roles = Role::orderBy('id', 'DESC');
+            $roles = Role::whereNotIn('name', $this->systemRoleNames())->orderBy('id', 'DESC');
             return datatables($roles)
                 ->addIndexColumn()
                 ->addColumn('status', function ($data) {
@@ -50,7 +50,16 @@ class RoleController extends Controller
         $data['pageTitle'] = __('Roles');
         $data['showManageStaff'] = 'show';
         $data['activeRole'] = 'active';
-        $data['permissions'] = Permission::all();
+        $service = app(RolePermissionService::class);
+        $data['systemRoles'] = collect($service->systemRoles())->map(function ($definition) use ($service) {
+            return [
+                'key' => $definition['key'],
+                'label' => $definition['label'],
+                'role' => Role::where('name', $service->systemRoleName($definition['key']))->where('guard_name', 'web')->first(),
+                'locked' => false,
+                'edit_url' => route('admin.staffs.roles.system.edit', $definition['key']),
+            ];
+        })->prepend(['key' => 'admin', 'label' => 'Admin', 'role' => null, 'locked' => true])->values();
         return view('admin.staffs.roles.index', $data);
 
     }
@@ -64,10 +73,8 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:roles,name',
+            'name' => ['required', 'string', 'max:120', 'unique:roles,name', 'not_regex:/^__system_/'],
             'status' => 'required|boolean',
-            'permissions' => 'array',
-            'permissions.*' => ['string', Rule::exists('permissions', 'name')->where('guard_name', 'web')],
         ]);
 
         try {
@@ -78,10 +85,8 @@ class RoleController extends Controller
             $role->status = $request->status;
             $role->save();
 
-            $role->syncPermissions($request->input('permissions', []));
-
             DB::commit();
-            $message = __(CREATED_SUCCESSFULLY);
+            $message = __('Role created. Open its permissions to configure module access.');
             return $this->success(['role' => ['id' => $role->id, 'name' => $role->name]], $message);
         } catch (Exception $e) {
             DB::rollBack();
@@ -99,9 +104,45 @@ class RoleController extends Controller
     public function edit($id)
     {
         $data['role'] = Role::findOrFail($id);
-        $data['permissions'] = Permission::all();
+        abort_if(str_starts_with($data['role']->name, '__system_'), 404);
+        $data['permissionGroups'] = app(RolePermissionService::class)->groupedPermissions();
         $data['oldPermissions'] = $data['role']->permissions->pluck('name')->toArray();
         return view('admin.staffs.roles.edit')->with($data);
+    }
+
+    public function editSystem(string $key)
+    {
+        abort_if($key === 'admin', 404);
+        $definition = collect(app(RolePermissionService::class)->systemRoles())->firstWhere('key', $key);
+        abort_unless($definition, 404);
+
+        $data['role'] = Role::where('name', app(RolePermissionService::class)->systemRoleName($key))
+            ->where('guard_name', 'web')->firstOrFail();
+        $data['roleLabel'] = $definition['label'];
+        $data['permissionGroups'] = app(RolePermissionService::class)->groupedPermissions();
+        $data['oldPermissions'] = $data['role']->permissions->pluck('name')->toArray();
+        return view('admin.staffs.roles.system-edit', $data);
+    }
+
+    public function updateSystem(Request $request, string $key)
+    {
+        abort_if($key === 'admin', 404);
+        $definition = collect(app(RolePermissionService::class)->systemRoles())->firstWhere('key', $key);
+        abort_unless($definition, 404);
+
+        $allowedPermissions = collect(app(RolePermissionService::class)->permissions())->pluck('name')->all();
+        $request->validate([
+            'permissions' => 'array',
+            'permissions.*' => ['string', Rule::in($allowedPermissions)],
+        ]);
+
+        $role = Role::where('name', app(RolePermissionService::class)->systemRoleName($key))
+            ->where('guard_name', 'web')->firstOrFail();
+        $role->syncPermissions($request->input('permissions', []));
+        app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        RolePermissionService::clearSystemRoleCache();
+
+        return redirect()->route('admin.staffs.roles.index')->with('success', __('Permissions updated successfully.'));
     }
 
     /**
@@ -114,15 +155,16 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name' => 'required|unique:roles,name,' . $id,
+            'name' => ['required', 'string', 'max:120', 'unique:roles,name,' . $id, 'not_regex:/^__system_/'],
             'status' => 'required|boolean',
             'permissions' => 'array',
-            'permissions.*' => ['string', Rule::exists('permissions', 'name')->where('guard_name', 'web')],
+            'permissions.*' => ['string', Rule::in(collect(app(RolePermissionService::class)->permissions())->pluck('name')->all())],
         ]);
 
         try {
             DB::beginTransaction();
             $role = Role::findOrFail($id);
+            abort_if(str_starts_with($role->name, '__system_'), 404);
 
             $role->name = $request->name;
             $role->status = $request->status;
@@ -130,6 +172,7 @@ class RoleController extends Controller
 
             // An unchecked permission must be revocable, including clearing all grants.
             $role->syncPermissions($request->input('permissions', []));
+            app(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
 
             DB::commit();
             $message = __(UPDATED_SUCCESSFULLY);
@@ -152,6 +195,10 @@ class RoleController extends Controller
         try {
             DB::beginTransaction();
             $role = Role::findOrFail($id);
+            if (str_starts_with($role->name, '__system_')) {
+                DB::rollBack();
+                return response()->json(['status' => false, 'data' => [], 'message' => __('System roles cannot be deleted.')], 422);
+            }
             if ($role->users()->exists()) {
                 DB::rollBack();
 
@@ -171,5 +218,13 @@ class RoleController extends Controller
             $message = getErrorMessage($e, $e->getMessage());
             return $this->error([], $message);
         }
+    }
+
+    private function systemRoleNames(): array
+    {
+        $service = app(RolePermissionService::class);
+        return collect($service->systemRoles())
+            ->map(fn ($definition) => $service->systemRoleName($definition['key']))
+            ->all();
     }
 }

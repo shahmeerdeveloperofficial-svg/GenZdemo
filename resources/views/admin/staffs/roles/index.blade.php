@@ -9,6 +9,27 @@
             + {{__('Add Role')}}</button>
     </div>
     <div class="p-sm-30 p-15">
+        <div class="p-sm-25 p-15 bd-one bd-c-stroke bd-ra-10 bg-white mb-4">
+            <h5 class="fs-16 fw-700 lh-24 text-title-text">{{ __('Built-in account roles') }}</h5>
+            <p class="small text-muted">{{ __('The five core account types are preserved. Admin is locked as Super Admin; other roles can be configured below.') }}</p>
+            <div class="table-responsive"><table class="table table-bordered align-middle mb-0">
+                <thead><tr><th>{{ __('Role') }}</th><th>{{ __('Type') }}</th><th>{{ __('Access') }}</th></tr></thead>
+                <tbody>
+                @foreach($systemRoles as $systemRole)
+                    <tr>
+                        <td>{{ __($systemRole['label']) }}</td><td>{{ __('System') }}</td>
+                        <td class="text-end">
+                            @if($systemRole['locked'])
+                                <span class="badge bg-secondary">{{ __('Locked — Full access') }}</span>
+                            @else
+                                <a class="flipBtn sf-flipBtn-primary" href="{{ $systemRole['edit_url'] }}">{{ __('Configure permissions') }}</a>
+                            @endif
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table></div>
+        </div>
         <div class="p-sm-25 p-15 bd-one bd-c-stroke bd-ra-10 bg-white">
             <div class="">
                 <table class="table zTable zTable-last-item-right pt-15" id="roleDataTable">
@@ -68,21 +89,7 @@
                             </select>
                         </div>
 
-                        <div class="bd-b-one bd-c-stroke-2">
-                            <h5 class="fs-16 fw-700 lh-24 text-title-text">{{__('Permissions')}}</h5>
-                        </div>
-                        <div class="">
-                            <div class="d-flex flex-wrap g-10">
-                                @foreach($permissions as $permission)
-                                <div class="">
-                                    <div class="zCheck form-switch">
-                                        <input class="form-check-input" type="checkbox" name="permissions[]" id="{{$permission->id}}" value="{{$permission->name}}" role="switch">
-                                        <label class="zForm-label-alt" for="{{$permission->id}}">{{$permission->name}}</label>
-                                    </div>
-                                </div>
-                                @endforeach
-                            </div>
-                        </div>
+                        <p class="small text-muted mb-0">{{ __('Create the role first, then use Configure permissions in the role list to set module access.') }}</p>
                     </div>
                     <div class="bd-c-stroke-2 justify-content-between align-items-center text-end pt-15">
                         <button type="submit" class="flipBtn sf-flipBtn-primary flex-shrink-0">{{__('Submit')}}</button>

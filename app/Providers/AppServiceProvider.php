@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Language;
 use App\Models\Setting;
+use App\Services\RolePermissionService;
 use Illuminate\Database\Schema\Builder;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\App;
@@ -45,6 +46,13 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             if ((int) $user->role === USER_ROLE_ADMIN) {
                 return true;
+            }
+
+            $permissionService = app(RolePermissionService::class);
+            $module = $permissionService->moduleForLegacyAbility((string) $ability);
+            if ($module) {
+                $action = $permissionService->actionForRequest(request());
+                return $permissionService->allows($user, $module . '.' . $action);
             }
 
             $rolePermissions = [
